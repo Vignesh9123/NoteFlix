@@ -4,6 +4,8 @@ import jwt from "jsonwebtoken";
 import config from "@/config/config";
 import User from "@/models/user.model";
 import { userJwtPayload } from "@/types";
+import connectDB from "@/dbConfig/connectDB";
+connectDB();
 
 
 export const authMiddleware = async (req: NextRequest) => {

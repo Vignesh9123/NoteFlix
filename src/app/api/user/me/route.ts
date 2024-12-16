@@ -1,5 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { authMiddleware } from "@/middleware/auth.middleware";
+import connectDB from "@/dbConfig/connectDB";
+connectDB();
+
 export const GET = async (req: NextRequest, res: NextResponse) => {
    try {
     const response = await authMiddleware(req);

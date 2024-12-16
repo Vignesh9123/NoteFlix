@@ -1,9 +1,10 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { useScroll, useTransform } from "framer-motion";
-import { Button } from "@/components/ui/button";
 import { GoogleGeminiEffect } from "@/components/ui/google-gemini-effect";
+import { useAuth } from "@/context/AuthContext";
 export default function Home() {
+  const { user } = useAuth();
   const ref = React.useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({
     target: ref,
@@ -21,7 +22,7 @@ export default function Home() {
         ref={ref}
     >
       <GoogleGeminiEffect
-        title="VidScribe"
+        title={user ? `Welcome to VidScribe, ${user?.name?.split(" ")[0]}` : "Welcome to VidScribe" }
         description="Transform how you watch YouTube videos with personalized playlists, time-stamped notes, and content organization all in one place."        
         pathLengths={[
           pathLengthFirst,
