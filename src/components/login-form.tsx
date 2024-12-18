@@ -5,14 +5,14 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import Link from "next/link"
-
+import { useAuth } from "@/context/AuthContext"
 export default function LoginForm({
 className,
 ...props
 }: React.ComponentPropsWithoutRef<"form">) {
 const [email, setEmail] = useState("")
 const [password, setPassword] = useState("")
-
+const {setUser} = useAuth()
 const handleSubmit = async(e: React.FormEvent<HTMLFormElement>) => {
   e.preventDefault()
   try {
@@ -44,6 +44,7 @@ const handleSubmit = async(e: React.FormEvent<HTMLFormElement>) => {
 
     // Success case
     alert(data.message)
+    setUser(data.user)
     // You might want to redirect the user or update the UI state here
     
   } catch (error) {

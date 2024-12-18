@@ -30,7 +30,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   return (
     <SidebarProvider defaultOpen={isOpen} onOpenChange={handleToggle}>
       <AppSidebar />
-      <main>
+      <main className="w-full">
         <SidebarTrigger className={isMobile ? "block" : "hidden"}/>
         {children}
       </main>
