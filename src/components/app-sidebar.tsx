@@ -13,6 +13,7 @@ import {
 } from "@/components/ui/sidebar"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "./ui/dropdown-menu"
 import { usePathname } from "next/navigation"
+import Link from "next/link"
 
 // Menu items.
 const items = [
@@ -28,7 +29,7 @@ const items = [
   },
   {
     title: "Videos",
-    url: "#",
+    url: "/videos",
     icon: ListVideo,
   },
   {
@@ -55,10 +56,10 @@ export function AppSidebar() {
               {items.map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton asChild isActive={pathname === item.url}>
-                    <a href={item.url}>
+                    <Link href={item.url}>
                       <item.icon />
                       <span>{item.title}</span>
-                    </a>
+                    </Link>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               ))}
