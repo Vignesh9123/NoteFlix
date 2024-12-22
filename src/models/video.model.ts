@@ -42,13 +42,9 @@ const videoSchema = new mongoose.Schema({
   publishedAt: { 
     type: Date, 
     required: true
-  },
-  cachedAt: { 
-    type: Date, 
-    required: true 
-  },
+  }
 }, {timestamps: true});
 
-const Video = mongoose.models.Video || mongoose.model('Video', videoSchema);
+const Video = mongoose.models.Video || mongoose.model("Video", videoSchema);
 
 export default Video;

@@ -31,6 +31,7 @@
 }
 */
 
+import { ILibrary } from "@/types";
 import mongoose from "mongoose";
 
 const librarySchema = new mongoose.Schema({
@@ -56,25 +57,11 @@ const librarySchema = new mongoose.Schema({
             return this.type === "playlist_entry";
         }
     },
-    userNotes: [{
-        timestamp: {
-            type: Number,
-            required: true
-        },
-        text: {
-            type: String,
-            required: true
-        },
-        category: {
-            type: String,
-            enum: ["key point", "todo", "question"],
-            required: true
-        },
-        createdAt: {
-            type: Date,
-            default: Date.now
-        }
-    }],
+    userNotes: {
+        type: [mongoose.Schema.Types.ObjectId],
+        ref: "Note",
+        required: false
+    },
     watchProgress: {
         lastWatchedTimestamp: {
             type: Number,
@@ -96,6 +83,6 @@ const librarySchema = new mongoose.Schema({
     }
 }, { timestamps: true });
 
-const Library = mongoose.models.Library || mongoose.model("Library", librarySchema);
+const Library = mongoose.models.Library as mongoose.Model<ILibrary> || mongoose.model<ILibrary>("Library", librarySchema);
 
 export default Library;

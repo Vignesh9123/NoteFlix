@@ -3,7 +3,7 @@ import { type NextRequest } from "next/server";
 import jwt from "jsonwebtoken";
 import config from "@/config/config";
 import User from "@/models/user.model";
-import { userJwtPayload } from "@/types";
+import { IUser, userJwtPayload } from "@/types";
 import connectDB from "@/dbConfig/connectDB";
 connectDB();
 
@@ -19,7 +19,7 @@ export const authMiddleware = async (req: NextRequest) => {
         return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
     user.password = undefined;
-    req.user = user;
+    req.user = user as IUser;
     return NextResponse.next();
 
 }

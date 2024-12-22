@@ -11,3 +11,32 @@ export interface IUser extends Document {
     matchPassword(password: string): Promise<boolean>;
     generateToken(): string;
 }
+
+export interface ILibrary extends Document {
+    _id: string;
+    userId: string;
+    videoId: string;
+    type: "standalone" | "playlist_entry";
+    playlistId: string;
+    userNotes: string[];
+    watchProgress: IWatchProgress;
+    tags: string[];
+    status: "watched" | "to_watch" | "in_progress";
+    rating: number;
+    addedAt: Date;
+    lastUpdated: Date;
+}
+
+export interface IUserNote extends Document {
+    _id: string;
+    libraryId: string;
+    timestamp: number;
+    text: string;
+    category: "key point" | "todo" | "question";
+    createdAt: Date;
+}
+
+export interface IWatchProgress{
+    lastWatchedTimestamp: number;
+    percentageWatched: number;
+}
