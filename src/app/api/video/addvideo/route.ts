@@ -17,7 +17,7 @@ export async function POST(request: NextRequest){
      const video = await Video.findOne({youtubeId});
      let newVideo;
      if(!video){
-         newVideo = await Video.create({youtubeId, title, channelName, thumbnailUrl, duration: Number(duration), publishedAt: new Date(publishedAt)});
+         newVideo = await Video.create({youtubeId, title, channelName, thumbnailUrl, duration: Number(duration.match(/PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?/).slice(1).reduce((acc: number, v: string, i: number) => acc + (v ? parseInt(v) * [3600, 60, 1][i] : 0), 0)), publishedAt: new Date(publishedAt)});
      }
      else{
          newVideo = video;

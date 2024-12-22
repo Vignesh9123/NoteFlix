@@ -12,6 +12,15 @@ export interface IUser extends Document {
     generateToken(): string;
 }
 
+export interface IVideoDetails {
+    title: string;
+    duration: string;
+    channelName: string;
+    thumbnailUrl: string;
+    publishedAt: string;
+    youtubeId: string;
+}
+
 export interface ILibrary extends Document {
     _id: string;
     userId: string;
