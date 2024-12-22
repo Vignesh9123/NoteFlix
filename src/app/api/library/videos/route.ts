@@ -56,3 +56,21 @@ export async function GET(request: NextRequest){
 
     }
 }
+
+export async function DELETE(request: NextRequest){
+    try {
+        const auth = await authMiddleware(request);
+        if(auth.status == 401){
+            return NextResponse.json({error: "Unauthorized"}, {status: 401})
+        }
+        const {id} = await request.json();
+        const library = await Library.findById(id);
+        if(!library) return NextResponse.json({error: "Library not found"}, {status: 404});
+        if(library.userId.toString() != request.user?._id.toString()) return NextResponse.json({error: "Unauthorized"}, {status: 401});
+        await Library.findByIdAndDelete(id);
+        return NextResponse.json({data: library}, {status: 200});
+    } catch (error) {
+        console.log("Error deleting video from library", error);
+        return NextResponse.json({message: "Internal server error"}, {status: 500});
+    }
+}

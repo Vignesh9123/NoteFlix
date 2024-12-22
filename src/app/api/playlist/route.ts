@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import {authMiddleware} from "@/middleware/auth.middleware";
 import Playlist from "@/models/playlist.model";
+import Library from "@/models/library.model";
 import connectDB from "@/dbConfig/connectDB";
 connectDB();
 
@@ -50,6 +51,7 @@ export async function DELETE(request: NextRequest){
     if(!playlist) return NextResponse.json({message: "Playlist not found"}, {status: 404});
     if(playlist?.userId.toString() != request.user?._id.toString()) return NextResponse.json({message: "Unauthorized"}, {status: 401});
     await Playlist.findByIdAndDelete(id);
+    await Library.deleteMany({playlistId: id});
     return NextResponse.json({data: playlist}, {status: 200});
     } catch (error) {
         console.log(error);
