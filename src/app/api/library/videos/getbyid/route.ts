@@ -53,7 +53,7 @@ export async function POST(request: NextRequest) {
                         },
                     },
             ]);
-        if (!video) return NextResponse.json({ error: "Video not found in library" }, { status: 404 });
+        if (video.length == 0) return NextResponse.json({ error: "Video not found in library" }, { status: 404 });
         return NextResponse.json({ data: video }, { status: 200 });
     } catch (error) {
         console.log("Error getting video from library", error);
