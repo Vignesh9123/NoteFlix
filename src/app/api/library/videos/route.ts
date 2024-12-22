@@ -8,12 +8,11 @@ export async function GET(request: NextRequest){
         if(auth.status == 401){
             return NextResponse.json({error: "Unauthorized"}, {status: 401})
         }
-        const videos = await Library.aggregate([
+        
+        const videos = await Library
+        .aggregate([
             {
-                $match: {
-                    userId: request.user?._id,
-                    type: "standalone",
-                },
+                $match: {userId: request.user?._id, type: "standalone"}
             },
             {
                 $lookup: {
@@ -21,34 +20,17 @@ export async function GET(request: NextRequest){
                     localField: "videoId",
                     foreignField: "_id",
                     as: "videoDetails",
-                },
+                }
             },
             {
-                $unwind: {
-                    path: "$videoDetails",
-                    preserveNullAndEmptyArrays: true,
-                },
-            },
-            {
-                $lookup: {
-                    from: "notes",
-                    localField: "userNotes",
-                    foreignField: "_id",
-                    as: "userNotes",
-                },
-            },
-            {
-                $addFields: {
-                    videoDetails: "$videoDetails",
-                },
+                $unwind: "$videoDetails"
             },
             {
                 $project: {
                     videoId: 0,
-                },
-            },
-        ]);
-        
+                }
+            }
+        ])
         return NextResponse.json({data: videos}, {status: 200})
     } catch (error) {
         console.log(error);
