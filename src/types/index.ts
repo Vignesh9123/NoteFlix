@@ -49,3 +49,17 @@ export interface IWatchProgress{
     lastWatchedTimestamp: number;
     percentageWatched: number;
 }
+
+export interface IPlaylist extends Document {
+    _id: string;
+    userId: string;
+    name: string;
+    description: string;
+    coverPicture: string;
+    tags: string[];
+    videoCount: number;
+    videos: IVideoDetails[];
+    createdAt: Date;
+    updatedAt: Date;
+}
+
