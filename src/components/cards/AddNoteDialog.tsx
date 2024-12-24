@@ -6,7 +6,7 @@ import { Button } from '../ui/button';
 import { Input } from '../ui/input';
 import { Label } from '../ui/label';
 import { timeToSeconds } from '@/lib/utils';
-function AddNoteDialog({ open, setOpen, category, setCategory, libraryId }: { open: boolean, setOpen: (open: boolean) => void, category: string, setCategory: (category: string) => void, libraryId: string }) {
+function AddNoteDialog({ open, setOpen, category, setCategory, libraryId, fetchNotes }: { open: boolean, setOpen: (open: boolean) => void, category: string, setCategory: (category: string) => void, libraryId: string, fetchNotes: () => void }) {
     const [note, setNote] = useState("");
     const [timestamp, setTimestamp] = useState<string | null>(null);
     const handleAddNote = async () => {
@@ -22,6 +22,7 @@ function AddNoteDialog({ open, setOpen, category, setCategory, libraryId }: { op
         })
             .then((res) => {
                 console.log(res);
+                fetchNotes();
             })
             .catch((err) => {
                 console.log(err);

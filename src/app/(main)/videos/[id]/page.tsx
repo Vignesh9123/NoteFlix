@@ -42,6 +42,11 @@ function VideoPage() {
       })
     )
   }, [searchQuery, keyPointFilter, todoFilter, questionFilter, userNotes])
+  const fetchNotes = async () => {
+    const response = await api.post(`/library/notes`, { id });
+    setUserNotes(response.data.data);
+    setFilteredNotes(response.data.data);
+  }
   useEffect(() => {
     setLoading(true);
     api.post(`/library/videos/getbyid`,{id}).then((res) => {
@@ -98,7 +103,7 @@ function VideoPage() {
 
                 </DropdownMenu>
                 {(
-                        <AddNoteDialog open={addNoteDialogOpen} setOpen={setAddNoteDialogOpen} category={addNoteDialogCategory} setCategory={setAddNoteDialogCategory} libraryId={library?._id!} />
+                        <AddNoteDialog open={addNoteDialogOpen} setOpen={setAddNoteDialogOpen} fetchNotes={fetchNotes} category={addNoteDialogCategory} setCategory={setAddNoteDialogCategory} libraryId={library?._id!} />
                        )}
                 <Input placeholder='Search' value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} />
                 <div className='relative'>
