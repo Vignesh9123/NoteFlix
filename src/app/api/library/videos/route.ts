@@ -26,6 +26,13 @@ export async function GET(request: NextRequest){
                 $unwind: "$videoDetails"
             },
             {
+                $addFields: {
+                    videoDetails: {
+                        $mergeObjects: ["$videoDetails", { libraryId: "$_id" }]
+                    }
+                }
+            },
+            {
                 $project: {
                     videoId: 0,
                 }

@@ -20,6 +20,7 @@ export interface IVideoDetails {
     thumbnailUrl: string;
     publishedAt: string;
     youtubeId: string;
+    libraryId: string;
 }
 
 export interface ILibrary extends Document {

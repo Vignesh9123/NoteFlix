@@ -17,7 +17,7 @@ export async function POST(request: NextRequest) {
                         $match: {
                             userId: request.user?._id,
                             type: "standalone",
-                            videoId: new mongoose.Types.ObjectId(id)
+                            _id: new mongoose.Types.ObjectId(id)
                         },
                     },
                     {
@@ -32,6 +32,7 @@ export async function POST(request: NextRequest) {
                         $unwind: {
                             path: "$videoDetails",
                             preserveNullAndEmptyArrays: true,
+                            
                         },
                     },
                     {
@@ -44,7 +45,9 @@ export async function POST(request: NextRequest) {
                     },
                     {
                         $addFields: {
-                            videoDetails: "$videoDetails",
+                            videoDetails: {
+                                $mergeObjects: ["$videoDetails", { libraryId: "$_id" }]
+                            }
                         },
                     },
                     {

@@ -16,7 +16,7 @@ function VideoListCard({videoDetails}: {videoDetails: IVideoDetails}) {
 
     <Image src={videoDetails.thumbnailUrl} alt='logo' width={100} height={100} className='w-[200px] h-full object-cover' />
     </div>
-    <Link href={`/videos/${videoDetails._id}`}>
+    <Link href={`/videos/${videoDetails.libraryId}`}>
     <div className='flex flex-col items-start gap-2'>
         <h1 className='text-md md:text-xl lg:text-2xl font-bold'>{videoDetails.title.slice(0, 30)+ (videoDetails.title.length > 30 ? '...' : '')}</h1>
         {/* <div className='flex items-center gap-2'>
