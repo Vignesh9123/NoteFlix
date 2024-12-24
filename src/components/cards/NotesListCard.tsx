@@ -6,11 +6,9 @@ function NotesListCard({note}: {note: IUserNote}) {
   return (
     <>
     {note.category === "key point" && <div key={note.text} className='flex flex-col gap-2 p-2 rounded-lg bg-muted dark:hover:bg-slate-900 duration-150 hover:scale-[1.01] cursor-pointer'>
-    <div className='text-sm font-bold text-center'>{note.category.charAt(0).toUpperCase() + note.category.slice(1)}</div>
-    <div className='text-sm text-muted-foreground mt-2'>{note.text}</div>
+    <li className='text-sm text-muted-foreground mt-2'>{note.text}</li>
 </div>}
 {note.category === "todo" && <div key={note.text} className='flex flex-col gap-2 p-2 rounded-lg bg-muted'>
-    <div className='text-sm font-bold text-center'>{note.category.charAt(0).toUpperCase() + note.category.slice(1)}</div>
     <div className='text-sm flex items-center gap-2 text-muted-foreground mt-2'>
         <Checkbox checked={todoCompleted} onCheckedChange={() => setTodoCompleted(!todoCompleted)} className='w-4 h-4 dark:border-gray-500' /> <span className={`${todoCompleted ? "line-through" : ""}`}>{note.text}</span>
     </div>
