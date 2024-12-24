@@ -92,7 +92,7 @@ function VideoPage() {
       <div className="usernotes m-5">
         <div className='flex flex-col gap-2'>
             {filteredNotes.map((note) => (
-                <NotesListCard key={note.text} note={note} />
+                <NotesListCard key={note.text} note={note} videoDetails={video!} />
             ))}
         </div>
       </div>
