@@ -41,12 +41,20 @@ export async function POST(request: NextRequest) {
                     $unwind: "$videoDetails"
                 },
                 {
+                    $addFields: {
+                        videoDetails: {
+                            $mergeObjects: ["$videoDetails", { libraryId: "$_id" }]
+                        }
+                    }
+                },
+                {
                     $group: {
                         _id: "$playlistId",
                         playlistDetails: { $first: "$playlistDetails" },
                         videoDetails: { $push: "$videoDetails" }
                     }
                 },
+                
                 {
                     $project: {
                         _id: 0,
