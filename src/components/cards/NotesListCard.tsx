@@ -1,12 +1,14 @@
 import React, { useState } from 'react'
 import { IUserNote } from '@/types'
 import { Checkbox } from '../ui/checkbox'
+import { secondsToTime } from '@/lib/utils';
 function NotesListCard({note}: {note: IUserNote}) {
     const [todoCompleted, setTodoCompleted] = useState(note.todoCompleted);
   return (
     <>
     {note.category === "key point" && <div key={note.text} className='flex flex-col gap-2 p-2 rounded-lg bg-muted dark:hover:bg-slate-900 duration-150 hover:scale-[1.01] cursor-pointer'>
     <li className='text-sm text-muted-foreground mt-2'>{note.text}</li>
+    <div className='text-sm text-muted-foreground mt-2'>{secondsToTime(note.timestamp)}</div>
 </div>}
 {note.category === "todo" && <div key={note.text} className='flex flex-col gap-2 p-2 rounded-lg bg-muted'>
     <div className='text-sm flex items-center gap-2 text-muted-foreground mt-2'>
