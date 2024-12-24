@@ -13,6 +13,7 @@ export interface IUser extends Document {
 }
 
 export interface IVideoDetails {
+    _id: string;
     title: string;
     duration: string;
     channelName: string;
@@ -42,6 +43,7 @@ export interface IUserNote extends Document {
     timestamp: number;
     text: string;
     category: "key point" | "todo" | "question";
+    todoCompleted: boolean;
     createdAt: Date;
 }
 

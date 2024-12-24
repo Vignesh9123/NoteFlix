@@ -23,6 +23,7 @@ function VideosPage() {
   const [videoDetails, setVideoDetails] = useState<IVideoDetails | null>(null)
   const [videoList, setVideoList] = useState<IVideoDetails[]>([])
   const [openAddVideoDialog, setOpenAddVideoDialog] = useState(false)
+  const [loadingVideos, setLoadingVideos] = useState(false)
   const handleGetVideoDetails = async () => {
     try {
       setLoading(true)
@@ -45,6 +46,7 @@ function VideosPage() {
   }
   const fetchVideos = async () => {
     try {
+      setLoadingVideos(true)
       const response = await api.get('/library/videos')
       const responseData = response.data.data
       const videos = responseData.map((data: any) => ({
@@ -53,6 +55,9 @@ function VideosPage() {
       setVideoList(videos)
     } catch (error) {
       console.log(error)
+    }
+    finally {
+      setLoadingVideos(false)
     }
   }
   useEffect(() => {
@@ -92,7 +97,7 @@ function VideosPage() {
             
         </div>
         <div className='flex flex-col gap-4'>
-          {videoList.map((video) => (
+          {loadingVideos ? <div className='flex col-span-3 md:col-span-2 lg:col-span-3 justify-center items-center h-screen'><Loader2 className='animate-spin text-gray-500' /></div> : videoList.map((video) => (
             <VideoListCard key={video.youtubeId} videoDetails={video} />
           ))}
         </div>

@@ -53,7 +53,7 @@ const librarySchema = new mongoose.Schema({
     playlistId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "Playlist",
-        required: function (this: any) {
+        required: function (this: ILibrary) {
             return this.type === "playlist_entry";
         }
     },

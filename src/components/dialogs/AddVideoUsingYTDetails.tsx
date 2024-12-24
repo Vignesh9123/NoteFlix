@@ -1,19 +1,36 @@
 'use client'
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog'
-import { IVideoDetails } from '@/types'
+import { IPlaylist, IVideoDetails } from '@/types'
 import { Label } from '../ui/label'
 import { Input } from '../ui/input'
 import { Button } from '../ui/button'
 import Image from 'next/image'
 import { api } from '@/config/config'
 import { Loader2 } from 'lucide-react'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select'
 function AddVideo({open, setOpen, videoDetails, setVideoDetails, setVideoList, videoList}: {open: boolean, setOpen: (open: boolean) => void, videoDetails: IVideoDetails, setVideoDetails: (videoDetails: IVideoDetails|null) => void, setVideoList: (videoList: IVideoDetails[]) => void, videoList: IVideoDetails[]}) {
     const [title, setTitle] = useState(videoDetails.title || '');
     const [duration, setDuration] = useState(videoDetails.duration || '');
     const [channelName, setChannelName] = useState(videoDetails.channelName || '');
     const [publishedAt, setPublishedAt] = useState(videoDetails.publishedAt || '');
     const [addingVideo, setAddingVideo] = useState(false);
+    const [playlists, setPlaylists] = useState<IPlaylist[]>([])
+    const [selectedPlaylist, setSelectedPlaylist] = useState<string | null>(null)
+    const [playlistLoading, setPlaylistLoading] = useState(false);
+    useEffect(() => {
+        setPlaylistLoading(true);
+        api.get('/library/playlists').then((res) => {
+            console.log("res", res)
+            setPlaylists(res.data.data)
+        })
+        .finally(() => {
+            setPlaylistLoading(false);
+        })
+        return () => {
+            setPlaylists([]);
+        }
+    }, [])
     const handleAddVideo = async () => {
         setAddingVideo(true);
        try {
@@ -24,7 +41,8 @@ function AddVideo({open, setOpen, videoDetails, setVideoDetails, setVideoList, v
              thumbnailUrl: videoDetails.thumbnailUrl,
              duration: duration,
              publishedAt: publishedAt,
-             isStandalone: true
+             isStandalone: selectedPlaylist ? false : true,
+             playlistId: selectedPlaylist ? selectedPlaylist : null
          }
          const response = await api.post('/video/addvideo', data);
          console.log("response", response)
@@ -40,6 +58,7 @@ function AddVideo({open, setOpen, videoDetails, setVideoDetails, setVideoList, v
         setAddingVideo(false);
        }
     }
+
   return (
     videoDetails && (<Dialog open={open} onOpenChange={setOpen}>
       <DialogContent>
@@ -61,6 +80,18 @@ function AddVideo({open, setOpen, videoDetails, setVideoDetails, setVideoList, v
                 <Input value={channelName} readOnly />
                 <Label>Published At</Label>
                 <Input value={new Date(publishedAt).toLocaleDateString('en-IN', { year: 'numeric', month: 'long', day: 'numeric' })} readOnly />
+                <Label>Playlists</Label>
+                <Select value={selectedPlaylist!} onValueChange={setSelectedPlaylist}>
+                    <SelectTrigger>
+                        <SelectValue placeholder='Select a playlist'/>
+                    </SelectTrigger>
+                    <SelectContent>
+                        {playlistLoading ? <div className='flex justify-center items-center'><Loader2 className='animate-spin' /></div> : playlists.map((playlist) => (
+                            <SelectItem key={playlist._id} value={playlist._id}>{playlist.name}</SelectItem>
+                        ))}
+                        {!playlistLoading && playlists.length === 0 && <div className='flex justify-center items-center'>No playlists found</div>}
+                    </SelectContent>
+                </Select>
             </div>
         </div>
         <div className='flex justify-end gap-2'>

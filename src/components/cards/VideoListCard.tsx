@@ -2,8 +2,9 @@ import { IVideoDetails } from '@/types'
 import { Calendar, EllipsisVertical } from 'lucide-react'
 import Image from 'next/image'
 import React from 'react'
-
+import Link from 'next/link'
 function VideoListCard({videoDetails}: {videoDetails: IVideoDetails}) {
+    console.log("videoDetails", videoDetails)
   return (
     <div>
 
@@ -15,6 +16,7 @@ function VideoListCard({videoDetails}: {videoDetails: IVideoDetails}) {
 
     <Image src={videoDetails.thumbnailUrl} alt='logo' width={100} height={100} className='w-[200px] h-full object-cover' />
     </div>
+    <Link href={`/videos/${videoDetails._id}`}>
     <div className='flex flex-col items-start gap-2'>
         <h1 className='text-md md:text-xl lg:text-2xl font-bold'>{videoDetails.title.slice(0, 30)+ (videoDetails.title.length > 30 ? '...' : '')}</h1>
         {/* <div className='flex items-center gap-2'>
@@ -26,6 +28,7 @@ function VideoListCard({videoDetails}: {videoDetails: IVideoDetails}) {
             <span className='text-sm text-gray-500'>{new Date(videoDetails.publishedAt).toLocaleDateString('en-IN')}</span>
         </div>
     </div>
+    </Link>
     </div>
     <div title='More' className='flex p-2 items-center gap-2'>
         <EllipsisVertical className='text-gray-500 cursor-pointer hover:text-white duration-150' />

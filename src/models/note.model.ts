@@ -1,6 +1,5 @@
 import { IUserNote } from "@/types";
 import mongoose from "mongoose";
-import Library from "./library.model";
 
 const noteSchema = new mongoose.Schema({
     libraryId: {
@@ -13,13 +12,19 @@ const noteSchema = new mongoose.Schema({
         enum: ["key point", "todo", "question"],
         required: true
     },
+    todoCompleted: {
+        type: Boolean,
+        required: function(this: IUserNote){
+            return this.category === "todo";
+        },
+        default: false
+    },
     text: {
         type: String,
         required: true
     },
     timestamp: {
         type: Number,
-        required: true
     }
 },{timestamps: true})
 
