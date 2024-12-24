@@ -19,7 +19,7 @@ export async function POST(request: NextRequest) {
         youtubeId: videoId,
         title: response.data?.items?.[0]?.snippet?.title,
         channelName: response.data?.items?.[0]?.snippet?.channelTitle,
-        thumbnailUrl: response.data?.items?.[0]?.snippet?.thumbnails?.high?.url,
+        thumbnailUrl: response.data?.items?.[0]?.snippet?.thumbnails?.maxres?.url,
         duration: response.data?.items?.[0]?.contentDetails?.duration,
         publishedAt: response.data?.items?.[0]?.snippet?.publishedAt,
      }

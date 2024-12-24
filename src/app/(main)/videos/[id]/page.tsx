@@ -10,6 +10,7 @@ import { Input } from '@/components/ui/input';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import NotesListCard from '@/components/cards/NotesListCard';
 import AddNoteDialog from '@/components/cards/AddNoteDialog';
+import NotesFilterDialog from '@/components/dialogs/NotesFilterDialog';
 function VideoPage() {
   const { id } = useParams();
   const [video, setVideo] = useState<IVideoDetails | null>(null);
@@ -20,12 +21,27 @@ function VideoPage() {
   const [filteredNotes, setFilteredNotes] = useState<IUserNote[]>([]);
   const [addNoteDialogOpen, setAddNoteDialogOpen] = useState(false);
   const [addNoteDialogCategory, setAddNoteDialogCategory] = useState("");
+  const [notesFilterDialogOpen, setNotesFilterDialogOpen] = useState(false);
+  const [keyPointFilter, setKeyPointFilter] = useState(false);
+  const [todoFilter, setTodoFilter] = useState(false);
+  const [questionFilter, setQuestionFilter] = useState(false);
   useEffect(() => {
     setSearchQuery("");
   }, [id])
   useEffect(() => {
-    setFilteredNotes(userNotes.filter((note) => note.text.toLowerCase().includes(searchQuery.toLowerCase())));
-  }, [searchQuery])
+    setFilteredNotes(
+      userNotes.filter((note) => {
+        const matchesSearch = note.text.toLowerCase().includes(searchQuery.toLowerCase());
+        const matchesCategory = (
+          (!keyPointFilter && !todoFilter && !questionFilter) ||
+          (keyPointFilter && note.category === "key point") ||
+          (todoFilter && note.category === "todo") ||
+          (questionFilter && note.category === "question")
+        );
+        return matchesSearch && matchesCategory;
+      })
+    )
+  }, [searchQuery, keyPointFilter, todoFilter, questionFilter, userNotes])
   useEffect(() => {
     setLoading(true);
     api.post(`/library/videos/getbyid`,{id}).then((res) => {
@@ -85,8 +101,24 @@ function VideoPage() {
                         <AddNoteDialog open={addNoteDialogOpen} setOpen={setAddNoteDialogOpen} category={addNoteDialogCategory} setCategory={setAddNoteDialogCategory} libraryId={library?._id!} />
                        )}
                 <Input placeholder='Search' value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} />
-                <ListFilter size={27} className='text-gray-500 cursor-pointer hover:bg-muted duration-150' />
+                <div className='relative'>
+                <ListFilter onClick={() => setNotesFilterDialogOpen(true)} size={27} className='text-gray-500 cursor-pointer hover:bg-muted duration-150' />
+                {(keyPointFilter || todoFilter || questionFilter) && <div className='absolute top-0 right-0 w-fit h-fit bg-black opacity-50'>
+                  {[keyPointFilter, todoFilter, questionFilter]
+                  .reduce((acc, curr) => {
+                    if(curr) {
+                      acc += 1;
+                    }
+                    return acc;
+                  }, 0)
+                  }
+                </div>}
+                </div>
+                  
             </div>
+            {(
+                        <NotesFilterDialog open={notesFilterDialogOpen} setOpen={setNotesFilterDialogOpen} keyPointFilter={keyPointFilter} setKeyPointFilter={setKeyPointFilter} todoFilter={todoFilter} setTodoFilter={setTodoFilter} questionFilter={questionFilter} setQuestionFilter={setQuestionFilter} />
+            )}
         </div>
       </div>
       <div className="usernotes m-5">
