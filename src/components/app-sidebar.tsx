@@ -33,8 +33,8 @@ const items = [
     icon: ListVideo,
   },
   {
-    title: "Search",
-    url: "#",
+    title: "Notes",
+    url: "notetest",
     icon: Search,
   },
   {
