@@ -3,9 +3,10 @@ import { Calendar, EllipsisVertical } from 'lucide-react'
 import Image from 'next/image'
 import React from 'react'
 import Link from 'next/link'
-function VideoListCard({videoDetails, type}: {videoDetails: IVideoDetails, type: string}) {
+import { motion } from 'framer-motion'
+function VideoListCard({videoDetails, type, index}: {videoDetails: IVideoDetails, type: string, index: number}) {
   return (
-    <div className='flex'>
+    <motion.div initial={{opacity: 0, y: 100, scale: 0.6}} animate={{opacity: 1, y: 0, scale: 1}} transition={{delay: index * 0.1, duration: 0.3}} className='flex'>
 
     <Link href={type === "standalone" ? `/videos/${videoDetails.libraryId}` : `/playlists/video/${videoDetails.libraryId}`} className='w-full'>
 <div className='flex hover:bg-muted duration-150 rounded-md p-4 h-[150px] gap-4 w-full border-b border-muted'>
@@ -35,7 +36,7 @@ function VideoListCard({videoDetails, type}: {videoDetails: IVideoDetails, type:
     <div title='More' onClick={(e) => e.stopPropagation()} className='flex p-2 items-center gap-2'>
         <EllipsisVertical className='text-gray-500 cursor-pointer hover:text-white duration-150' />
     </div>
-    </div>
+    </motion.div>
   )
 }
 

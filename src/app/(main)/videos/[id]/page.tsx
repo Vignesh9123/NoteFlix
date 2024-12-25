@@ -128,8 +128,8 @@ function VideoPage() {
       </div>
       <div className="usernotes m-5">
         <div className='flex flex-col gap-2'>
-            {filteredNotes.map((note) => (
-                <NotesListCard key={note.text} note={note} videoDetails={video!} />
+            {filteredNotes.map((note, index) => (
+                <NotesListCard key={note.text} note={note} videoDetails={video!} index={index} />
             ))}
             {filteredNotes.length === 0 && <div className='text-center text-muted-foreground'>No notes found</div>}
         </div>
