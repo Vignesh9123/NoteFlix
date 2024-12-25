@@ -1,49 +1,42 @@
 'use client'
-import React, { useEffect, useState } from 'react'
-import {
-  Card,
-  CardContent,
-  CardHeader,
-} from "@/components/ui/card"
-function Dashboard() {
-  const [data, setData] = useState(null)
+import React, { useState, useEffect } from 'react';
+import { AnimatePresence } from 'framer-motion';
+import { AnimatedCard } from '@/components/cards/AnimatedCard';
+
+function App() {
+  const [data, setData] = useState(null);
+
   useEffect(() => {
     const fetchData = async () => {
-      const response = await fetch('/api/youtube/test')
-      const data = await response.json()
-      setData(data)
-    }
-    fetchData()
-  }, [])
+      const response = await fetch('/api/youtube/test');
+      const data = await response.json();
+      setData(data);
+    };
+    fetchData();
+  }, []);
+
+  const cards = [
+    { title: 'Playlists', value: 10 },
+    { title: 'Videos', value: 10 },
+    { title: 'Hours Completed', value: 10 },
+  ];
+
   return (
-    <div className="flex justify-around w-full mt-10">
-      <Card className="flex flex-col gap-4 items-center w-[25%]">
-        <CardHeader className='text-lg font-bold'>Playlists</CardHeader>
-        <CardContent>
-          <div className='flex items-center justify-center rounded-full text-2xl font-bold'>
-            10
-          </div>
-        </CardContent>
-      </Card>
-      <Card className="flex flex-col gap-4 items-center w-[25%]">
-        <CardHeader className='text-lg font-bold'>Videos</CardHeader>
-        <CardContent>
-          <div className='flex items-center justify-center rounded-full text-2xl font-bold'>
-            10
-          </div>
-        </CardContent>
-      </Card>
-      <Card className="flex flex-col gap-4 items-center w-[25%]">
-        <CardHeader className='text-lg font-bold'>Hours Completed</CardHeader>
-        <CardContent>
-          <div className='flex items-center justify-center rounded-full text-2xl font-bold'>
-            10
-          </div>
-        </CardContent>
-      </Card>
-      
+    <div className="min-h-screen p-8">
+      <div className="flex justify-around w-full mt-10 gap-6">
+        <AnimatePresence>
+          {cards.map((card, index) => (
+            <AnimatedCard
+              key={card.title}
+              title={card.title}
+              value={card.value}
+              index={index}
+            />
+          ))}
+        </AnimatePresence>
+      </div>
     </div>
-  )
+  );
 }
 
-export default Dashboard
+export default App;
