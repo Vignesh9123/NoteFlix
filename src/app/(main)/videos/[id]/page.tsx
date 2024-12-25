@@ -49,7 +49,7 @@ function VideoPage() {
   }
   useEffect(() => {
     setLoading(true);
-    api.post(`/library/videos/getbyid`,{id}).then((res) => {
+    api.post(`/library/videos/getbyid`,{id, type: "standalone"}).then((res) => {
         console.log("res", res.data.data)
         setVideo(res.data.data.videoDetails);
         setLibrary(res.data.data);
@@ -131,6 +131,7 @@ function VideoPage() {
             {filteredNotes.map((note) => (
                 <NotesListCard key={note.text} note={note} videoDetails={video!} />
             ))}
+            {filteredNotes.length === 0 && <div className='text-center text-muted-foreground'>No notes found</div>}
         </div>
       </div>
     </div>

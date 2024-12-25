@@ -10,13 +10,13 @@ export async function POST(request: NextRequest) {
         if (auth.status == 401) {
             return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
         }
-        const { id }: { id: string } = await request.json();
+        const { id, type }: { id: string, type: string } = await request.json();
         const video = await Library
         .aggregate([
             {
                         $match: {
                             userId: request.user?._id,
-                            type: "standalone",
+                            type: type,
                             _id: new mongoose.Types.ObjectId(id)
                         },
                     },

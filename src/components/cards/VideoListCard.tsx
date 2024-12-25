@@ -3,12 +3,11 @@ import { Calendar, EllipsisVertical } from 'lucide-react'
 import Image from 'next/image'
 import React from 'react'
 import Link from 'next/link'
-function VideoListCard({videoDetails}: {videoDetails: IVideoDetails}) {
-    console.log("videoDetails", videoDetails)
+function VideoListCard({videoDetails, type}: {videoDetails: IVideoDetails, type: string}) {
   return (
     <div className='flex'>
 
-    <Link href={`/videos/${videoDetails.libraryId}`} className='w-full'>
+    <Link href={type === "standalone" ? `/videos/${videoDetails.libraryId}` : `/playlists/video/${videoDetails.libraryId}`} className='w-full'>
 <div className='flex hover:bg-muted duration-150 rounded-md p-4 h-[150px] gap-4 w-full border-b border-muted'>
 
 <div className='flex justify-between w-full gap-4 '>

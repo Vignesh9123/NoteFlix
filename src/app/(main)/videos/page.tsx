@@ -98,7 +98,7 @@ function VideosPage() {
         </div>
         <div className='flex flex-col gap-4'>
           {loadingVideos ? <div className='flex col-span-3 md:col-span-2 lg:col-span-3 justify-center items-center h-screen'><Loader2 className='animate-spin text-gray-500' /></div> : videoList.map((video) => (
-            <VideoListCard key={video.youtubeId} videoDetails={video} />
+            <VideoListCard key={video.youtubeId} videoDetails={video} type="standalone" />
           ))}
         </div>
     </div>
