@@ -28,8 +28,8 @@ function PlaylistIDPage() {
         <h1 className='text-2xl font-bold'>{playlist?.name}</h1>
         <p className='text-sm text-gray-500'>{playlist?.description}</p>
         <div className='flex flex-col gap-4'>
-            {videos.map((video) => (
-                <VideoListCard key={video.libraryId} videoDetails={video} type="playlist_entry" />
+            {videos.map((video, index) => (
+                <VideoListCard key={video.libraryId} videoDetails={video} type="playlist_entry" index={index} />
             ))}
         </div>
     </div>

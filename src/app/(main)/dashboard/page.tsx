@@ -8,9 +8,13 @@ function App() {
 
   useEffect(() => {
     const fetchData = async () => {
-      const response = await fetch('/api/youtube/test');
-      const data = await response.json();
-      setData(data);
+     try {
+       const response = await fetch('/api/youtube/test');
+       const data = await response.json();
+       setData(data);
+     } catch (error) {
+      console.log(error);
+     }
     };
     fetchData();
   }, []);
