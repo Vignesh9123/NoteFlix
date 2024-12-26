@@ -34,7 +34,7 @@ const items = [
   },
   {
     title: "Notes",
-    url: "notetest",
+    url: "/notetest",
     icon: Search,
   },
   {

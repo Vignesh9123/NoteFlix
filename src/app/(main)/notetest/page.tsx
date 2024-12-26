@@ -1,10 +1,13 @@
-import Editor from "@/components/Editor";
-import React from 'react'
+'use client'
+import Editor from "@/components/TipTap";
+import React, { useEffect, useState } from 'react'
 
 function NoteTestPage() {
+  const [text, setText] = useState('')
+
   return (
     <div>
-      <Editor />
+      <Editor text={text} setText={setText} isEditable={true}/>
     </div>
   )
 }

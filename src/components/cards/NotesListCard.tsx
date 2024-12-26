@@ -5,14 +5,14 @@ import { secondsToTime } from '@/lib/utils';
 import Link from 'next/link';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '../ui/tooltip';
 import { motion } from 'framer-motion'
-import Editor from '../Editor';
+import Editor from '../TipTap';
 function NotesListCard({note, videoDetails, index}: {note: IUserNote, videoDetails: IVideoDetails, index: number}) {
     const [todoCompleted, setTodoCompleted] = useState(note.todoCompleted);
   return (
     <>
     {note.category === "key point" && <motion.div initial={{opacity: 0, y: 100, scale: 0.6}} animate={{opacity: 1, y: 0, scale: 1}} transition={{delay: index * 0.1, duration: 0.3}} onClick={() => console.log("clicked")} key={note.text} className='flex flex-col gap-2 p-2 rounded-lg bg-muted dark:hover:bg-slate-900 duration-150 hover:scale-[1.01] cursor-pointer'>
     {/* <li className='text-sm text-muted-foreground mt-2'> */}
-        <Editor loadText={note.text} />
+        <Editor text={note.text} isEditable={false} />
     {/* </li> */}
    {note.timestamp && <TooltipProvider >
     <Tooltip >

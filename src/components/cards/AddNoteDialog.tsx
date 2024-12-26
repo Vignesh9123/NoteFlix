@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Textarea } from '../ui/textarea';
 import { api } from '@/config/config';
@@ -6,7 +6,7 @@ import { Button } from '../ui/button';
 import { Input } from '../ui/input';
 import { Label } from '../ui/label';
 import { timeToSeconds } from '@/lib/utils';
-import Editor from '../Editor';
+import Editor from '../TipTap';
 function AddNoteDialog({ open, setOpen, category, setCategory, libraryId, fetchNotes }: { open: boolean, setOpen: (open: boolean) => void, category: string, setCategory: (category: string) => void, libraryId: string, fetchNotes: () => void }) {
     const [note, setNote] = useState("");
     const [timestamp, setTimestamp] = useState<string | null>(null);
@@ -34,10 +34,16 @@ function AddNoteDialog({ open, setOpen, category, setCategory, libraryId, fetchN
                 setOpen(false);
             })
     }
+
+    useEffect(() => {
+       return () => {
+        setNote("");
+       } 
+    },[])
     return (
         <Dialog open={open} onOpenChange={setOpen}>
-            <DialogContent>
-                <DialogHeader>
+            <DialogContent className='w-auto'>
+                <DialogHeader className='w-full'>
                     <DialogTitle>Add {category}</DialogTitle>
                 </DialogHeader>
                 <DialogDescription>
@@ -50,8 +56,8 @@ function AddNoteDialog({ open, setOpen, category, setCategory, libraryId, fetchN
                 </div>
                 {/* <Textarea placeholder='Add a note' value={note} onChange={(e) => setNote(e.target.value)} /> */}
                 <Label htmlFor="note">Note</Label>
-                <div className=''>
-                <Editor text={note} setText={setNote}/>
+                <div className='w-full'>
+                <Editor text={note} setText={setNote} isEditable/>
                 </div>
                 <Button onClick={handleAddNote}>Add</Button>
             </DialogContent>
