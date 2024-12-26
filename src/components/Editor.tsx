@@ -10,6 +10,7 @@ import {HistoryPlugin} from '@lexical/react/LexicalHistoryPlugin';
 import {LexicalErrorBoundary} from '@lexical/react/LexicalErrorBoundary';
 import Toolbars from './Toolbars';
 import LoadState from './LoadState';
+const placeholder = 'Enter some text...';
 const theme = {
   // Theme styling goes here
   //...
@@ -22,24 +23,27 @@ function onError(error: any) {
   console.error(error);
 }
 
-export default function Editor() {
+export default function Editor({text, setText, loadText}:{text?:string, setText?:(text:string) => void, loadText?:string}) {
   const initialConfig = {
     namespace: 'MyEditor',
     theme: exampleTheme,
     onError,
+    
   };
 
   return (
     <LexicalComposer initialConfig={initialConfig}>
+      {!loadText && <Toolbars text={text!} setText={setText!}/>}
+      <div className="relative">
+
       <RichTextPlugin
-        contentEditable={<ContentEditable className="outline-none" />}
-        placeholder={<div>Enter some text...</div>}
+        contentEditable={<ContentEditable contentEditable={!loadText} className="outline-none bg-muted m-1 max-h-[200px] overflow-auto rounded-lg p-1 relative" aria-placeholder={placeholder} placeholder={<div className=" absolute top-1 left-2 ">{placeholder}</div>}/>}
         ErrorBoundary={LexicalErrorBoundary}
-      />
+        />
       <HistoryPlugin />
-      <LoadState/>
+      {loadText && <LoadState loadText={loadText}/>}
       <AutoFocusPlugin />
-      <Toolbars />
+        </div>
     </LexicalComposer>
   );
 }
