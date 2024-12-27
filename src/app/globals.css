@@ -201,7 +201,7 @@
     margin: 0;
 
     li {
-      align-items: flex-start;
+      align-items: center;
       display: flex;
 
       > label {
@@ -235,6 +235,6 @@
   pointer-events: none;
 }
 
-.editableEditor p{
+.editableEditor .tiptap{
   padding: 1rem;
 }
