@@ -42,9 +42,8 @@ export interface IUserNote extends Document {
     _id: string;
     libraryId: string;
     timestamp: number;
+    title: string;
     text: string;
-    category: "key point" | "todo" | "question";
-    todoCompleted: boolean;
     createdAt: Date;
 }
 

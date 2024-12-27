@@ -7,10 +7,10 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '../ui/
 import { motion } from 'framer-motion'
 import Editor from '../TipTap';
 function NotesListCard({note, videoDetails, index}: {note: IUserNote, videoDetails: IVideoDetails, index: number}) {
-    const [todoCompleted, setTodoCompleted] = useState(note.todoCompleted);
   return (
     <>
-    {note.category === "key point" && <motion.div initial={{opacity: 0, y: 100, scale: 0.6}} animate={{opacity: 1, y: 0, scale: 1}} transition={{delay: index * 0.1, duration: 0.3}} onClick={() => console.log("clicked")} key={note.text} className='flex flex-col gap-2 p-2 rounded-lg bg-muted dark:hover:bg-slate-900 duration-150 hover:scale-[1.01] cursor-pointer'>
+   <motion.div initial={{opacity: 0, y: 100, scale: 0.6}} animate={{opacity: 1, y: 0, scale: 1}} transition={{delay: index * 0.1, duration: 0.3}} onClick={() => console.log("clicked")} key={note.text} className='flex flex-col gap-2 p-2 rounded-lg bg-muted dark:hover:bg-slate-900 duration-150 hover:scale-[1.01] cursor-pointer'>
+    <div className='text-md md:text-xl lg:text-2xl font-bold'>{note.title}</div>
     {/* <li className='text-sm text-muted-foreground mt-2'> */}
         <Editor text={note.text} isEditable={false} />
     {/* </li> */}
@@ -25,16 +25,7 @@ function NotesListCard({note, videoDetails, index}: {note: IUserNote, videoDetai
     </TooltipContent>
     </Tooltip>
     </TooltipProvider>}
-</motion.div>}
-{note.category === "todo" && <motion.div initial={{opacity: 0, y: 100, scale: 0.6}} animate={{opacity: 1, y: 0, scale: 1}} transition={{delay: index * 0.1, duration: 0.3}} onClick={() => console.log("clicked")} key={note.text} className='flex flex-col gap-2 p-2 rounded-lg bg-muted dark:hover:bg-slate-900 duration-150 hover:scale-[1.01] cursor-pointer'>
-    <div className='text-sm flex items-center gap-2 text-muted-foreground mt-2'>
-        <Checkbox checked={todoCompleted} onCheckedChange={() => setTodoCompleted(!todoCompleted)} onClick={(e) => e.stopPropagation()} className='w-4 h-4 dark:border-gray-500' /> <span className={`${todoCompleted ? "line-through" : ""}`}>{note.text}</span>
-    </div>
-</motion.div>}
-{note.category === "question" && <motion.div initial={{opacity: 0, y: 100, scale: 0.6}} animate={{opacity: 1, y: 0, scale: 1}} transition={{delay: index * 0.1, duration: 0.3}} onClick={() => console.log("clicked")} key={note.text} className='flex flex-col gap-2 p-2 rounded-lg bg-muted dark:hover:bg-slate-900 duration-150 hover:scale-[1.01] cursor-pointer'>
-    <div className='text-sm font-bold text-center'>{note.category}</div>
-    <div className='text-sm text-muted-foreground mt-2'>{note.text}</div>
-</motion.div>}
+</motion.div>
     </>
   )
 }

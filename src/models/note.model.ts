@@ -7,17 +7,9 @@ const noteSchema = new mongoose.Schema({
         ref: "Library", 
         required: true
     },
-    category: {
+   title: {
         type: String,
-        enum: ["key point", "todo", "question"],
         required: true
-    },
-    todoCompleted: {
-        type: Boolean,
-        required: function(this: IUserNote){
-            return this.category === "todo";
-        },
-        default: false
     },
     text: {
         type: String,

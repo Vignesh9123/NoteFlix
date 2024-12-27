@@ -1,25 +1,31 @@
 import React, { useState, useEffect } from 'react'
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import { Textarea } from '../ui/textarea';
 import { api } from '@/config/config';
 import { Button } from '../ui/button';
 import { Input } from '../ui/input';
 import { Label } from '../ui/label';
 import { timeToSeconds } from '@/lib/utils';
 import Editor from '../TipTap';
-function AddNoteDialog({ open, setOpen, category, setCategory, libraryId, fetchNotes }: { open: boolean, setOpen: (open: boolean) => void, category: string, setCategory: (category: string) => void, libraryId: string, fetchNotes: () => void }) {
+import { Loader2 } from 'lucide-react';
+function AddNoteDialog({ open, setOpen, libraryId, fetchNotes }: { open: boolean, setOpen: (open: boolean) => void, libraryId: string, fetchNotes: () => void }) {
     const [note, setNote] = useState("");
     const [timestamp, setTimestamp] = useState<string | null>(null);
+    const [title, setTitle] = useState<string | null>(null);
+    const [loading, setLoading] = useState(false);
     const handleAddNote = async () => {
+        setLoading(true);
         const timestampInSeconds = timestamp ? timeToSeconds(timestamp) : 0;
         console.log(timestampInSeconds);
         console.log(note);
-        // return;
+        if(!note || !libraryId || !title){
+            console.log("Missing fields");
+            return;
+        } 
         api.post("/video/notes", {
             notes: {
                 libraryId,
                 text: note,
-                category, 
+                title,
                 timestamp: timestampInSeconds != 0 ? timestampInSeconds : null
             }
         })
@@ -31,7 +37,9 @@ function AddNoteDialog({ open, setOpen, category, setCategory, libraryId, fetchN
                 console.log(err);
             })
             .finally(() => {
+                setLoading(false);
                 setOpen(false);
+
             })
     }
 
@@ -44,7 +52,7 @@ function AddNoteDialog({ open, setOpen, category, setCategory, libraryId, fetchN
         <Dialog open={open} onOpenChange={setOpen}>
             <DialogContent className='w-auto'>
                 <DialogHeader className='w-full'>
-                    <DialogTitle>Add {category}</DialogTitle>
+                    <DialogTitle>Add a note</DialogTitle>
                 </DialogHeader>
                 <DialogDescription>
                     Add a note to this video
@@ -54,12 +62,16 @@ function AddNoteDialog({ open, setOpen, category, setCategory, libraryId, fetchN
 
                 <Input type='text' id='timestamp' placeholder='12:13' value={timestamp || ""} onChange={(e) => setTimestamp(e.target.value)} />
                 </div>
+                <Label htmlFor='title'>Title</Label>
+                <div className=''>
+                    <Input type='text' id='title' placeholder='Title' value={title || ""} onChange={(e) => setTitle(e.target.value)} />
+                </div>
                 {/* <Textarea placeholder='Add a note' value={note} onChange={(e) => setNote(e.target.value)} /> */}
                 <Label htmlFor="note">Note</Label>
                 <div className='w-full'>
                 <Editor text={note} setText={setNote} isEditable/>
                 </div>
-                <Button onClick={handleAddNote}>Add</Button>
+                <Button onClick={handleAddNote}>{loading?<div className='flex justify-center items-center'><Loader2 className='animate-spin' /></div> :"Add"}</Button>
             </DialogContent>
         </Dialog>
     )

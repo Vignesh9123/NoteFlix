@@ -20,7 +20,7 @@ export async function POST(request: NextRequest){
             libraryId: notes.libraryId,
             timestamp: notes.timestamp,
             text: notes.text,
-            category: notes.category
+            title: notes.title
         });
         library.userNotes.push(newNote._id);
         await library.save();
@@ -61,11 +61,9 @@ export async function DELETE(request: NextRequest){
         if(!library){
             return NextResponse.json({error: "Library not found"}, {status: 404})
         }
-        console.log("library before", library.userNotes);
         library.userNotes = library.userNotes.filter((noteId) => noteId.toString() !== note._id.toString());
-        console.log("library after", library.userNotes);
         await library.save();
-        return NextResponse.json({data: note, message: "Note deleted successfully"}, {status: 200})
+        return NextResponse.json({message: "Note deleted successfully"}, {status: 200})
     } catch (error) {
         console.log("Error deleting note", error);
         return NextResponse.json({error: "Internal Server Error"}, {status: 500})
