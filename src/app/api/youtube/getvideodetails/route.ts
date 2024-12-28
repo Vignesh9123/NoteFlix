@@ -15,11 +15,12 @@ export async function POST(request: NextRequest) {
      if(response.data?.items?.length === 0) {
         return NextResponse.json({error: "Video not found"}, {status: 404})
      }
+     console.log(response.data?.items?.[0]?.snippet)
      const data = {
         youtubeId: videoId,
         title: response.data?.items?.[0]?.snippet?.title,
         channelName: response.data?.items?.[0]?.snippet?.channelTitle,
-        thumbnailUrl: response.data?.items?.[0]?.snippet?.thumbnails?.maxres?.url,
+        thumbnailUrl: response.data?.items?.[0]?.snippet?.thumbnails?.maxres?.url || response.data?.items?.[0]?.snippet?.thumbnails?.standard?.url || response.data?.items?.[0]?.snippet?.thumbnails?.high?.url || response.data?.items?.[0]?.snippet?.thumbnails?.medium?.url || response.data?.items?.[0]?.snippet?.thumbnails?.default?.url,
         duration: response.data?.items?.[0]?.contentDetails?.duration,
         publishedAt: response.data?.items?.[0]?.snippet?.publishedAt,
      }

@@ -16,6 +16,7 @@
 }
 */
 
+import { IVideoDetails } from '@/types';
 import mongoose from 'mongoose';
 
 const videoSchema = new mongoose.Schema({
@@ -42,9 +43,13 @@ const videoSchema = new mongoose.Schema({
   publishedAt: { 
     type: Date, 
     required: true
+  },
+  transcript: {
+    type: String,
+    required: false
   }
 }, {timestamps: true});
 
-const Video = mongoose.models.Video || mongoose.model("Video", videoSchema);
+const Video = mongoose.models.Video as mongoose.Model<IVideoDetails> || mongoose.model<IVideoDetails>("Video", videoSchema);
 
 export default Video;

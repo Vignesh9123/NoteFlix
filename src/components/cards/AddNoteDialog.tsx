@@ -7,11 +7,13 @@ import { Label } from '../ui/label';
 import { timeToSeconds } from '@/lib/utils';
 import Editor from '../TipTap';
 import { Loader2 } from 'lucide-react';
-function AddNoteDialog({ open, setOpen, libraryId, fetchNotes }: { open: boolean, setOpen: (open: boolean) => void, libraryId: string, fetchNotes: () => void }) {
-    const [note, setNote] = useState("");
+function AddNoteDialog({ open, setOpen, libraryId, fetchNotes, youtubeId, text, noteTitle }: { open: boolean, setOpen: (open: boolean) => void, libraryId: string, fetchNotes: () => void, youtubeId: string, text?: string, noteTitle?: string }) {
+    console.log(text)
+    const [note, setNote] = useState(text || "");
     const [timestamp, setTimestamp] = useState<string | null>(null);
     const [title, setTitle] = useState<string | null>(null);
     const [loading, setLoading] = useState(false);
+    const [AILoading, setAILoading] = useState(false);
     const handleAddNote = async () => {
         setLoading(true);
         const timestampInSeconds = timestamp ? timeToSeconds(timestamp) : 0;
@@ -38,6 +40,9 @@ function AddNoteDialog({ open, setOpen, libraryId, fetchNotes }: { open: boolean
             })
             .finally(() => {
                 setLoading(false);
+                setNote("");
+                setTimestamp(null);
+                setTitle(null);
                 setOpen(false);
 
             })
@@ -46,8 +51,27 @@ function AddNoteDialog({ open, setOpen, libraryId, fetchNotes }: { open: boolean
     useEffect(() => {
        return () => {
         setNote("");
+        setTimestamp(null);
+        setTitle(null);
        } 
     },[])
+    useEffect(() => {
+        if(!open){
+            setNote("");
+            setTimestamp(null);
+            setTitle(null);
+        }
+    },[open])
+
+    
+    useEffect(() => {
+        if(text){
+            setNote(text);
+        }
+        if(noteTitle){
+            setTitle(noteTitle);
+        }
+    }, [text])
     return (
         <Dialog open={open} onOpenChange={setOpen}>
             <DialogContent className='w-auto'>
@@ -71,7 +95,7 @@ function AddNoteDialog({ open, setOpen, libraryId, fetchNotes }: { open: boolean
                 <div className='w-full'>
                 <Editor text={note} setText={setNote} isEditable/>
                 </div>
-                <Button onClick={handleAddNote}>{loading?<div className='flex justify-center items-center'><Loader2 className='animate-spin' /></div> :"Add"}</Button>
+                <Button onClick={handleAddNote} disabled={loading || AILoading}>{loading?<div className='flex justify-center items-center'><Loader2 className='animate-spin' /></div> :"Add"}</Button>
             </DialogContent>
         </Dialog>
     )

@@ -98,7 +98,7 @@
     margin-top: 0;
   }
   
-  max-height: 300px;
+  max-height: 100px;
   overflow-y: auto;
   /* List styles */
   ul, 

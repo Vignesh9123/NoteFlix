@@ -5,7 +5,7 @@ import { api } from '@/config/config';
 import { ILibrary, IUserNote, IVideoDetails } from '@/types';
 import Image from 'next/image';
 import Link from 'next/link';
-import { Grid2X2, List, Plus } from 'lucide-react';
+import { Grid2X2, List, Plus, Stars } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import NotesListCard from '@/components/cards/NotesListCard';
 import AddNoteDialog from '@/components/cards/AddNoteDialog';
@@ -18,6 +18,9 @@ function VideoPage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [filteredNotes, setFilteredNotes] = useState<IUserNote[]>([]);
   const [addNoteDialogOpen, setAddNoteDialogOpen] = useState(false);
+  const [AILoading, setAILoading] = useState(false);
+  const [note, setNote] = useState("");
+  const [noteTitle, setNoteTitle] = useState("");
 
   useEffect(() => {
     setSearchQuery("");
@@ -30,6 +33,26 @@ function VideoPage() {
       })
     )
   }, [searchQuery])
+
+  const handleAISummaryClick = async () => {
+    setAILoading(true);
+    try {
+        await api.post('/youtube/getaudio', {videoId: video?.youtubeId});
+        const res = await api.post('/youtube/gettranscript', {videoId: video?.youtubeId});
+        console.log('Transcript extracted',res);
+        const transcript = res.data.data
+        const summary = await api.post('/gemini/generatesummary', {transcript});
+        setNote(summary.data.data.toString());
+        setNoteTitle("Summary of the video");
+        setAddNoteDialogOpen(true);
+    }
+    catch (error) {
+        console.log(error)
+    }
+    finally {
+        setAILoading(false);
+    }
+}
   const fetchNotes = async () => {
     const response = await api.post(`/library/notes`, { id });
     setUserNotes(response.data.data);
@@ -49,7 +72,8 @@ function VideoPage() {
       })
   }, [id])
   return (
-    <div>
+    <div className={`${AILoading ? "opacity-50 pointer-events-none" : ""}`}>
+      {/* {AILoading && <div className='absolute top-0 left-0 w-screen h-screen z-[100000] bg-muted flex justify-center items-center'>Generating Summary...</div>} */}
       <div className='w-full h-[20vh] relative'>
         <Image src={!loading && video?.thumbnailUrl ? video?.thumbnailUrl : "/images/playlist.png"} alt='thumbnail' width={100} height={100} className='w-full h-full object-cover rounded-lg' style={{ filter: "brightness(0.2)" }} />
         <div className='absolute top-0 left-0 w-full h-full flex flex-col gap-4 justify-center items-center'>
@@ -72,9 +96,9 @@ function VideoPage() {
           <div className='flex gap-2 items-center'>
 
             <Plus onClick={() => setAddNoteDialogOpen(true)} size={27} className='text-gray-500 cursor-pointer hover:bg-muted duration-150' />
-
+            <Stars size={27} onClick={handleAISummaryClick} className='text-gray-500 cursor-pointer hover:bg-muted duration-150' />
             {(
-              <AddNoteDialog open={addNoteDialogOpen} setOpen={setAddNoteDialogOpen} fetchNotes={fetchNotes} libraryId={library?._id!} />
+             addNoteDialogOpen && <AddNoteDialog youtubeId={video?.youtubeId!} open={addNoteDialogOpen} setOpen={setAddNoteDialogOpen} fetchNotes={fetchNotes} libraryId={library?._id!} text={note} noteTitle={noteTitle} />
             )}
             <Input placeholder='Search' value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} />
           </div>

@@ -15,12 +15,13 @@ export interface IUser extends Document {
 export interface IVideoDetails {
     _id: string;
     title: string;
-    duration: string;
+    duration: string | number;
     channelName: string;
     thumbnailUrl: string;
     publishedAt: string;
     youtubeId: string;
     libraryId: string;
+    transcript: string;
 }
 
 export interface ILibrary extends Document {

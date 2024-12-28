@@ -2,7 +2,7 @@ import { authMiddleware } from "@/middleware/auth.middleware";
 import { NextRequest, NextResponse } from "next/server";
 import fs from 'fs';
 import ytdlp from 'ytdlp-nodejs';
-
+import Video from "@/models/video.model";
 export async function POST(request: NextRequest) {
     let videoId: string;
     try {
@@ -13,6 +13,19 @@ export async function POST(request: NextRequest) {
         ({ videoId } = await request.json());
         if (!videoId) {
             return NextResponse.json({ error: "Invalid request" }, { status: 400 });
+        }
+        const dbVideo = await Video.findOne({ youtubeId: videoId });
+        if (!dbVideo) {
+            return NextResponse.json({ error: "Video not found" }, { status: 404 });
+        }
+        if(Number(dbVideo.duration) > 1200){
+            return NextResponse.json({ error: "Video duration is too long" }, { status: 400 });
+        }
+        if(dbVideo.transcript) {
+            return NextResponse.json({ message: "Audio downloaded successfully" }, { status: 200 });
+        }
+        if (fs.existsSync(`public/${videoId}.mp3`)) {
+            return NextResponse.json({message: "Audio downloaded successfully"}, {status: 200});
         }
         const videoUrl = `https://www.youtube.com/watch?v=${videoId}`;
 
