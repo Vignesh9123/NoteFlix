@@ -115,7 +115,7 @@ function VideoPage() {
       <div className='w-full h-[20vh] relative'>
         <Image src={!loading && video?.thumbnailUrl ? video?.thumbnailUrl : "/images/playlist.png"} alt='thumbnail' width={100} height={100} className='w-full h-full object-cover rounded-lg' style={{ filter: "brightness(0.2)" }} />
         <div className='absolute top-0 left-0 w-full h-full flex flex-col gap-4 justify-center items-center'>
-          <div className='text-2xl font-bold hover:underline line-clamp-1'>
+          <div className='text-2xl font-bold hover:underline line-clamp-1 text-center'>
             <Link href={`https://www.youtube.com/watch?v=${video?.youtubeId}`} target='_blank'>
               {video?.title}
             </Link>

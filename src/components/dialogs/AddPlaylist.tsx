@@ -22,7 +22,7 @@ function AddPlaylist({ open, setOpen }: { open: boolean, setOpen: (open: boolean
     return (
         <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
-                <div className='bg-primary p-1 rounded-full'>
+                <div className='bg-primary p-1 rounded-full cursor-pointer'>
                     <Plus />
                 </div>
             </DialogTrigger>
