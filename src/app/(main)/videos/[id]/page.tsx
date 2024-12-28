@@ -11,6 +11,7 @@ import NotesListCard from '@/components/cards/NotesListCard';
 import { MultiStepLoader as Loader } from '@/components/ui/multi-step-loader';
 import AddNoteDialog from '@/components/cards/AddNoteDialog';
 function VideoPage() {
+  const flag: number = 1;
   const { id } = useParams();
   const [video, setVideo] = useState<IVideoDetails | null>(null);
   const [library, setLibrary] = useState<ILibrary | null>(null);
@@ -36,28 +37,47 @@ function VideoPage() {
   }, [searchQuery])
 
   const handleAISummaryClick = async () => {
-    setAILoading(true);
-    try {
-        await api.post('/youtube/getaudio', {videoId: video?.youtubeId});
+    if (flag == 0) {
+      setAILoading(true);
+      try {
+        await api.post('/youtube/getaudio', { videoId: video?.youtubeId });
         setLoadingIndex(1);
-        const res = await api.post('/youtube/gettranscript', {videoId: video?.youtubeId});
+        const res = await api.post('/youtube/gettranscript', { videoId: video?.youtubeId });
         setLoadingIndex(2);
-        console.log('Transcript extracted',res);
+        console.log('Transcript extracted', res);
         const transcript = res.data.data
-        const summary = await api.post('/gemini/generatesummary', {transcript});
+        const summary = await api.post('/gemini/generatesummary', { transcript, videoId: video?.youtubeId });
         // setLoadingIndex(2);
         setNote(summary.data.data.toString());
         setNoteTitle("Summary of the video");
         setAddNoteDialogOpen(true);
-    }
-    catch (error) {
+      }
+      catch (error) {
         console.log(error)
-    }
-    finally {
+      }
+      finally {
         setAILoading(false);
         setLoadingIndex(0);
+      }
     }
-}
+    else{
+      setAILoading(true);
+      try {
+        await api.post('/youtube/getaudio', { videoId: video?.youtubeId });
+        setLoadingIndex(1);
+        const res = await api.post('/gemini/audiosummarizer', { videoId: video?.youtubeId });
+        setNote(res.data.data.toString());
+        setNoteTitle("Summary of the video");
+        setAddNoteDialogOpen(true);
+      } catch (error) {
+        console.log(error);
+      }
+      finally {
+        setAILoading(false);
+        setLoadingIndex(0);
+      }
+    }
+  }
   const fetchNotes = async () => {
     const response = await api.post(`/library/notes`, { id });
     setUserNotes(response.data.data);
@@ -74,7 +94,7 @@ function VideoPage() {
     })
       .finally(() => {
         setLoading(false);
-      
+
       })
   }, [id])
   const loadingStates = [
@@ -90,7 +110,7 @@ function VideoPage() {
   ]
   return (
     <div>
-      <Loader loadingStates={loadingStates} duration={60000} loading={AILoading} value={loadingIndex}/>
+      <Loader loadingStates={loadingStates} duration={60000} loading={AILoading} value={loadingIndex} />
 
       <div className='w-full h-[20vh] relative'>
         <Image src={!loading && video?.thumbnailUrl ? video?.thumbnailUrl : "/images/playlist.png"} alt='thumbnail' width={100} height={100} className='w-full h-full object-cover rounded-lg' style={{ filter: "brightness(0.2)" }} />
@@ -116,7 +136,7 @@ function VideoPage() {
             <Plus onClick={() => setAddNoteDialogOpen(true)} size={27} className='text-gray-500 cursor-pointer hover:bg-muted duration-150' />
             <Stars size={27} onClick={handleAISummaryClick} className='text-gray-500 cursor-pointer hover:bg-muted duration-150' />
             {(
-             addNoteDialogOpen && <AddNoteDialog youtubeId={video?.youtubeId!} open={addNoteDialogOpen} setOpen={setAddNoteDialogOpen} fetchNotes={fetchNotes} libraryId={library?._id!} text={note} noteTitle={noteTitle} />
+              addNoteDialogOpen && <AddNoteDialog youtubeId={video?.youtubeId!} open={addNoteDialogOpen} setOpen={setAddNoteDialogOpen} fetchNotes={fetchNotes} libraryId={library?._id!} text={note} noteTitle={noteTitle} />
             )}
             <Input placeholder='Search' value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} />
           </div>
