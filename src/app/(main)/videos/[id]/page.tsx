@@ -8,6 +8,7 @@ import Link from 'next/link';
 import { Grid2X2, List, Plus, Stars } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import NotesListCard from '@/components/cards/NotesListCard';
+import { MultiStepLoader as Loader } from '@/components/ui/multi-step-loader';
 import AddNoteDialog from '@/components/cards/AddNoteDialog';
 function VideoPage() {
   const { id } = useParams();
@@ -21,7 +22,7 @@ function VideoPage() {
   const [AILoading, setAILoading] = useState(false);
   const [note, setNote] = useState("");
   const [noteTitle, setNoteTitle] = useState("");
-
+  const [loadingIndex, setLoadingIndex] = useState(0);
   useEffect(() => {
     setSearchQuery("");
   }, [id])
@@ -38,10 +39,13 @@ function VideoPage() {
     setAILoading(true);
     try {
         await api.post('/youtube/getaudio', {videoId: video?.youtubeId});
+        setLoadingIndex(1);
         const res = await api.post('/youtube/gettranscript', {videoId: video?.youtubeId});
+        setLoadingIndex(2);
         console.log('Transcript extracted',res);
         const transcript = res.data.data
         const summary = await api.post('/gemini/generatesummary', {transcript});
+        // setLoadingIndex(2);
         setNote(summary.data.data.toString());
         setNoteTitle("Summary of the video");
         setAddNoteDialogOpen(true);
@@ -71,9 +75,21 @@ function VideoPage() {
         setLoading(false);
       })
   }, [id])
+  const loadingStates = [
+    {
+      text: "Listening to the video",
+    },
+    {
+      text: "Getting the transcript",
+    },
+    {
+      text: "Generating the summary",
+    }
+  ]
   return (
-    <div className={`${AILoading ? "opacity-50 pointer-events-none" : ""}`}>
-      {/* {AILoading && <div className='absolute top-0 left-0 w-screen h-screen z-[100000] bg-muted flex justify-center items-center'>Generating Summary...</div>} */}
+    <div>
+      <Loader loadingStates={loadingStates} duration={60000} loading={AILoading} value={loadingIndex}/>
+
       <div className='w-full h-[20vh] relative'>
         <Image src={!loading && video?.thumbnailUrl ? video?.thumbnailUrl : "/images/playlist.png"} alt='thumbnail' width={100} height={100} className='w-full h-full object-cover rounded-lg' style={{ filter: "brightness(0.2)" }} />
         <div className='absolute top-0 left-0 w-full h-full flex flex-col gap-4 justify-center items-center'>

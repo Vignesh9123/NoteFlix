@@ -20,7 +20,7 @@ const MenuBar = () => {
 
   return (
     <div className="m-1">
-      <div className="button-group flex flex-wrap gap-4">
+      <div className="button-group border rounded-lg flex flex-wrap gap-2">
         <button
           onClick={() => editor.chain().focus().toggleBold().run()}
           disabled={
@@ -30,7 +30,7 @@ const MenuBar = () => {
               .toggleBold()
               .run()
           }
-          className={`p-2 ${editor.isActive('bold') ? 'bg-muted' : ''}`}
+          className={`p-1 ${editor.isActive('bold') ? 'bg-muted' : ''}`}
         >
           <Bold />
         </button>
@@ -43,7 +43,7 @@ const MenuBar = () => {
               .toggleItalic()
               .run()
           }
-          className={`p-2 ${editor.isActive('italic') ? 'bg-muted' : ''}`}
+          className={`p-1 ${editor.isActive('italic') ? 'bg-muted' : ''}`}
         >
           <Italic />
         </button>
@@ -56,7 +56,7 @@ const MenuBar = () => {
               .toggleCode()
               .run()
           }
-          className={`p-2 ${editor.isActive('code') ? 'bg-muted' : ''}`}
+          className={`p-1 ${editor.isActive('code') ? 'bg-muted' : ''}`}
         >
           <Code />
         </button>
@@ -65,43 +65,43 @@ const MenuBar = () => {
         </button>
         <button
           onClick={() => editor.chain().focus().toggleHeading({ level: 1 }).run()}
-          className={`p-2 ${editor.isActive('heading', { level: 1 }) ? 'bg-muted' : ''}`}
+          className={`p-1 ${editor.isActive('heading', { level: 1 }) ? 'bg-muted' : ''}`}
         >
           H1
         </button>
         <button
           onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()}
-          className={`p-2 ${editor.isActive('heading', { level: 2 }) ? 'bg-muted' : ''}`}
+          className={`p-1 ${editor.isActive('heading', { level: 2 }) ? 'bg-muted' : ''}`}
         >
           H2
         </button>
         <button
           onClick={() => editor.chain().focus().toggleHeading({ level: 3 }).run()}
-          className={`p-2 ${editor.isActive('heading', { level: 3 }) ? 'bg-muted' : ''}`}
+          className={`p-1 ${editor.isActive('heading', { level: 3 }) ? 'bg-muted' : ''}`}
         >
           H3
         </button>
         <button
           onClick={() => editor.chain().focus().toggleBulletList().run()}
-          className={`p-2 ${editor.isActive('bulletList') ? 'bg-muted' : ''}`}
+          className={`p-1 ${editor.isActive('bulletList') ? 'bg-muted' : ''}`}
         >
           <List />
         </button>
         <button
           onClick={() => editor.chain().focus().toggleOrderedList().run()}
-          className={`p-2 ${editor.isActive('orderedList') ? 'bg-muted' : ''}`}
+          className={`p-1 ${editor.isActive('orderedList') ? 'bg-muted' : ''}`}
         >
           <ListOrdered />
         </button>
         <button
           onClick={() => editor.chain().focus().toggleCodeBlock().run()}
-          className={`p-2 ${editor.isActive('codeBlock') ? 'bg-muted' : ''}`}
+          className={`p-1 ${editor.isActive('codeBlock') ? 'bg-muted' : ''}`}
         >
           Code Block
         </button>
         <button
           onClick={() => editor.chain().focus().toggleBlockquote().run()}
-          className={`p-2 ${editor.isActive('blockquote') ? 'bg-muted' : ''}`}
+          className={`p-1 ${editor.isActive('blockquote') ? 'bg-muted' : ''}`}
         >
           <TextQuote />
         </button>
@@ -133,7 +133,7 @@ const MenuBar = () => {
         </button>
         <button
           onClick={() => editor.chain().focus().toggleTaskList().run()}
-          className={`p-2 ${editor.isActive('taskList') ? 'bg-muted' : ''}`}
+          className={`p-1 ${editor.isActive('taskList') ? 'bg-muted' : ''}`}
         >
           <CheckSquare />
         </button>
