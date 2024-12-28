@@ -44,7 +44,7 @@ const videoSchema = new mongoose.Schema({
     type: Date, 
     required: true
   },
-  transcript: {
+  summary: {
     type: String,
     required: false
   }

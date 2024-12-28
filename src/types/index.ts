@@ -21,7 +21,7 @@ export interface IVideoDetails {
     publishedAt: string;
     youtubeId: string;
     libraryId: string;
-    transcript: string;
+    summary: string;
 }
 
 export interface ILibrary extends Document {
