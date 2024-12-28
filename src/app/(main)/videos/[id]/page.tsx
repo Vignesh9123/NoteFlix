@@ -55,6 +55,7 @@ function VideoPage() {
     }
     finally {
         setAILoading(false);
+        setLoadingIndex(0);
     }
 }
   const fetchNotes = async () => {
@@ -73,6 +74,7 @@ function VideoPage() {
     })
       .finally(() => {
         setLoading(false);
+      
       })
   }, [id])
   const loadingStates = [
