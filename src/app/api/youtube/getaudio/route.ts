@@ -18,10 +18,10 @@ export async function POST(request: NextRequest) {
         if (!dbVideo) {
             return NextResponse.json({ error: "Video not found" }, { status: 404 });
         }
-        if(Number(dbVideo.duration) > 1200){
+        if(Number(dbVideo.duration) > 9000){
             return NextResponse.json({ error: "Video duration is too long" }, { status: 400 });
         }
-        if(dbVideo.transcript) {
+        if(dbVideo.summary){
             return NextResponse.json({ message: "Audio downloaded successfully" }, { status: 200 });
         }
         if (fs.existsSync(`public/${videoId}.mp3`)) {

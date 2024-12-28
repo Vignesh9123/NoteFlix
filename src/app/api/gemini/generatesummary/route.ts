@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import {GoogleGenerativeAI} from '@google/generative-ai'
 import { authMiddleware } from "@/middleware/auth.middleware";
+import Video from "@/models/video.model";
 
 export async function POST(request: NextRequest) {
     try {
@@ -8,7 +9,14 @@ export async function POST(request: NextRequest) {
         if (auth.status == 401) {
             return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
         }
-        const { transcript }:{transcript: string} = await request.json();
+        const { transcript, videoId }:{transcript: string, videoId: string} = await request.json();
+        const video = await Video.findOne({youtubeId: videoId});
+        if (!video) {
+            return NextResponse.json({ error: "Invalid request" }, { status: 400 });
+        }
+        if(video.summary) {
+            return NextResponse.json({ data: video.summary, message: "Summary generated successfully" }, { status: 200 });
+        }
         if (!transcript) {
             return NextResponse.json({ error: "Invalid request" }, { status: 400 });
         }
@@ -25,7 +33,13 @@ export async function POST(request: NextRequest) {
         }
         const chatSession = model.startChat({generationConfig});
 const response = await chatSession.sendMessage(transcript + 'Summarize the above text to a format like : <h2>Hi there,</h2><p>this is a <em>basic</em> example of <strong>Tiptap</strong>. Sure, there are all kind of basic text styles you’d probably expect from a text editor. But wait until you see the lists:</p><ul><li><p>That’s a bullet list with one …</p></li><li><p>… or two list items.</p></li></ul><p>Isn’t that great? And all of that is editable. But wait, there’s more. Let’s try a code block:</p><pre><code class=\"language-css\">body {display: none;}</code></pre><p>I know, I know, this is impressive. It’s only the tip of the iceberg though. Give it a try and click a little bit around. Don’t forget to check the other examples too.</p><blockquote><p>Wow, that’s amazing. Good work, boy! 👏 <br>— Momma</p><p><s>dddd Burt np</s></p></blockquote><ul data-type=\"taskList\"><li data-checked=\"true\" data-type=\"taskItem\"><label><input type=\"checkbox\" checked=\"checked\"><span></span></label><div><p>flour</p></div></li><li data-checked=\"true\" data-type=\"taskItem\"><label><input type=\"checkbox\" checked=\"checked\"><span></span></label><div><p>baking powder</p></div></li><li data-checked=\"true\" data-type=\"taskItem\"><label><input type=\"checkbox\" checked=\"checked\"><span></span></label><div><p>salt</p></div></li><li data-checked=\"false\" data-type=\"taskItem\"><label><input type=\"checkbox\"><span></span></label><div><p>sugar</p></div></li><li data-checked=\"false\" data-type=\"taskItem\"><label><input type=\"checkbox\"><span></span></label><div><p>milk</p></div></li><li data-checked=\"false\" data-type=\"taskItem\"><label><input type=\"checkbox\"><span></span></label><div><p>eggs</p></div></li><li data-checked=\"false\" data-type=\"taskItem\"><label><input type=\"checkbox\"><span></span></label><div><p>butter</p></div></li></ul><p></p><pre><code class=\"language-js\">console.log(\"Hello world\");</code></pre><p></p>  Don\'t add \'\'\'html to the response also add todo\'s in the form of tasklist if required please don\'t add \'\'\'html to the response also use formatting only as specified in above html sample don\'t add any `(backticks) in this');
-        return NextResponse.json({ data: response.response.candidates?.[0].content.parts?.[0].text }, { status: 200 });
+        let summary = response.response.candidates?.[0].content.parts?.[0].text
+        summary = summary?.replaceAll('```html', '')
+        summary = summary?.replaceAll('```', '') 
+        video.summary = summary!;
+        await video.save();
+
+        return NextResponse.json({ data: summary , message: "Summary generated successfully" }, { status: 200 });
     } catch (error) {
         console.log(error);
         return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
