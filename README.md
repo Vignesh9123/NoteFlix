@@ -1,11 +1,9 @@
 # VidScribe
 
-## Main
-- Add libraryId for each video ✔️
-- Redirect to libraryId on each video click ✔️
-- Fetching video based on playlistId ✔️
-
-## Note taking
-- Make Notes category based like points for key points instead of mentioning it as a key point ✔️
-- Think of completing the todo
-
+## Todos
+- Search functionalities
+- Add video to playlist ✔️
+- Remove video from playlist ✔️
+- Google OAuth
+- Update standalone video details
+- Restrict updating title of the video
