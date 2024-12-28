@@ -9,6 +9,7 @@ import Image from 'next/image'
 import { api } from '@/config/config'
 import { Loader2 } from 'lucide-react'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select'
+import { secondsToTime } from '@/lib/utils'
 function AddVideo({open, setOpen, videoDetails, setVideoDetails, setVideoList, videoList}: {open: boolean, setOpen: (open: boolean) => void, videoDetails: IVideoDetails, setVideoDetails: (videoDetails: IVideoDetails|null) => void, setVideoList: (videoList: IVideoDetails[]) => void, videoList: IVideoDetails[]}) {
     const [title, setTitle] = useState(videoDetails.title || '');
     const [duration, setDuration] = useState(videoDetails.duration || '');
@@ -46,8 +47,12 @@ function AddVideo({open, setOpen, videoDetails, setVideoDetails, setVideoList, v
          }
          const response = await api.post('/video/addvideo', data);
          console.log("response", response)
+         const newVideo = {
+            ...videoDetails,
+            libraryId: response.data.data._id,
+         }
          if(videoList ){
-            setVideoList([...videoList, videoDetails]);
+            setVideoList([...videoList, newVideo]);
          }
          setOpen(false);
         } catch (error) {
@@ -75,7 +80,7 @@ function AddVideo({open, setOpen, videoDetails, setVideoDetails, setVideoList, v
                 <Label>Title</Label>
                 <Input value={title} onChange={(e) => setTitle(e.target.value)} />
                 <Label>Duration</Label>
-                <Input value={videoDetails.duration.replace('PT', '').replace('H', 'h ').replace('M', 'm ').replace('S', 's ')} readOnly />
+                <Input value={typeof videoDetails.duration === 'string' ? videoDetails.duration.replace('PT', '').replace('H', 'h ').replace('M', 'm ').replace('S', 's '): secondsToTime(videoDetails.duration)} readOnly />
                 <Label>Channel Name</Label>
                 <Input value={channelName} readOnly />
                 <Label>Published At</Label>
