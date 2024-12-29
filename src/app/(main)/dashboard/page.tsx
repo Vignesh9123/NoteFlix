@@ -4,21 +4,7 @@ import { AnimatePresence } from 'framer-motion';
 import { AnimatedCard } from '@/components/cards/AnimatedCard';
 
 function App() {
-  const [data, setData] = useState(null);
-
-  useEffect(() => {
-    const fetchData = async () => {
-     try {
-       const response = await fetch('/api/youtube/test');
-       const data = await response.json();
-       setData(data);
-     } catch (error) {
-      console.log(error);
-     }
-    };
-    fetchData();
-  }, []);
-
+  // TODO: Stats fetching
   const cards = [
     { title: 'Playlists', value: 10 },
     { title: 'Videos', value: 10 },

@@ -22,6 +22,7 @@ export interface IVideoDetails {
     youtubeId: string;
     libraryId: string;
     summary: string;
+    status: "watched" | "to_watch" | "in_progress";
 }
 
 export interface ILibrary extends Document {

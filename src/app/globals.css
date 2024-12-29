@@ -238,3 +238,19 @@
 .editableEditor .tiptap{
   padding: 1rem;
 }
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+    filter: blur(0px);
+    height: max-content;
+  }
+  to {
+    opacity: 0;
+    filter: blur(10px);
+    height: 0px;
+  }
+}
+
+.animate-fade-out {
+  animation: fadeOut 1s forwards;
+}

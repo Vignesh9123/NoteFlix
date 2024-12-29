@@ -31,7 +31,7 @@ function PlaylistsPage() {
       <Input placeholder='Search' className=' mx-auto' value={searchText} onChange={(e) => setSearchText(e.target.value)} />
       <AddPlaylist open={addPlaylistOpen} setOpen={setAddPlaylistOpen}/>
     </div>
-<div className='grid grid-cols-3 md:grid-cols-2 lg:grid-cols-5 gap-4 m-5 items-center justify-items-center'>     
+<div className='grid grid-cols-3 md:grid-cols-2 lg:grid-cols-3 gap-4 m-5 items-center justify-items-center'>     
     {loading ? <div className='flex col-span-3 md:col-span-2 lg:col-span-3 justify-center items-center h-screen'><Loader2 className='animate-spin text-gray-500' /></div> : 
     
     filteredPlaylists.map((playlist, index) => (

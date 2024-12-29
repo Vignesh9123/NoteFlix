@@ -16,6 +16,8 @@ import {
 import { api } from '@/config/config'
 import { IVideoDetails } from '@/types'
 import AddVideo from '@/components/dialogs/AddVideoUsingYTDetails'
+import { DropdownMenu, DropdownMenuTrigger, DropdownMenuLabel, DropdownMenuContent, DropdownMenuRadioGroup, DropdownMenuRadioItem } from '@/components/ui/dropdown-menu'
+
 function VideosPage() {
   const [open, setOpen] = useState(false)
   const [youtubeUrl, setYoutubeUrl] = useState('')
@@ -26,16 +28,27 @@ function VideosPage() {
   const [openAddVideoDialog, setOpenAddVideoDialog] = useState(false)
   const [loadingVideos, setLoadingVideos] = useState(false)
   const [searchText, setSearchText] = useState('')
+  const [durationFilter, setDurationFilter] = useState<string>('all')
 
   useEffect(() => {
-    setFilteredVideoList(videoList.filter((video) => video.title.toLowerCase().includes(searchText.toLowerCase())))
-  },[searchText, videoList])
+    const filteredVideos = videoList.filter((video) => {
+      const matchesSearchText = video.title.toLowerCase().includes(searchText.toLowerCase());
+      const matchesDuration = durationFilter === 'all' || (
+        durationFilter === 'short' && Number(video.duration) <= 300 ||
+        durationFilter === 'medium' && Number(video.duration) > 300 && Number(video.duration) <= 1200 ||
+        durationFilter === 'long' && Number(video.duration) > 1200
+      );
+      return matchesSearchText && matchesDuration;
+    });
+    setFilteredVideoList(filteredVideos);
+  }, [searchText, videoList, durationFilter]);
+
   const handleGetVideoDetails = async () => {
     try {
       setLoading(true)
       const videoId = youtubeUrl.split('v=')[1] || youtubeUrl.split('youtu.be/')[1]
-      if(!videoId) return
-  
+      if (!videoId) return
+
       const response = await api.post(`/youtube/getvideodetails`, { videoId })
       setVideoDetails(response.data.data)
       console.log(response.data.data)
@@ -50,6 +63,7 @@ function VideosPage() {
       setLoading(false)
     }
   }
+
   const fetchVideos = async () => {
     try {
       setLoadingVideos(true)
@@ -67,46 +81,60 @@ function VideosPage() {
       setLoadingVideos(false)
     }
   }
+
   useEffect(() => {
     fetchVideos()
   }, [])
 
   return (
     <div className='m-5'>
-        <div className='flex w-full justify-between items-center mb-5'>
-            <div className='flex m-1 items-center gap-2'>
-                    <ListVideo size={27} className='text-gray-500 cursor-pointer bg-muted duration-150' />
-                    <Grid2X2 size={27} className='text-gray-500 cursor-pointer hover:bg-muted duration-150' />
-            </div>
-            <Input placeholder='Search' onChange={(e) => setSearchText(e.target.value)} value={searchText} />
-            <div className=' mx-2'>
-              <Dialog open={open} onOpenChange={setOpen}>
-
-              <DialogTrigger className='bg-primary p-2 rounded-full'>
-                  <Plus size={20} />
-                
-              </DialogTrigger>
-              <DialogContent>
-                <DialogHeader>
-                  <DialogTitle>Add Video From YouTube</DialogTitle>
-                </DialogHeader>
-                <DialogDescription>
-                  <Input value={youtubeUrl} onChange={(e) => setYoutubeUrl(e.target.value)} placeholder='Enter YouTube Video URL' />
-                </DialogDescription>
-                <DialogFooter>
-                  <Button onClick={handleGetVideoDetails}>{loading ?<div className='flex items-center gap-2'><Loader2 size={20} className='animate-spin' /></div>: 'Proceed'}</Button>
-                </DialogFooter>
-              </DialogContent>
-              </Dialog>
-             {videoDetails && <AddVideo open={openAddVideoDialog} setOpen={setOpenAddVideoDialog} videoDetails={videoDetails} setVideoDetails={setVideoDetails} videoList={videoList} setVideoList={setVideoList}  />}
-            </div>
-            
+      <div className='flex w-full justify-between items-center mb-5'>
+        <div className='flex m-1 items-center gap-2'>
+          <ListVideo size={27} className='text-gray-500 cursor-pointer bg-muted duration-150' />
+          <Grid2X2 size={27} className='text-gray-500 cursor-pointer hover:bg-muted duration-150' />
         </div>
-        <div className='flex flex-col gap-4'>
-          {loadingVideos ? <div className='flex col-span-3 md:col-span-2 lg:col-span-3 justify-center items-center h-screen'><Loader2 className='animate-spin text-gray-500' /></div> : filteredVideoList.map((video, index) => (
-            <VideoListCard key={video.youtubeId} videoDetails={video} type="standalone" index={index} />
-          ))}
+        <Input placeholder='Search' onChange={(e) => setSearchText(e.target.value)} value={searchText} />
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant='outline' className='w-16 mx-2'>
+              {durationFilter === 'all' ? 'All' : durationFilter === 'short' ? 'Short' : durationFilter === 'medium' ? 'Medium' : 'Long'}
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent>
+            <DropdownMenuLabel>Duration</DropdownMenuLabel>
+            <DropdownMenuRadioGroup value={durationFilter} onValueChange={setDurationFilter}>
+              <DropdownMenuRadioItem value='all'>All</DropdownMenuRadioItem>
+              <DropdownMenuRadioItem value='short'>Short &lt; 5m</DropdownMenuRadioItem>
+              <DropdownMenuRadioItem value='medium'>Medium &gt; 5m - &lt; 20m</DropdownMenuRadioItem>
+              <DropdownMenuRadioItem value='long'>Long &gt; 20m</DropdownMenuRadioItem>
+            </DropdownMenuRadioGroup>
+          </DropdownMenuContent>
+        </DropdownMenu>
+        <div className=' mx-2'>
+          <Dialog open={open} onOpenChange={setOpen}>
+            <DialogTrigger className='bg-primary p-2 rounded-full'>
+              <Plus size={20} />
+            </DialogTrigger>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>Add Video From YouTube</DialogTitle>
+              </DialogHeader>
+              <DialogDescription>
+                <Input value={youtubeUrl} onChange={(e) => setYoutubeUrl(e.target.value)} placeholder='Enter YouTube Video URL' />
+              </DialogDescription>
+              <DialogFooter>
+                <Button onClick={handleGetVideoDetails}>{loading ? <div className='flex items-center gap-2'><Loader2 size={20} className='animate-spin' /></div> : 'Proceed'}</Button>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
+          {videoDetails && <AddVideo open={openAddVideoDialog} setOpen={setOpenAddVideoDialog} videoDetails={videoDetails} setVideoDetails={setVideoDetails} videoList={videoList} setVideoList={setVideoList} />}
         </div>
+      </div>
+      <div className='flex flex-col gap-4'>
+        {loadingVideos ? <div className='flex col-span-3 md:col-span-2 lg:col-span-3 justify-center items-center h-screen'><Loader2 className='animate-spin text-gray-500' /></div> : filteredVideoList.map((video, index) => (
+          <VideoListCard key={video.youtubeId} videoDetails={video} type="standalone" index={index} videoList={videoList} setVideoList={setVideoList} />
+        ))}
+      </div>
     </div>
   )
 }

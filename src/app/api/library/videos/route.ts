@@ -28,7 +28,7 @@ export async function GET(request: NextRequest){
             {
                 $addFields: {
                     videoDetails: {
-                        $mergeObjects: ["$videoDetails", { libraryId: "$_id" }]
+                        $mergeObjects: ["$videoDetails", { libraryId: "$_id", status: "$status" }]
                     }
                 }
             },

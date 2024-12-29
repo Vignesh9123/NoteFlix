@@ -50,6 +50,7 @@ function AddVideo({open, setOpen, videoDetails, setVideoDetails, setVideoList, v
          const newVideo = {
             ...videoDetails,
             libraryId: response.data.data._id,
+            status: response.data.data.status
          }
          if(videoList ){
             setVideoList([...videoList, newVideo]);
@@ -78,7 +79,7 @@ function AddVideo({open, setOpen, videoDetails, setVideoDetails, setVideoList, v
             </div>
             <div className='flex flex-col gap-2'>
                 <Label>Title</Label>
-                <Input value={title} onChange={(e) => setTitle(e.target.value)} />
+                <Input value={title} onChange={(e) => setTitle(e.target.value)}  readOnly />
                 <Label>Duration</Label>
                 <Input value={typeof videoDetails.duration === 'string' ? videoDetails.duration.replace('PT', '').replace('H', 'h ').replace('M', 'm ').replace('S', 's '): secondsToTime(videoDetails.duration)} readOnly />
                 <Label>Channel Name</Label>
