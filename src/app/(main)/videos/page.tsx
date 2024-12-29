@@ -22,8 +22,14 @@ function VideosPage() {
   const [loading, setLoading] = useState(false)
   const [videoDetails, setVideoDetails] = useState<IVideoDetails | null>(null)
   const [videoList, setVideoList] = useState<IVideoDetails[]>([])
+  const [filteredVideoList, setFilteredVideoList] = useState<IVideoDetails[]>([])
   const [openAddVideoDialog, setOpenAddVideoDialog] = useState(false)
   const [loadingVideos, setLoadingVideos] = useState(false)
+  const [searchText, setSearchText] = useState('')
+
+  useEffect(() => {
+    setFilteredVideoList(videoList.filter((video) => video.title.toLowerCase().includes(searchText.toLowerCase())))
+  },[searchText, videoList])
   const handleGetVideoDetails = async () => {
     try {
       setLoading(true)
@@ -53,6 +59,7 @@ function VideosPage() {
         ...data.videoDetails,
       }))
       setVideoList(videos)
+      setFilteredVideoList(videos)
     } catch (error) {
       console.log(error)
     }
@@ -61,7 +68,6 @@ function VideosPage() {
     }
   }
   useEffect(() => {
-  
     fetchVideos()
   }, [])
 
@@ -72,7 +78,7 @@ function VideosPage() {
                     <ListVideo size={27} className='text-gray-500 cursor-pointer bg-muted duration-150' />
                     <Grid2X2 size={27} className='text-gray-500 cursor-pointer hover:bg-muted duration-150' />
             </div>
-            <Input placeholder='Search' />
+            <Input placeholder='Search' onChange={(e) => setSearchText(e.target.value)} value={searchText} />
             <div className=' mx-2'>
               <Dialog open={open} onOpenChange={setOpen}>
 
@@ -97,7 +103,7 @@ function VideosPage() {
             
         </div>
         <div className='flex flex-col gap-4'>
-          {loadingVideos ? <div className='flex col-span-3 md:col-span-2 lg:col-span-3 justify-center items-center h-screen'><Loader2 className='animate-spin text-gray-500' /></div> : videoList.map((video, index) => (
+          {loadingVideos ? <div className='flex col-span-3 md:col-span-2 lg:col-span-3 justify-center items-center h-screen'><Loader2 className='animate-spin text-gray-500' /></div> : filteredVideoList.map((video, index) => (
             <VideoListCard key={video.youtubeId} videoDetails={video} type="standalone" index={index} />
           ))}
         </div>

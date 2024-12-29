@@ -1,9 +1,10 @@
 import { IVideoDetails } from '@/types'
-import { Calendar, EllipsisVertical } from 'lucide-react'
+import { Calendar, Clock, EllipsisVertical } from 'lucide-react'
 import Image from 'next/image'
 import React from 'react'
 import Link from 'next/link'
 import { motion } from 'framer-motion'
+import { secondsToTime } from '@/lib/utils'
 function VideoListCard({videoDetails, type, index}: {videoDetails: IVideoDetails, type: string, index: number}) {
   return (
     <motion.div initial={{opacity: 0, y: 100, scale: 0.6, filter:"blur(10px)"}} animate={{opacity: 1, y: 0, scale: 1, filter:"blur(0px)"}} transition={{delay: index * 0.1, duration: 0.3}} className='flex'>
@@ -19,13 +20,14 @@ function VideoListCard({videoDetails, type, index}: {videoDetails: IVideoDetails
     </div>
     <div className='flex flex-col items-start gap-2'>
         <h1 className='text-md md:text-xl lg:text-2xl font-bold'>{videoDetails.title.slice(0, 30)+ (videoDetails.title.length > 30 ? '...' : '')}</h1>
-        {/* <div className='flex items-center gap-2'>
-            <span className='text-sm text-gray-500'>100k views</span>
-            <span className='text-sm text-gray-500'>100k likes</span>
-        </div> */}
+       
         <div className='flex items-center gap-2'>
             <Calendar size={16} className='text-gray-500 text-sm' />
             <span className='text-sm text-gray-500'>{new Date(videoDetails.publishedAt).toLocaleDateString('en-IN')}</span>
+        </div>
+        <div className='flex items-center gap-2'>
+            <Clock size={16} className='text-gray-500 text-sm' />
+            <span className='text-sm text-gray-500'>{secondsToTime(Number(videoDetails.duration))}</span>
         </div>
     </div>
     </div>
