@@ -6,7 +6,6 @@ import {
   SidebarFooter,
   SidebarGroup,
   SidebarGroupContent,
-  SidebarGroupLabel,
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
@@ -14,7 +13,8 @@ import {
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "./ui/dropdown-menu"
 import { usePathname } from "next/navigation"
 import Link from "next/link"
-
+import { useState } from "react"
+import SignOut from "./dialogs/SignOut"
 // Menu items.
 const items = [
   {
@@ -45,10 +45,12 @@ const items = [
 ]
 
 export function AppSidebar() {
+  const [signOutDialogOpen, setSignOutDialogOpen] = useState(false)
     const { user } = useAuth()
     const pathname = usePathname()
   return (
     <Sidebar>
+      {signOutDialogOpen && <SignOut open={signOutDialogOpen} setOpen={setSignOutDialogOpen} />}
       <SidebarContent>
         <SidebarGroup>
           <SidebarGroupContent>
@@ -85,7 +87,7 @@ export function AppSidebar() {
                     <span>Account</span>
                   </DropdownMenuItem>
 
-                  <DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => setSignOutDialogOpen(true)}>
                     <span>Sign out</span>
                   </DropdownMenuItem>
                 </DropdownMenuContent>
@@ -93,6 +95,7 @@ export function AppSidebar() {
             </SidebarMenuItem>
           </SidebarMenu>
         </SidebarFooter>
+
     </Sidebar>
   )
 }
