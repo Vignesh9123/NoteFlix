@@ -1,9 +1,11 @@
 import User from "@/models/user.model";
 import { NextRequest, NextResponse } from "next/server";
 import { cookies } from "next/headers";
+import connectDB from "@/dbConfig/connectDB";
+connectDB();
 export async function POST(req: NextRequest){
     try {
-        const { name, email, _id, password } = await req.json();
+        const { name, email, password }:{ name: string, email: string, password: string} = await req.json();
         const user = await User.findOne({ email });
         if(user?.loginType === "email") {
             return NextResponse.json({ error: "Please login with email and password" }, { status: 400 });
@@ -14,7 +16,7 @@ export async function POST(req: NextRequest){
             return NextResponse.json({ message: "User logged in successfully", user }, { status: 200 });
         }
         if(!user) {
-            const newUser = await User.create({ name, email, _id, password, loginType: "google" });
+            const newUser = await User.create({ name, email, password, loginType: "google" });
             const token = newUser.generateToken();
             (await cookies()).set("token", token, { httpOnly: true, secure: true, sameSite: "strict", maxAge: 60 * 60 * 24 });
             newUser.password = undefined;
