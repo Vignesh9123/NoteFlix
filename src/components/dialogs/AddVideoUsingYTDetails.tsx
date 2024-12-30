@@ -47,8 +47,15 @@ function AddVideo({open, setOpen, videoDetails, setVideoDetails, setVideoList, v
          }
          const response = await api.post('/video/addvideo', data);
          console.log("response", response)
-         const newVideo = {
-            ...videoDetails,
+         const newVideo:IVideoDetails = {
+            _id: response.data.data.videoId,
+            title: videoDetails.title,
+            duration: Number(String(videoDetails.duration).match(/PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?/)?.slice(1).reduce((acc: number, v: string, i: number) => acc + (v ? parseInt(v) * [3600, 60, 1][i] : 0), 0)),
+            channelName: videoDetails.channelName,
+            thumbnailUrl: videoDetails.thumbnailUrl,
+            publishedAt: videoDetails.publishedAt,
+            youtubeId: videoDetails.youtubeId,
+            summary: '',
             libraryId: response.data.data._id,
             status: response.data.data.status
          }
