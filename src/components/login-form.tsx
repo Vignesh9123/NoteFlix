@@ -7,6 +7,8 @@ import { Label } from "@/components/ui/label"
 import Link from "next/link"
 import { useAuth } from "@/context/AuthContext"
 import { useRouter } from "next/navigation"
+import { getAuth, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
+
 export default function LoginForm({
 className,
 ...props
@@ -15,6 +17,7 @@ const [email, setEmail] = useState("")
 const [password, setPassword] = useState("")
 const {setUser} = useAuth()
 const router = useRouter()
+const auth = getAuth()
 const handleSubmit = async(e: React.FormEvent<HTMLFormElement>) => {
   e.preventDefault()
   try {
@@ -47,9 +50,7 @@ const handleSubmit = async(e: React.FormEvent<HTMLFormElement>) => {
     // Success case
     alert(data.message)
     setUser(data.user)
-    router.push('/dashboard')
-    // You might want to redirect the user or update the UI state here
-    
+    router.push('/dashboard')    
   } catch (error) {
     console.log(error)
     alert("An error occurred while logging in")

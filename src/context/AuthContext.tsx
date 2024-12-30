@@ -2,6 +2,9 @@
 import { createContext, useContext, useState, useEffect } from "react";
 import Loader from "@/components/loader";
 import { IUser } from "@/types";
+import { initializeApp } from "firebase/app";
+import { firebaseConfig } from "@/config/firebase";
+import { getAnalytics } from "firebase/analytics";
 const AuthContext = createContext<{ user: IUser|null; setUser: any }>({ user: null, setUser: null });
 
 export const useAuth = () => useContext(AuthContext);
@@ -30,6 +33,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
             setLoading(false);
         };
         checkAuth();
+        const app = initializeApp(firebaseConfig);
+        getAnalytics(app);
     }, []);
     return <AuthContext.Provider value={{ user, setUser }}>{loading ? <Loader /> : children}</AuthContext.Provider>;
 }
