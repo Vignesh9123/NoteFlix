@@ -9,11 +9,13 @@ import { Badge } from '../ui/badge'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '../ui/dropdown-menu'
 import UpdateVideo from '../dialogs/UpdateVideo'
 import DeleteVideo from '../dialogs/DeleteVideo'
-function VideoListCard({videoDetails, type, index, videoList, setVideoList}: {videoDetails: IVideoDetails, type: string, index: number, videoList: IVideoDetails[], setVideoList: (videoList: IVideoDetails[]) => void}) {
+import MoveToPlaylist from '../dialogs/MoveToPlaylist'
+function VideoListCard({videoDetails, type, index, videoList, setVideoList, playlistId}: {videoDetails: IVideoDetails, type: string, index: number, videoList: IVideoDetails[], setVideoList: (videoList: IVideoDetails[]) => void, playlistId?: string}) {
     const [updateDialogOpen, setUpdateDialogOpen] = useState(false)
     const [animationClass, setAnimationClass] = useState('');
     const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
     const [isDeleting, setIsDeleting] = useState(false);
+    const [moveDialogOpen, setMoveDialogOpen] = useState(false);
 
     const updateStatusAnimation = () => {
         if (videoDetails.status) {
@@ -68,11 +70,13 @@ function VideoListCard({videoDetails, type, index, videoList, setVideoList}: {vi
     </DropdownMenuTrigger>
     <DropdownMenuContent className=''>
         <DropdownMenuItem onClick={() => setUpdateDialogOpen(true)}> Update watch status </DropdownMenuItem>
+        <DropdownMenuItem onClick={() => setMoveDialogOpen(true)}> Move to Playlist </DropdownMenuItem>
         <DropdownMenuItem onClick={() => setDeleteDialogOpen(true)}> Delete </DropdownMenuItem>
     </DropdownMenuContent>
     </DropdownMenu>
     {updateDialogOpen && <UpdateVideo open={updateDialogOpen} setOpen={setUpdateDialogOpen} video={videoDetails} updateStatusAnimation={updateStatusAnimation} />}
     {deleteDialogOpen && <DeleteVideo open={deleteDialogOpen} setIsDeleting={setIsDeleting} setOpen={setDeleteDialogOpen} videoDetails={videoDetails} setVideoList={setVideoList} videoList={videoList} />}
+    {moveDialogOpen && <MoveToPlaylist open={moveDialogOpen} setOpen={setMoveDialogOpen} videoDetails={videoDetails} videoList={videoList} setVideoList={setVideoList} setIsDeleting={setIsDeleting} currentPlaylist={playlistId}/>}
     </motion.div>
   )
 }
