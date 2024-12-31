@@ -57,9 +57,10 @@ function AddVideo({open, setOpen, videoDetails, setVideoDetails, setVideoList, v
             youtubeId: videoDetails.youtubeId,
             summary: '',
             libraryId: response.data.data._id,
-            status: response.data.data.status
+            status: response.data.data.status,
+            isStandalone: response.data.data.isStandalone
          }
-         if(videoList ){
+         if(videoList && newVideo.isStandalone ){
             setVideoList([...videoList, newVideo]);
          }
          setOpen(false);

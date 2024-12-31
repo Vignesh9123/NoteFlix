@@ -23,6 +23,7 @@ export interface IVideoDetails {
     libraryId: string;
     summary: string;
     status: "watched" | "to_watch" | "in_progress";
+    isStandalone: boolean;
 }
 
 export interface ILibrary extends Document {

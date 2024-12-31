@@ -3,9 +3,9 @@ import PlaylistGridCard from '@/components/cards/PlaylistGridCard'
 import React , {useState, useEffect} from 'react'
 import {api} from '@/config/config'
 import { IPlaylist } from '@/types'
-import { Loader2, Plus } from 'lucide-react'
 import { Input } from '@/components/ui/input'
 import AddPlaylist from '@/components/dialogs/AddPlaylist'
+import PlaylistGridCardSkeleton from '@/components/skeletons/PlaylistGridCardSkeleton'
 function PlaylistsPage() {
   const [playlists, setPlaylists] = useState<IPlaylist[]>([])
   const [loading, setLoading] = useState(true)
@@ -31,8 +31,8 @@ function PlaylistsPage() {
       <Input placeholder='Search' className=' mx-auto' value={searchText} onChange={(e) => setSearchText(e.target.value)} />
       <AddPlaylist open={addPlaylistOpen} setOpen={setAddPlaylistOpen}/>
     </div>
-<div className='grid grid-cols-3 md:grid-cols-2 lg:grid-cols-3 gap-4 m-5 items-center justify-items-center'>     
-    {loading ? <div className='flex col-span-3 md:col-span-2 lg:col-span-3 justify-center items-center h-screen'><Loader2 className='animate-spin text-gray-500' /></div> : 
+<div className='grid grid-cols-3 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 m-5 items-center justify-items-center'>     
+    {loading ? [1,2,3,4,5,6].map((index) => <PlaylistGridCardSkeleton key={index} />) :
     
     filteredPlaylists.map((playlist, index) => (
         <PlaylistGridCard key={playlist._id} playlist={playlist} index={index} />

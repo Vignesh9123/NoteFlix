@@ -17,6 +17,7 @@ import { api } from '@/config/config'
 import { IVideoDetails } from '@/types'
 import AddVideo from '@/components/dialogs/AddVideoUsingYTDetails'
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuLabel, DropdownMenuContent, DropdownMenuRadioGroup, DropdownMenuRadioItem } from '@/components/ui/dropdown-menu'
+import VideoListCardSkeleton from '@/components/skeletons/VideoListCardSkeleton'
 
 function VideosPage() {
   const [open, setOpen] = useState(false)
@@ -131,7 +132,7 @@ function VideosPage() {
         </div>
       </div>
       <div className='flex flex-col gap-4'>
-        {loadingVideos ? <div className='flex col-span-3 md:col-span-2 lg:col-span-3 justify-center items-center h-screen'><Loader2 className='animate-spin text-gray-500' /></div> : filteredVideoList.map((video, index) => (
+        {loadingVideos ? [1,2,3,4,5].map((num)=> <VideoListCardSkeleton key={num} />): filteredVideoList.map((video, index) => (
           <VideoListCard key={video.youtubeId} videoDetails={video} type="standalone" index={index} videoList={videoList} setVideoList={setVideoList} />
         ))}
       </div>

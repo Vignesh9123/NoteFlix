@@ -79,7 +79,8 @@ const librarySchema = new mongoose.Schema({
     status: {
         type: String,
         enum: ["watched", "to_watch", "in_progress"],
-        required: true
+        required: true,
+        default: "to_watch"
     }
 }, { timestamps: true });
 
