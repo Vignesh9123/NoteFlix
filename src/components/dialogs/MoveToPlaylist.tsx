@@ -6,7 +6,7 @@ import { Label } from '@radix-ui/react-label'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select'
 import { Loader2 } from 'lucide-react'
 import { Button } from '../ui/button'
-function MoveToPlaylist({open, setOpen, videoDetails,videoList, setVideoList, setIsDeleting, currentPlaylist}: {open: boolean, setOpen: (open: boolean) => void, videoDetails: IVideoDetails, videoList: IVideoDetails[], setVideoList: (videoList: IVideoDetails[]) => void, setIsDeleting: (isDeleting: boolean) => void, currentPlaylist?: string}) {
+function MoveToPlaylist({open, setOpen, videoDetails,videoList, setVideoList, setIsDeleting, currentPlaylist, bulk, bulkVideos}: {open: boolean, setOpen: (open: boolean) => void, videoDetails?: IVideoDetails, videoList: IVideoDetails[], setVideoList: (videoList: IVideoDetails[]) => void, setIsDeleting?: (isDeleting: boolean) => void, currentPlaylist?: string, bulk?: boolean, bulkVideos?: IVideoDetails[]}) {
     const [playlists, setPlaylists] = useState<IPlaylist[]>([])
     const [selectedPlaylist, setSelectedPlaylist] = useState<string | null>(null)
     const [playlistLoading, setPlaylistLoading] = useState(false);
@@ -29,22 +29,29 @@ function MoveToPlaylist({open, setOpen, videoDetails,videoList, setVideoList, se
         }
     }, [])
     const handleMoveClick = async () => {
-        setIsDeleting(true);
+        setIsDeleting?.(true);
         setTimeout(async () => {
             try {
-                await api.post('/library/videos/movetoplaylist', {libraryId: videoDetails.libraryId, playlistId: selectedPlaylist!});
-                setVideoList(videoList.filter((video) => video.libraryId !== videoDetails.libraryId));
+                if(bulk){
+                    await api.post('/library/videos/bulk/movetoplaylist', {libraryIds: bulkVideos!.map((video) => video.libraryId), playlistId: selectedPlaylist!});
+                    setVideoList(videoList.filter((video) => !bulkVideos!.map((video) => video.libraryId).includes(video.libraryId)));
+
+                }
+                else {
+                    await api.post('/library/videos/movetoplaylist', {libraryId: videoDetails?.libraryId, playlistId: selectedPlaylist!});
+                    setVideoList(videoList.filter((video) => video.libraryId !== videoDetails?.libraryId));
+                }
             } catch (err) {
                 console.log(err);
             } finally {
                 setOpen(false);
-                setIsDeleting(false);
+                setIsDeleting?.(false);
             }
         }, 1000);
     }
     
   return (
-    videoDetails && (
+    (
         <Dialog open={open} onOpenChange={setOpen}>
         <DialogContent>
             <DialogHeader>

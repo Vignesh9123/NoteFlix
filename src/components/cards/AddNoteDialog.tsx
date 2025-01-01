@@ -8,8 +8,7 @@ import { timeToSeconds } from '@/lib/utils';
 import Editor from '../TipTap';
 import { Loader2 } from 'lucide-react';
 function AddNoteDialog({ open, setOpen, libraryId, fetchNotes, youtubeId, text, noteTitle }: { open: boolean, setOpen: (open: boolean) => void, libraryId: string, fetchNotes: () => void, youtubeId: string, text?: string, noteTitle?: string }) {
-    console.log(text)
-    const [note, setNote] = useState(text || "");
+    const [note, setNote] = useState<string | null>(null);
     const [timestamp, setTimestamp] = useState<string | null>(null);
     const [title, setTitle] = useState<string | null>(null);
     const [loading, setLoading] = useState(false);
@@ -20,8 +19,8 @@ function AddNoteDialog({ open, setOpen, libraryId, fetchNotes, youtubeId, text, 
         console.log(timestampInSeconds);
         console.log(note);
         if(!note || !libraryId || !title){
-            console.log("Missing fields");
-            return;
+            console.log("Missing fields",{note, libraryId, title});
+            return setLoading(false);
         } 
         api.post("/video/notes", {
             notes: {
@@ -40,7 +39,7 @@ function AddNoteDialog({ open, setOpen, libraryId, fetchNotes, youtubeId, text, 
             })
             .finally(() => {
                 setLoading(false);
-                setNote("");
+                setNote(null);
                 setTimestamp(null);
                 setTitle(null);
                 setOpen(false);
@@ -50,14 +49,14 @@ function AddNoteDialog({ open, setOpen, libraryId, fetchNotes, youtubeId, text, 
 
     useEffect(() => {
        return () => {
-        setNote("");
+        setNote(null);
         setTimestamp(null);
         setTitle(null);
        } 
     },[])
     useEffect(() => {
         if(!open){
-            setNote("");
+            setNote(null);
             setTimestamp(null);
             setTitle(null);
         }
@@ -93,7 +92,7 @@ function AddNoteDialog({ open, setOpen, libraryId, fetchNotes, youtubeId, text, 
                 {/* <Textarea placeholder='Add a note' value={note} onChange={(e) => setNote(e.target.value)} /> */}
                 <Label htmlFor="note">Note</Label>
                 <div className='w-full'>
-                <Editor text={note} setText={setNote} isEditable/>
+                <Editor text={note!} setText={setNote} isEditable/>
                 </div>
                 <Button onClick={handleAddNote} disabled={loading || AILoading}>{loading?<div className='flex justify-center items-center'><Loader2 className='animate-spin' /></div> :"Add"}</Button>
             </DialogContent>

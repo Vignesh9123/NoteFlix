@@ -98,7 +98,7 @@
     margin-top: 0;
   }
   
-  max-height: 100px;
+  max-height: 200px;
   overflow-y: auto;
   /* List styles */
   ul, 
@@ -226,7 +226,9 @@
     }
   }
 }
-
+.tiptap::-webkit-scrollbar-thumb {
+  background-color: var(--gray-3);
+}
 .tiptap p.is-editor-empty:first-child::before {
   color: #adb5bd;
   content: attr(data-placeholder);

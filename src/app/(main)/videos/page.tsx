@@ -18,6 +18,7 @@ import { IVideoDetails } from '@/types'
 import AddVideo from '@/components/dialogs/AddVideoUsingYTDetails'
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuLabel, DropdownMenuContent, DropdownMenuRadioGroup, DropdownMenuRadioItem } from '@/components/ui/dropdown-menu'
 import VideoListCardSkeleton from '@/components/skeletons/VideoListCardSkeleton'
+import MoveToPlaylist from '@/components/dialogs/MoveToPlaylist'
 function VideosPage() {
   const [ytLinkDialogOpen, setYtLinkDialogOpen] = useState(false)
   const [youtubeUrl, setYoutubeUrl] = useState('')
@@ -31,6 +32,7 @@ function VideosPage() {
   const [durationFilter, setDurationFilter] = useState<string>('all')
   const [selectedVideos, setSelectedVideos] = useState<IVideoDetails[]>([])
   const [selectMode, setSelectMode] = useState(false)
+  const [moveToPlaylistOpen, setMoveToPlaylistOpen] = useState(false)
 
   useEffect(() => {
     const filteredVideos = videoList.filter((video) => {
@@ -156,12 +158,15 @@ function VideosPage() {
           {videoDetails && <AddVideo open={openAddVideoDialog} setOpen={setOpenAddVideoDialog} videoDetails={videoDetails} setVideoDetails={setVideoDetails} videoList={videoList} setVideoList={setVideoList} />}
         </div>
       </div>
+      <MoveToPlaylist  open={moveToPlaylistOpen} setOpen={setMoveToPlaylistOpen} videoList={videoList} setVideoList={setVideoList} bulkVideos={selectedVideos} bulk={true} />
+
       <div className='flex flex-col gap-4'>
         {selectMode && 
         <div className='flex gap-4 items-center'>
         <Button onClick={() => setSelectMode(false)} variant='secondary' className='w-16 mx-2'>Cancel</Button>
         <Button onClick={() => setSelectedVideos([])} variant='destructive' className='w-16 mx-2'>Clear</Button>
         <Button onClick={() =>{setSelectedVideos(filteredVideoList)}} variant='secondary' className='w-16 mx-2'>Select All</Button>
+        <Button onClick={()=>setMoveToPlaylistOpen(true)} variant='secondary' className=''>Move to Playlist</Button>
         <Button onClick={handleDelete} variant='secondary' className='w-16 mx-2'>Delete</Button>
         </div>
         }
@@ -177,6 +182,7 @@ function VideosPage() {
           <VideoListCard key={video.youtubeId} videoDetails={video} type="standalone" index={index} videoList={videoList} setVideoList={setVideoList} isSelected={selectedVideos.some((selectedVideo) => selectedVideo._id === video._id)} />
           </div>
         ))}
+        {filteredVideoList.length === 0 && !loadingVideos && <p className='text-center text-gray-500'>No videos found</p>}
       </div>
     </div>
   )

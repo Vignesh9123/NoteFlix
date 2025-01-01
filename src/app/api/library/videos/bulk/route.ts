@@ -2,7 +2,6 @@ import { NextRequest, NextResponse } from "next/server";
 import Library from "@/models/library.model";
 import { authMiddleware } from "@/middleware/auth.middleware";
 import connectDB from "@/dbConfig/connectDB";
-import mongoose from "mongoose";
 connectDB();
 
 export async function DELETE(request: NextRequest) {
@@ -20,7 +19,7 @@ export async function DELETE(request: NextRequest) {
         })
         
         return NextResponse.json({ message: "Videos deleted successfully" }, { status: 200 });
-        
+
     } catch (error) {
         console.log("Error deleting video from library", error);
         return NextResponse.json({ message: "Internal server error" }, { status: 500 });

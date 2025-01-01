@@ -25,6 +25,7 @@ export async function POST(request: NextRequest) {
             library.status = "to_watch";
             await library.save();
         })
+        return NextResponse.json({ message: "Videos added to playlist successfully" }, { status: 200 });
     } catch (error) {
         console.log("Error in adding videos to library", error);
         return NextResponse.json({ message: "Internal server error" }, { status: 500 });

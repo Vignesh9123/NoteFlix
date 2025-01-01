@@ -175,9 +175,9 @@ const content = "<h2>Facing a Hiring Freeze? Learn from My Mistakes!</h2>\n\n<p>
 export default ({text, setText, isEditable}:{text: string, setText?: (text: string) => void, isEditable?: boolean}) => {
   const [editorText, setEditorText] = useState(text)
   useEffect(() => {
-    return () => {
-      setText && setText("")
-    }
+    // return () => {
+    //   setText && setText("")
+    // }
   }, [])
   useEffect(() => {setEditorText(text)}, [text])
   const handleUpdate = useDebouncedCallback((text) => {setText && setText(String(text.editor.getHTML()))}, 500)

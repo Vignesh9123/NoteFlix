@@ -51,7 +51,8 @@ function VideoPage() {
   return (
     <div>
       <div className='w-full h-[20vh] relative'>
-        <Image src={!loading && video?.thumbnailUrl ? video?.thumbnailUrl : "/images/playlist.png"} alt='thumbnail' width={100} height={100} className='w-full h-full object-cover rounded-lg' style={{ filter: "brightness(0.2)" }} />
+      {loading && <div className='w-full h-full flex justify-center items-center animate-pulse bg-muted'></div> }
+      {!loading && video?.thumbnailUrl && <Image src={!loading && video?.thumbnailUrl } alt='thumbnail' width={1920} height={1080} quality={100} className='w-full h-full object-cover rounded-lg' style={{ filter: "brightness(0.2) contrast(1.1) blur(2px)" }} />}
         <div className='absolute top-0 left-0 w-full h-full flex flex-col gap-4 justify-center items-center'>
           <div className='text-2xl font-bold hover:underline line-clamp-1'>
             <Link href={`https://www.youtube.com/watch?v=${video?.youtubeId}`} target='_blank'>
@@ -74,7 +75,7 @@ function VideoPage() {
             <Plus onClick={() => setAddNoteDialogOpen(true)} size={27} className='text-gray-500 cursor-pointer hover:bg-muted duration-150' />
 
             {(
-              <AddNoteDialog open={addNoteDialogOpen} setOpen={setAddNoteDialogOpen} fetchNotes={fetchNotes} libraryId={library?._id!} />
+              <AddNoteDialog open={addNoteDialogOpen} setOpen={setAddNoteDialogOpen} fetchNotes={fetchNotes} libraryId={library?._id!} youtubeId={video?.youtubeId!} />
             )}
             <Input placeholder='Search' value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} />
           </div>
@@ -83,10 +84,11 @@ function VideoPage() {
       </div>
       <div className="usernotes m-5">
         <div className='flex flex-col gap-2'>
+          {loading && [1, 2, 3, 4, 5, 6].map((index) => <div key={index} className='h-40 w-full bg-muted animate-pulse'></div>)}
           {filteredNotes.map((note, index) => (
             <NotesListCard key={note.text} note={note} videoDetails={video!} index={index} />
           ))}
-          {filteredNotes.length === 0 && <div className='text-center text-muted-foreground'>No notes found</div>}
+          {!loading && (filteredNotes.length === 0) && <div className='text-center text-muted-foreground'>No notes found</div>}
         </div>
       </div>
     </div>
