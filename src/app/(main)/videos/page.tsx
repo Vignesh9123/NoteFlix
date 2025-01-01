@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react'
 import VideoListCard from '@/components/cards/VideoListCard'
 import { Input } from '@/components/ui/input'
-import { Grid2X2, ListVideo, Loader2, Plus } from 'lucide-react'
+import { CheckSquare2, Grid2X2, ListVideo, Loader2, Plus, Square } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import {
   Dialog,
@@ -18,9 +18,8 @@ import { IVideoDetails } from '@/types'
 import AddVideo from '@/components/dialogs/AddVideoUsingYTDetails'
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuLabel, DropdownMenuContent, DropdownMenuRadioGroup, DropdownMenuRadioItem } from '@/components/ui/dropdown-menu'
 import VideoListCardSkeleton from '@/components/skeletons/VideoListCardSkeleton'
-
 function VideosPage() {
-  const [open, setOpen] = useState(false)
+  const [ytLinkDialogOpen, setYtLinkDialogOpen] = useState(false)
   const [youtubeUrl, setYoutubeUrl] = useState('')
   const [loading, setLoading] = useState(false)
   const [videoDetails, setVideoDetails] = useState<IVideoDetails | null>(null)
@@ -30,6 +29,8 @@ function VideosPage() {
   const [loadingVideos, setLoadingVideos] = useState(false)
   const [searchText, setSearchText] = useState('')
   const [durationFilter, setDurationFilter] = useState<string>('all')
+  const [selectedVideos, setSelectedVideos] = useState<IVideoDetails[]>([])
+  const [selectMode, setSelectMode] = useState(false)
 
   useEffect(() => {
     const filteredVideos = videoList.filter((video) => {
@@ -53,7 +54,7 @@ function VideosPage() {
       const response = await api.post(`/youtube/getvideodetails`, { videoId })
       setVideoDetails(response.data.data)
       console.log(response.data.data)
-      setOpen(false)
+      setYtLinkDialogOpen(false)
       setYoutubeUrl('')
       setOpenAddVideoDialog(true)
     } catch (error) {
@@ -62,6 +63,30 @@ function VideosPage() {
     }
     finally {
       setLoading(false)
+    }
+  }
+
+  useEffect(()=>{
+    console.log(selectedVideos)
+  },[selectedVideos])
+
+  const handleDelete = async () => {
+    try {
+      setLoading(true)
+      const ids = selectedVideos.map((video) => video.libraryId)
+      const response = await api.delete(`/library/videos/bulk`,  { data:{libraryIds:ids} })
+      fetchVideos()
+      setSelectedVideos([])
+    } catch (error) {
+      console.log(error)
+    }
+    }
+
+  const handleSelectVideo = (video: IVideoDetails) => {
+    if (selectedVideos.some((v) => v._id === video._id)) {
+      setSelectedVideos(selectedVideos.filter((v) => v._id !== video._id))
+    } else {
+      setSelectedVideos([...selectedVideos, video])
     }
   }
 
@@ -112,7 +137,7 @@ function VideosPage() {
           </DropdownMenuContent>
         </DropdownMenu>
         <div className=' mx-2'>
-          <Dialog open={open} onOpenChange={setOpen}>
+          <Dialog open={ytLinkDialogOpen} onOpenChange={setYtLinkDialogOpen}>
             <DialogTrigger className='bg-primary p-2 rounded-full'>
               <Plus size={20} />
             </DialogTrigger>
@@ -132,8 +157,25 @@ function VideosPage() {
         </div>
       </div>
       <div className='flex flex-col gap-4'>
+        {selectMode && 
+        <div className='flex gap-4 items-center'>
+        <Button onClick={() => setSelectMode(false)} variant='secondary' className='w-16 mx-2'>Cancel</Button>
+        <Button onClick={() => setSelectedVideos([])} variant='destructive' className='w-16 mx-2'>Clear</Button>
+        <Button onClick={() =>{setSelectedVideos(filteredVideoList)}} variant='secondary' className='w-16 mx-2'>Select All</Button>
+        <Button onClick={handleDelete} variant='secondary' className='w-16 mx-2'>Delete</Button>
+        </div>
+        }
+        {
+          !selectMode &&
+          <div className='flex gap-4 items-center'>
+          <Button  onClick={() => setSelectMode(true)} variant='secondary' className='w-16 ml-auto'>Select</Button>
+          </div>
+        }
         {loadingVideos ? [1,2,3,4,5].map((num)=> <VideoListCardSkeleton key={num} />): filteredVideoList.map((video, index) => (
-          <VideoListCard key={video.youtubeId} videoDetails={video} type="standalone" index={index} videoList={videoList} setVideoList={setVideoList} />
+          <div key={video._id} className='flex gap-4 items-center'>
+           {selectMode && (selectedVideos.includes(video) ?( <CheckSquare2 size={27} className='text-gray-500 cursor-pointer hover:bg-muted duration-150' onClick={() => handleSelectVideo(video)} />): <Square size={27} className='text-gray-500 cursor-pointer hover:bg-muted duration-150' onClick={() => handleSelectVideo(video)} />)}
+          <VideoListCard key={video.youtubeId} videoDetails={video} type="standalone" index={index} videoList={videoList} setVideoList={setVideoList} isSelected={selectedVideos.some((selectedVideo) => selectedVideo._id === video._id)} />
+          </div>
         ))}
       </div>
     </div>

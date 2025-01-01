@@ -58,7 +58,7 @@ function AddVideo({open, setOpen, videoDetails, setVideoDetails, setVideoList, v
             summary: '',
             libraryId: response.data.data._id,
             status: response.data.data.status,
-            isStandalone: response.data.data.isStandalone
+            isStandalone: response.data.data.type === 'standalone' ? true : false,
          }
          if(videoList && newVideo.isStandalone ){
             setVideoList([...videoList, newVideo]);

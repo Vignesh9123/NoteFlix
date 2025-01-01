@@ -10,7 +10,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import UpdateVideo from '../dialogs/UpdateVideo'
 import DeleteVideo from '../dialogs/DeleteVideo'
 import MoveToPlaylist from '../dialogs/MoveToPlaylist'
-function VideoListCard({videoDetails, type, index, videoList, setVideoList, playlistId}: {videoDetails: IVideoDetails, type: string, index: number, videoList: IVideoDetails[], setVideoList: (videoList: IVideoDetails[]) => void, playlistId?: string}) {
+function VideoListCard({videoDetails, type, index, videoList, setVideoList, playlistId, isSelected}: {videoDetails: IVideoDetails, type: string, index: number, videoList: IVideoDetails[], setVideoList: (videoList: IVideoDetails[]) => void, playlistId?: string, isSelected?: boolean}) {
     const [updateDialogOpen, setUpdateDialogOpen] = useState(false)
     const [animationClass, setAnimationClass] = useState('');
     const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
@@ -30,7 +30,7 @@ function VideoListCard({videoDetails, type, index, videoList, setVideoList, play
       
   return (
     <motion.div initial={{opacity: 0, y: 100, scale: 0.6, filter:"blur(10px)"}} animate={{opacity: 1, y: 0, scale: 1, filter:"blur(0px)"}} transition={{delay: index * 0.1, duration: 0.3}} exit={{ opacity: 0, y: 100, scale: 0.6, filter: "blur(10px)" }}
-    className={`flex ${isDeleting ? 'animate-fade-out' : ''}`} >
+    className={`flex w-full ${isDeleting ? 'animate-fade-out' : ''} ${isSelected ? 'bg-muted' : ''}`} >
 
     <Link href={type === "standalone" ? `/videos/${videoDetails.libraryId}` : `/playlists/video/${videoDetails.libraryId}`} className='w-full'>
 <div className='flex hover:bg-muted duration-150 rounded-md p-4 h-[150px] gap-4 w-full border-b border-muted'>
@@ -39,10 +39,10 @@ function VideoListCard({videoDetails, type, index, videoList, setVideoList, play
     <div className='flex gap-4'>
     <div className='min-w-[200px] h-full object-cover'>
 
-    <Image src={videoDetails.thumbnailUrl} alt='logo' width={100} height={100} className='w-[200px] h-full object-cover' />
+    <Image src={videoDetails.thumbnailUrl} alt='logo' width={200} height={200} className='w-[200px] h-full object-cover' />
     </div>
     <div className='flex flex-col items-start gap-2'>
-        <h1 className='text-md md:text-xl lg:text-2xl font-bold'>{videoDetails.title.slice(0, 30)+ (videoDetails.title.length > 30 ? '...' : '')}</h1>
+        <h1 className='text-md md:text-xl lg:text-2xl font-bold line-clamp-1'>{videoDetails.title}</h1>
         <div className='flex lg:flex-col flex-row items-center lg:items-start gap-4 lg:gap-1'>
 
         <div className='flex items-center gap-2'>
