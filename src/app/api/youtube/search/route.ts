@@ -32,11 +32,12 @@ export async function GET(req: NextRequest) {
             }) || []
         );
         const videos = videosWithDuration.map((video: any) => ({
-            id: video.id.videoId,
+            youtubeId: video.id.videoId,
             title: video.snippet.title,
             description: video.snippet.description,
-            thumbnail: video.snippet.thumbnails.maxres?.url || video.snippet.thumbnails.standard?.url || video.snippet.thumbnails.high?.url || video.snippet.thumbnails.medium?.url || video.snippet.thumbnails.default?.url,
-            duration: video.contentDetails?.duration || null,
+            channelName: video.snippet.channelTitle,
+            thumbnailUrl: video.snippet.thumbnails.maxres?.url || video.snippet.thumbnails.standard?.url || video.snippet.thumbnails.high?.url || video.snippet.thumbnails.medium?.url || video.snippet.thumbnails.default?.url,
+            duration:  Number(String(video.contentDetails.duration).match(/PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?/)?.slice(1).reduce((acc: number, v: string, i: number) => acc + (v ? parseInt(v) * [3600, 60, 1][i] : 0), 0))|| null,
             publishedAt: video.snippet.publishedAt
         }));
         return NextResponse.json({data: videos }, { status: 200 });
