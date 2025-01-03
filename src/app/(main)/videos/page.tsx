@@ -19,6 +19,7 @@ import AddVideo from '@/components/dialogs/AddVideoUsingYTDetails'
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuLabel, DropdownMenuContent, DropdownMenuRadioGroup, DropdownMenuRadioItem } from '@/components/ui/dropdown-menu'
 import VideoListCardSkeleton from '@/components/skeletons/VideoListCardSkeleton'
 import MoveToPlaylist from '@/components/dialogs/MoveToPlaylist'
+import VideoGridCard from '@/components/cards/VideoGridCard'
 function VideosPage() {
   const [ytLinkDialogOpen, setYtLinkDialogOpen] = useState(false)
   const [youtubeUrl, setYoutubeUrl] = useState('')
@@ -33,7 +34,8 @@ function VideosPage() {
   const [selectedVideos, setSelectedVideos] = useState<IVideoDetails[]>([])
   const [selectMode, setSelectMode] = useState(false)
   const [moveToPlaylistOpen, setMoveToPlaylistOpen] = useState(false)
-
+  const [displayMode, setDisplayMode] = useState<'grid' | 'list'>('grid')
+  
   useEffect(() => {
     const filteredVideos = videoList.filter((video) => {
       const matchesSearchText = video.title.toLowerCase().includes(searchText.toLowerCase());
@@ -118,8 +120,8 @@ function VideosPage() {
     <div className='m-5'>
       <div className='flex w-full justify-between items-center mb-5'>
         <div className='flex m-1 items-center gap-2'>
-          <ListVideo size={27} className='text-gray-500 cursor-pointer bg-muted duration-150' />
-          <Grid2X2 size={27} className='text-gray-500 cursor-pointer hover:bg-muted duration-150' />
+          <ListVideo size={27} className={`text-gray-500 cursor-pointer ${displayMode === 'list' ? 'bg-muted' : ''} duration-150`} onClick={() => setDisplayMode('list')} />
+          <Grid2X2 size={27} className={`text-gray-500 cursor-pointer ${displayMode === 'grid' ? 'bg-muted' : ''} duration-150`} onClick={() => setDisplayMode('grid')} />
         </div>
         <Input placeholder='Search' onChange={(e) => setSearchText(e.target.value)} value={searchText} />
         <DropdownMenu>
@@ -163,7 +165,7 @@ function VideosPage() {
       <div className='flex flex-col gap-4'>
         {selectMode && 
         <div className='flex gap-4 items-center'>
-        <Button onClick={() => setSelectMode(false)} variant='secondary' className='w-16 mx-2'>Cancel</Button>
+        <Button onClick={() => {setSelectMode(false); setSelectedVideos([])}} variant='secondary' className='w-16 mx-2'>Cancel</Button>
         <Button onClick={() => setSelectedVideos([])} variant='destructive' className='w-16 mx-2'>Clear</Button>
         <Button onClick={() =>{setSelectedVideos(filteredVideoList)}} variant='secondary' className='w-16 mx-2'>Select All</Button>
         <Button onClick={()=>setMoveToPlaylistOpen(true)} variant='secondary' className=''>Move to Playlist</Button>
@@ -176,12 +178,22 @@ function VideosPage() {
           <Button  onClick={() => setSelectMode(true)} variant='secondary' className='w-16 ml-auto'>Select</Button>
           </div>
         }
-        {loadingVideos ? [1,2,3,4,5].map((num)=> <VideoListCardSkeleton key={num} />): filteredVideoList.map((video, index) => (
-          <div key={video._id} className='flex gap-4 items-center'>
-           {selectMode && (selectedVideos.includes(video) ?( <CheckSquare2 size={27} className='text-gray-500 cursor-pointer hover:bg-muted duration-150' onClick={() => handleSelectVideo(video)} />): <Square size={27} className='text-gray-500 cursor-pointer hover:bg-muted duration-150' onClick={() => handleSelectVideo(video)} />)}
-          <VideoListCard key={video.youtubeId} videoDetails={video} type="standalone" index={index} videoList={videoList} setVideoList={setVideoList} isSelected={selectedVideos.some((selectedVideo) => selectedVideo._id === video._id)} />
-          </div>
+      {displayMode === 'list' && (loadingVideos ? [1,2,3,4,5].map((num)=> <VideoListCardSkeleton key={num} />): filteredVideoList.map((video, index) => (
+        <div key={video._id} className='flex gap-4 items-center'>
+          {selectMode && (selectedVideos.includes(video) ?( <CheckSquare2 size={27} className='text-gray-500 cursor-pointer hover:bg-muted duration-150' onClick={() => handleSelectVideo(video)} />): <Square size={27} className='text-gray-500 cursor-pointer hover:bg-muted duration-150' onClick={() => handleSelectVideo(video)} />)}
+        <VideoListCard key={video.youtubeId} videoDetails={video} type="standalone" index={index} videoList={videoList} setVideoList={setVideoList} isSelected={selectedVideos.some((selectedVideo) => selectedVideo._id === video._id)} />
+        </div>
+      ))) }
+        {displayMode === 'grid' && <div className='grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4'>
+        {loadingVideos ? [1,2,3,4,5].map((num)=> <VideoListCardSkeleton key={num} />): 
+        filteredVideoList.map((video, index) => (
+          <div key={video._id} className='flex relative gap-4 items-center'>
+            {selectMode && (selectedVideos.includes(video) ?( <CheckSquare2 size={27} className=' cursor-pointer bg- absolute z-50 bottom-4 right-4 duration-150' onClick={() => handleSelectVideo(video)} />): <Square size={27} className=' absolute z-50 bottom-4 right-4  cursor-pointer hover:bg-muted duration-150' onClick={() => handleSelectVideo(video)} />)}
+       <VideoGridCard key={video.youtubeId} videoDetails={video} type="standalone" index={index} videoList={videoList} setVideoList={setVideoList} isSelected={selectedVideos.some((selectedVideo) => selectedVideo._id === video._id)} />
+        </div>
         ))}
+        </div>}
+
         {filteredVideoList.length === 0 && !loadingVideos && <p className='text-center text-gray-500'>No videos found</p>}
       </div>
     </div>
