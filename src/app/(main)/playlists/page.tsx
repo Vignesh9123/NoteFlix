@@ -24,7 +24,7 @@ function PlaylistsPage() {
   }, [])
   useEffect(() => {
     setFilteredPlaylists(playlists.filter((playlist) => playlist.name.toLowerCase().includes(searchText.toLowerCase())))
-  },[searchText])
+  },[searchText, playlists])
   return (
     <>
     <div className='flex items-center m-5 gap-4'>
@@ -35,7 +35,7 @@ function PlaylistsPage() {
     {loading ? [1,2,3,4,5,6].map((index) => <PlaylistGridCardSkeleton key={index} />) :
     
     filteredPlaylists.map((playlist, index) => (
-        <PlaylistGridCard key={playlist._id} playlist={playlist} index={index} />
+        <PlaylistGridCard playlists={playlists} setPlaylists={setPlaylists} key={playlist._id} playlist={playlist} index={index} />
     ))}
     </div>
     </>

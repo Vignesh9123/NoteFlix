@@ -1,5 +1,4 @@
 # VidScribe
 
 ## Todos
-- MultiSelect delete
-- MultiSelect Add to Playlist
+-- Playlist Grid and List View

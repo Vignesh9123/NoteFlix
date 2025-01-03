@@ -25,6 +25,7 @@ export async function PATCH(request: NextRequest){
         const auth = await authMiddleware(request);
         if(auth.status == 401) return NextResponse.json({message: "Unauthorized"}, {status: 401});
         const {id, name, description, isPublic, coverPicture, tags} = await request.json();
+        if(!id) return NextResponse.json({message: "Invalid request"}, {status: 400});
         const playlist = await Playlist.findById(id)
         if(!playlist) return NextResponse.json({message: "Playlist not found"}, {status: 404});
         if(playlist?.userId.toString() != request.user?._id.toString()) return NextResponse.json({message: "Unauthorized"}, {status: 401});

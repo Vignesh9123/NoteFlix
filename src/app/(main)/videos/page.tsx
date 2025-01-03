@@ -70,9 +70,7 @@ function VideosPage() {
     }
   }
 
-  useEffect(()=>{
-    console.log(selectedVideos)
-  },[selectedVideos])
+ 
 
   const handleDelete = async () => {
     try {

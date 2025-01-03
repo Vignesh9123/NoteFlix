@@ -1,10 +1,16 @@
-import React from 'react'
+import {useState} from 'react'
 import { Card, CardContent, CardFooter } from '@/components/ui/card'
 import Image from 'next/image'
 import { IPlaylist } from '@/types'
 import Link from 'next/link'
 import { motion } from 'framer-motion'
-function PlaylistGridCard({playlist, index}: {playlist: IPlaylist, index: number}) {
+import { EllipsisVertical, ListVideo } from 'lucide-react'
+import { DropdownMenu, DropdownMenuItem, DropdownMenuContent, DropdownMenuTrigger } from '../ui/dropdown-menu'
+import DeletePlaylist from '../dialogs/DeletePlaylist'
+import UpdatePlaylist from '../dialogs/UpdatePlaylist'
+function PlaylistGridCard({playlist, index, playlists, setPlaylists}: {playlist: IPlaylist, index: number, playlists: IPlaylist[], setPlaylists: (playlists: IPlaylist[]) => void}) {
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [updateDialogOpen, setUpdateDialogOpen] = useState(false);
   return (
     <motion.div initial={{opacity: 0, y: 100, scale: 0.6}} animate={{opacity: 1, y: 0, scale: 1}} transition={{delay: index * 0.1, duration: 0.3}} className='h-full w-full'>
     <div className='h-full w-full'>
@@ -21,13 +27,25 @@ function PlaylistGridCard({playlist, index}: {playlist: IPlaylist, index: number
             </CardContent>
             <CardFooter>
                 <div className="flex w-full items-center justify-between gap-2">
-
-                <div className='w-full h-1 bg-gray-200'>
-                    <div className='w-[50%] h-full bg-green-500'>
-                    </div>
+                  <div className='flex items-center gap-2'>
+                      <ListVideo className='h-4 w-4' /> {playlist.videoCount}
+                  </div>
+                  <div className=" bg-muted p-[4px] rounded-full">
+                  <DropdownMenu>
+    <DropdownMenuTrigger asChild>
+    <div title='More' onClick={(e) => e.stopPropagation()} className='flex p-2 h-fit my-auto items-center cursor-pointer gap-2'>
+        <EllipsisVertical className='text-gray-500 cursor-pointer hover:text-white duration-150' />
+    </div>
+    </DropdownMenuTrigger>
+    <DropdownMenuContent className=''>
+        <DropdownMenuItem onClick={() =>{setUpdateDialogOpen(true)}}> Update Details </DropdownMenuItem>
+        <DropdownMenuItem onClick={() => {setDeleteDialogOpen(true)}}> Delete </DropdownMenuItem>
+    </DropdownMenuContent>
+    </DropdownMenu>
+                  </div>
                 </div>
-                <div className='text-sm text-gray-500'>50%</div>
-                </div>
+                {deleteDialogOpen && <DeletePlaylist playlists={playlists} setPlaylists={setPlaylists} open={deleteDialogOpen} setOpen={setDeleteDialogOpen} playlistDetails={playlist} />}
+                {updateDialogOpen && <UpdatePlaylist playlistList={playlists} setPlaylistList={setPlaylists} open={updateDialogOpen} setOpen={setUpdateDialogOpen} playlistDetails={playlist} />}
             </CardFooter>
         </Card>
     </div>
