@@ -34,7 +34,7 @@ function VideoPage() {
         return matchesSearch;
       })
     )
-  }, [searchQuery])
+  }, [searchQuery, userNotes])
 
   const handleAISummaryClick = async () => {
     if (flag == 0) {
@@ -148,7 +148,7 @@ function VideoPage() {
         <div className='flex flex-col gap-2'>
           {loading && [1, 2, 3, 4, 5, 6].map((index) => <div key={index} className='h-40 w-full bg-muted animate-pulse'></div>)}
           {filteredNotes.map((note, index) => (
-            <NotesListCard key={note._id} note={note} videoDetails={video!} index={index} />
+            <NotesListCard setNoteList={setUserNotes} noteList={userNotes} key={note._id} note={note} videoDetails={video!} index={index} />
           ))}
           {!loading &&( filteredNotes.length === 0 )&& <div className='text-center text-muted-foreground'>No notes found</div>}
         </div>

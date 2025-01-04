@@ -20,7 +20,7 @@ const MenuBar = () => {
 
   return (
     <div className="m-1">
-      <div className="button-group border rounded-lg flex flex-wrap gap-2">
+      <div className="button-group border rounded-lg flex flex-wrap gap-3 lg:gap-4 xl:gap-6 justify-center p-1">
         <button
           onClick={() => editor.chain().focus().toggleBold().run()}
           disabled={
@@ -177,7 +177,7 @@ export default ({text, setText, isEditable}:{text: string, setText?: (text: stri
   useEffect(() => {
     // return () => {
     //   setText && setText("")
-    // }
+  // 
   }, [])
   useEffect(() => {setEditorText(text)}, [text])
   const handleUpdate = useDebouncedCallback((text) => {setText && setText(String(text.editor.getHTML()))}, 500)

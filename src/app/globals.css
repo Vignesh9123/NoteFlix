@@ -100,6 +100,9 @@
   
   max-height: 200px;
   overflow-y: auto;
+  outline: none;
+  @apply focus:ring-1 focus:ring-ring focus:ring-offset-2;
+  @apply focus:ring-offset-background;
   /* List styles */
   ul, 
   ol {
