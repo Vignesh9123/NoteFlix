@@ -26,6 +26,20 @@ export async function GET(request: NextRequest){
                             $match: {
                                 type: "playlist_entry"
                             }
+                        },
+                        {
+                            $lookup: {
+                                from: "videos",
+                                localField: "videoId",
+                                foreignField: "_id",
+                                as: "videoDetails"
+                            }
+                        },
+                        {
+                            $unwind: {
+                                path: "$videoDetails",
+                                preserveNullAndEmptyArrays: true
+                            }
                         }
                     ],
                     as: "videos"
@@ -33,7 +47,13 @@ export async function GET(request: NextRequest){
             },
             {
                 $addFields: {
-                    videoCount: { $size: "$videos" }
+                    videoCount: { $size: "$videos" },
+                    coverPicture: {
+                        $ifNull: [
+                            { $arrayElemAt: ["$videos.videoDetails.thumbnailUrl", 0] },
+                            null
+                        ]
+                    }
                 }
             },
             {
