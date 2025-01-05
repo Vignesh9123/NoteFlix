@@ -11,7 +11,7 @@ import UpdateVideo from '../dialogs/UpdateVideo'
 import DeleteVideo from '../dialogs/DeleteVideo'
 import MoveToPlaylist from '../dialogs/MoveToPlaylist'
 import { Card, CardContent, CardFooter, CardHeader } from '../ui/card'
-function VideoGridCard({videoDetails, type, index, videoList, setVideoList, playlistId, isSelected}: {videoDetails: IVideoDetails, type: string, index: number, videoList: IVideoDetails[], setVideoList: (videoList: IVideoDetails[]) => void, playlistId?: string, isSelected?: boolean}) {
+function VideoGridCard({videoDetails, type, index, videoList, setVideoList, playlistId, isSelected, selectMode}: {videoDetails: IVideoDetails, type: string, index: number, videoList: IVideoDetails[], setVideoList: (videoList: IVideoDetails[]) => void, playlistId?: string, isSelected?: boolean, selectMode?: boolean}) {
     const [updateDialogOpen, setUpdateDialogOpen] = useState(false)
     const [animationClass, setAnimationClass] = useState('');
     const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
@@ -33,7 +33,7 @@ function VideoGridCard({videoDetails, type, index, videoList, setVideoList, play
     <motion.div initial={{opacity: 0, y: 100, scale: 0.6, filter:"blur(10px)"}} animate={{opacity: 1, y: 0, scale: 1, filter:"blur(0px)"}} whileHover={{scale: 1.05, transition: { duration: 0.2 , delay:0}}} transition={{delay: index * 0.1, duration: 0.3}} exit={{ opacity: 0, y: 100, scale: 0.6, filter: "blur(10px)" }}
     className={`flex relative w-full ${isDeleting ? 'animate-fade-out' : ''} ${isSelected ? 'bg-muted' : ''}`} >
 
-    <Link href={type === "standalone" ? `/videos/${videoDetails.libraryId}` : `/playlists/video/${videoDetails.libraryId}`} className='w-full'>
+    <Link href={selectMode ? '#' : type === "standalone" ? `/videos/${videoDetails.libraryId}` : `/playlists/video/${videoDetails.libraryId}`} className='w-full'>
    
     <Card className={`w-full h-full ${isSelected ? 'bg-muted' : ''}`}>
           <CardHeader className=''>

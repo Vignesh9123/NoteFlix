@@ -77,7 +77,7 @@ function PlaylistIDPage() {
             {displayMode === 'list' && filteredVideoList.map((video, index) => (
                 <VideoListCard key={video.libraryId} videoList={videos} setVideoList={setVideos} playlistId={id as string} videoDetails={video} type="playlist_entry" index={index} />
             ))}
-             {displayMode === 'grid' && <div className='grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4'> 
+             {displayMode === 'grid' && <div className='grid mt-5 grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4'> 
         {filteredVideoList.map((video, index) => (
           <div key={video._id} className='flex relative gap-4 items-center'>
        <VideoGridCard key={video.youtubeId} videoDetails={video} type="standalone" index={index} videoList={videos} setVideoList={setVideos} />
