@@ -158,7 +158,7 @@ function VideosPage() {
           {videoDetails && <AddVideo open={openAddVideoDialog} setOpen={setOpenAddVideoDialog} videoDetails={videoDetails} setVideoDetails={setVideoDetails} videoList={videoList} setVideoList={setVideoList} />}
         </div>
       </div>
-      <MoveToPlaylist  open={moveToPlaylistOpen} setOpen={setMoveToPlaylistOpen} videoList={videoList} setVideoList={setVideoList} bulkVideos={selectedVideos} bulk={true} />
+      { moveToPlaylistOpen && <MoveToPlaylist  open={moveToPlaylistOpen} setOpen={setMoveToPlaylistOpen} videoList={videoList} setVideoList={setVideoList} bulkVideos={selectedVideos} bulk={true} />}
 
       <div className='flex flex-col gap-4'>
         {selectMode && 

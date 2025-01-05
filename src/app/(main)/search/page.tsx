@@ -71,14 +71,15 @@ function Page() {
               <div className='relative aspect-video'>
                 <Image src={video.thumbnailUrl} alt='placeholder' layout='fill' className='object-cover hover:brightness-50 duration-150' />
                 <div className='absolute bottom-0 right-0 bg-gray-900 rounded-t-lg text-white px-2 py-1'>{secondsToTime(Number(video?.duration))}</div>
-                <Button variant='ghost' className='absolute top-1 left-2 z-10' onClick={(e) =>{
+                <Button variant='secondary' className='absolute top-1 left-2 z-10' onClick={(e) =>{
                     e.stopPropagation();
                     setSelectedVideo(video);
                     setAddVideoDialogOpen(true);
                 }} size='icon'><Plus/></Button>
               </div>
               <div className='py-4 p-1'>
-                <p className='font-bold text-lg line-clamp-1'>{video.title}</p>
+                <p title={video.title} className='font-bold text-lg line-clamp-1'>{video.title}</p>
+                <p className='text-sm text-muted-foreground line-clamp-1'>{video.channelName}</p>
                 <p className='text-sm text-muted-foreground'>{formatDistanceToNow(new Date(video.publishedAt), { addSuffix: true })}</p>
               </div>
             </motion.div>
