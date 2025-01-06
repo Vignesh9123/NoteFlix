@@ -183,7 +183,7 @@ function VideosPage() {
         <VideoListCard key={video.youtubeId} videoDetails={video} type="standalone" index={index} videoList={videoList} setVideoList={setVideoList} isSelected={selectedVideos.some((selectedVideo) => selectedVideo._id === video._id)} selectMode={selectMode} />
         </div>
       ))) }
-        {displayMode === 'grid' && <div className='grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4'>
+        {displayMode === 'grid' && <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-4'>
         {loadingVideos ? [1,2,3,4,5].map((num)=> <VideoListCardSkeleton key={num} />): 
         filteredVideoList.map((video, index) => (
           <div onClick={()=>{
