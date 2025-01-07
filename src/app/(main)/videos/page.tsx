@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react'
 import VideoListCard from '@/components/cards/VideoListCard'
 import { Input } from '@/components/ui/input'
-import { CheckSquare2, Grid2X2, ListVideo, Loader2, Plus, Square } from 'lucide-react'
+import { CheckSquare2, Grid2X2, ListVideo, Loader2, Plus, Square, Star } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import {
   Dialog,
@@ -114,6 +114,18 @@ function VideosPage() {
     fetchVideos()
   }, [])
 
+  const handleFavoriteClick = async(video: IVideoDetails) => {
+    try {
+      video.isFavourite = !video.isFavourite
+      setVideoList([...videoList])
+      await api.post(`/library/videos/favourite`,{libraryId:video.libraryId} )
+    } catch (error) {
+      console.log(error)
+      video.isFavourite = !video.isFavourite
+      setVideoList([...videoList])
+    }
+  }
+
   return (
     <div className='m-5'>
       <div className='flex w-full justify-between items-center mb-5'>
@@ -189,7 +201,9 @@ function VideosPage() {
           <div onClick={()=>{
             if(selectMode) handleSelectVideo(video)
           }} key={video._id} className='flex relative gap-4 items-center'>
-            {selectMode && (selectedVideos.includes(video) ?( <CheckSquare2 size={27} className=' cursor-pointer bg- absolute z-50 bottom-4 right-4 duration-150' onClick={() => handleSelectVideo(video)} />): <Square size={27} className=' absolute z-50 bottom-4 right-4  cursor-pointer hover:bg-muted duration-150' onClick={() => handleSelectVideo(video)} />)}
+            {selectMode ? (selectedVideos.includes(video) ?( <CheckSquare2 size={27} className=' cursor-pointer bg- absolute z-50 bottom-4 right-4 duration-150' onClick={() => handleSelectVideo(video)} />): <Square size={27} className=' absolute z-50 bottom-4 right-4  cursor-pointer hover:bg-muted duration-150' onClick={() => handleSelectVideo(video)} />):
+              <Star size={27} onClick={()=>handleFavoriteClick(video)} className={`cursor-pointer absolute z-50 bottom-4 right-4 ${video.isFavourite ? 'text-yellow-400 fill-yellow-300' : 'text-gray-500'}`}/>
+            }
        <VideoGridCard key={video.youtubeId} videoDetails={video} type="standalone" index={index} videoList={videoList} setVideoList={setVideoList} isSelected={selectedVideos.some((selectedVideo) => selectedVideo._id === video._id)} selectMode={selectMode}/>
         </div>
         ))}

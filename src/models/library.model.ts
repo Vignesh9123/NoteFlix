@@ -81,6 +81,10 @@ const librarySchema = new mongoose.Schema({
         enum: ["watched", "to_watch", "in_progress"],
         required: true,
         default: "to_watch"
+    },
+    isFavourite: {
+        type: Boolean,
+        default: false
     }
 }, { timestamps: true });
 
