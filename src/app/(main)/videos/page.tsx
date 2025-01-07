@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react'
 import VideoListCard from '@/components/cards/VideoListCard'
 import { Input } from '@/components/ui/input'
-import { CheckSquare2, Grid2X2, ListVideo, Loader2, Plus, Square, Star } from 'lucide-react'
+import { CheckSquare2, Filter, Grid2X2, ListVideo, Loader2, Plus, Square, Star } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import {
   Dialog,
@@ -32,6 +32,7 @@ function VideosPage() {
   const [loadingVideos, setLoadingVideos] = useState(false)
   const [searchText, setSearchText] = useState('')
   const [durationFilter, setDurationFilter] = useState<string>('all')
+  const [starredFilter, setStarredFilter] = useState<string>('all')
   const [selectedVideos, setSelectedVideos] = useState<IVideoDetails[]>([])
   const [selectMode, setSelectMode] = useState(false)
   const [moveToPlaylistOpen, setMoveToPlaylistOpen] = useState(false)
@@ -45,10 +46,11 @@ function VideosPage() {
         durationFilter === 'medium' && Number(video.duration) > 300 && Number(video.duration) <= 1200 ||
         durationFilter === 'long' && Number(video.duration) > 1200
       );
-      return matchesSearchText && matchesDuration;
+      const matchesStarred = starredFilter === 'all' || (starredFilter === 'starred' && video.isFavourite);
+      return matchesSearchText && matchesDuration && matchesStarred;
     });
     setFilteredVideoList(filteredVideos);
-  }, [searchText, videoList, durationFilter]);
+  }, [searchText, videoList, durationFilter, starredFilter]);
 
   const handleGetVideoDetails = async () => {
     try {
@@ -137,8 +139,11 @@ function VideosPage() {
         <Input placeholder='Search' onChange={(e) => setSearchText(e.target.value)} value={searchText} />
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant='outline' className='w-16 mx-2'>
-              {durationFilter === 'all' ? 'All' : durationFilter === 'short' ? 'Short' : durationFilter === 'medium' ? 'Medium' : 'Long'}
+            <Button variant='outline' className='w-16 mx-2 relative'>
+              <Filter size={20} />
+              {[durationFilter, starredFilter].some((filter) => filter !== 'all') && <span className='absolute top-0 right-0 w-5 h-5 flex items-center justify-center rounded-full bg-red-500'>
+                {[durationFilter, starredFilter].filter((filter) => filter !== 'all').length}
+                </span>}
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent>
@@ -148,6 +153,11 @@ function VideosPage() {
               <DropdownMenuRadioItem value='short'>Short &lt; 5m</DropdownMenuRadioItem>
               <DropdownMenuRadioItem value='medium'>Medium &gt; 5m - &lt; 20m</DropdownMenuRadioItem>
               <DropdownMenuRadioItem value='long'>Long &gt; 20m</DropdownMenuRadioItem>
+            </DropdownMenuRadioGroup>
+            <DropdownMenuLabel>Starred</DropdownMenuLabel>
+            <DropdownMenuRadioGroup value={starredFilter} onValueChange={setStarredFilter}>
+              <DropdownMenuRadioItem value='all'>All</DropdownMenuRadioItem>
+              <DropdownMenuRadioItem value='starred'>Starred</DropdownMenuRadioItem>
             </DropdownMenuRadioGroup>
           </DropdownMenuContent>
         </DropdownMenu>
