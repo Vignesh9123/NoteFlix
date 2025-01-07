@@ -4,7 +4,7 @@ import React, {useEffect, useState} from 'react'
 import { api } from '@/config/config'
 import { IPlaylist, IVideoDetails } from '@/types'
 import VideoListCard from '@/components/cards/VideoListCard'
-import { ListVideo, Grid2X2, CheckSquare2, Square, Star } from 'lucide-react'
+import { ListVideo, Grid2X2, CheckSquare2, Square, Star, Filter } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuLabel, DropdownMenuRadioGroup, DropdownMenuRadioItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
@@ -25,6 +25,7 @@ function PlaylistIDPage() {
   const [selectMode, setSelectMode] = useState(false)
   const [loadingVideos, setLoadingVideos] = useState(false)
   const [moveToPlaylistOpen, setMoveToPlaylistOpen] = useState(false)
+  const [starredFilter, setStarredFilter] = useState<string>('all')
     useEffect(() => {
         const filteredVideos = videos.filter((video) => {
           const matchesSearchText = video.title.toLowerCase().includes(searchText.toLowerCase());
@@ -33,10 +34,11 @@ function PlaylistIDPage() {
             durationFilter === 'medium' && Number(video.duration) > 300 && Number(video.duration) <= 1200 ||
             durationFilter === 'long' && Number(video.duration) > 1200
           );
-          return matchesSearchText && matchesDuration;
+          const matchesStarred = starredFilter === 'all' || (starredFilter === 'starred' && video.isStarred);
+          return matchesSearchText && matchesDuration && matchesStarred;
         });
         setFilteredVideoList(filteredVideos);
-      }, [searchText, videos, durationFilter]);
+      }, [searchText, videos, durationFilter, starredFilter]);
 
       const handleSelectVideo = (video: IVideoDetails) => {
         if (selectedVideos.some((v) => v._id === video._id)) {
@@ -78,12 +80,12 @@ function PlaylistIDPage() {
         }
         const handleFavoriteClick = useDebouncedCallback(async(video: IVideoDetails) => {
           try {
-            video.isFavourite = !video.isFavourite
+            video.isStarred = !video.isStarred
             setVideos([...videos])
-            await api.post(`/library/videos/favourite`,{libraryId:video.libraryId} )
+            await api.post(`/library/videos/starred`,{libraryId:video.libraryId} )
           } catch (error) {
             console.log(error)
-            video.isFavourite = !video.isFavourite
+            video.isStarred = !video.isStarred
             setVideos([...videos])
           }
         }, 500)
@@ -100,8 +102,11 @@ function PlaylistIDPage() {
         <Input placeholder='Search' onChange={(e) => setSearchText(e.target.value)} value={searchText} />
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant='outline' className='w-16 mx-2'>
-              {durationFilter === 'all' ? 'All' : durationFilter === 'short' ? 'Short' : durationFilter === 'medium' ? 'Medium' : 'Long'}
+            <Button variant='outline' className='w-16 mx-2 relative'>
+              <Filter size={20} />
+              {[durationFilter, starredFilter].some((filter) => filter !== 'all') && <span className='absolute top-0 right-0 w-5 h-5 flex items-center justify-center rounded-full bg-red-500'>
+                {[durationFilter, starredFilter].filter((filter) => filter !== 'all').length}
+                </span>}
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent>
@@ -111,6 +116,11 @@ function PlaylistIDPage() {
               <DropdownMenuRadioItem value='short'>Short &lt; 5m</DropdownMenuRadioItem>
               <DropdownMenuRadioItem value='medium'>Medium &gt; 5m - &lt; 20m</DropdownMenuRadioItem>
               <DropdownMenuRadioItem value='long'>Long &gt; 20m</DropdownMenuRadioItem>
+            </DropdownMenuRadioGroup>
+            <DropdownMenuLabel>Starred</DropdownMenuLabel>
+            <DropdownMenuRadioGroup value={starredFilter} onValueChange={setStarredFilter}>
+              <DropdownMenuRadioItem value='all'>All</DropdownMenuRadioItem>
+              <DropdownMenuRadioItem value='starred'>Starred</DropdownMenuRadioItem>
             </DropdownMenuRadioGroup>
           </DropdownMenuContent>
         </DropdownMenu>
@@ -147,13 +157,13 @@ function PlaylistIDPage() {
           <div onClick={()=>{
             if(selectMode) handleSelectVideo(video)
           }} key={video._id} className='flex relative gap-4 items-center'>
-            {selectMode ? (selectedVideos.includes(video) ?( <CheckSquare2 size={27} className=' cursor-pointer bg- absolute z-50 bottom-4 right-4 duration-150' onClick={() => handleSelectVideo(video)} />): <Square size={27} className=' absolute z-50 bottom-4 right-4  cursor-pointer hover:bg-muted duration-150' onClick={() => handleSelectVideo(video)} />):<Star size={27} onClick={()=>handleFavoriteClick(video)} className={`cursor-pointer absolute z-50 bottom-4 right-4 ${video.isFavourite ? 'text-yellow-400 fill-yellow-300 duration-300' : 'text-gray-500'}`}/>}
+            {selectMode ? (selectedVideos.includes(video) ?( <CheckSquare2 size={27} className=' cursor-pointer bg- absolute z-50 bottom-4 right-4 duration-150' onClick={() => handleSelectVideo(video)} />): <Square size={27} className=' absolute z-50 bottom-4 right-4  cursor-pointer hover:bg-muted duration-150' onClick={() => handleSelectVideo(video)} />):<Star size={27} onClick={()=>handleFavoriteClick(video)} className={`cursor-pointer absolute z-50 bottom-4 right-4 ${video.isStarred ? 'text-yellow-400 fill-yellow-300 duration-300' : 'text-gray-500'}`}/>}
        <VideoGridCard key={video.youtubeId} videoDetails={video} type="playlist_entry" index={index} videoList={videos} setVideoList={setVideos} playlistId={id as string} isSelected={selectedVideos.some((selectedVideo) => selectedVideo._id === video._id)} selectMode={selectMode}/>
         </div>
         ))}
         </div>}
-        { moveToPlaylistOpen && <MoveToPlaylist  open={moveToPlaylistOpen} setOpen={setMoveToPlaylistOpen} videoList={videos} setVideoList={setVideos} bulkVideos={selectedVideos}  currentPlaylist={'idea'} bulk={true} />}
-
+        { moveToPlaylistOpen && <MoveToPlaylist  open={moveToPlaylistOpen} setOpen={setMoveToPlaylistOpen} videoList={videos} setVideoList={setVideos} bulkVideos={selectedVideos}  currentPlaylist={playlist?._id} bulk={true} />}
+        {filteredVideoList.length === 0 && !loadingVideos && <p className='text-center text-gray-500'>No videos found</p>}
         </div>
     </div>
     }</div>

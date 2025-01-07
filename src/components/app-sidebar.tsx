@@ -1,4 +1,4 @@
-import {  ChevronUp, Home, Library, ListVideo, Search, Settings, User2 } from "lucide-react"
+import {  ChevronUp, Home, Library, ListVideo, Search, Settings, User2, Star } from "lucide-react"
 import { useAuth } from "@/context/AuthContext"
 import {
   Sidebar,
@@ -36,6 +36,11 @@ const items = [
     title: "Search",
     url: "/search",
     icon: Search,
+  },
+  {
+    title:"Starred",
+    url: "/starred",
+    icon: Star
   },
   {
     title: "Settings",

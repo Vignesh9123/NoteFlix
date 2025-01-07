@@ -46,7 +46,7 @@ function VideosPage() {
         durationFilter === 'medium' && Number(video.duration) > 300 && Number(video.duration) <= 1200 ||
         durationFilter === 'long' && Number(video.duration) > 1200
       );
-      const matchesStarred = starredFilter === 'all' || (starredFilter === 'starred' && video.isFavourite);
+      const matchesStarred = starredFilter === 'all' || (starredFilter === 'starred' && video.isStarred);
       return matchesSearchText && matchesDuration && matchesStarred;
     });
     setFilteredVideoList(filteredVideos);
@@ -119,12 +119,12 @@ function VideosPage() {
 
   const handleFavoriteClick = useDebouncedCallback(async(video: IVideoDetails) => {
     try {
-      video.isFavourite = !video.isFavourite
+      video.isStarred = !video.isStarred
       setVideoList([...videoList])
-      await api.post(`/library/videos/favourite`,{libraryId:video.libraryId} )
+      await api.post(`/library/videos/starred`,{libraryId:video.libraryId} )
     } catch (error) {
       console.log(error)
-      video.isFavourite = !video.isFavourite
+      video.isStarred = !video.isStarred
       setVideoList([...videoList])
     }
   },500)
@@ -161,7 +161,7 @@ function VideosPage() {
             </DropdownMenuRadioGroup>
           </DropdownMenuContent>
         </DropdownMenu>
-        <div className=' mx-2'>
+        <div className='mx-2'>
           <Dialog open={ytLinkDialogOpen} onOpenChange={setYtLinkDialogOpen}>
             <DialogTrigger className='bg-primary p-2 rounded-full'>
               <Plus size={20} />
@@ -202,7 +202,7 @@ function VideosPage() {
       {displayMode === 'list' && (loadingVideos ? [1,2,3,4,5].map((num)=> <VideoListCardSkeleton key={num} />): filteredVideoList.map((video, index) => (
         <div onClick={()=>{
           if(selectMode) handleSelectVideo(video)}} key={video._id} className='flex gap-4 items-center'>
-          {selectMode ? (selectedVideos.includes(video) ?( <CheckSquare2 size={27} className='text-gray-500 cursor-pointer hover:bg-muted duration-150' onClick={() => handleSelectVideo(video)} />): <Square size={27} className='text-gray-500 cursor-pointer hover:bg-muted duration-150' onClick={() => handleSelectVideo(video)} />): <Star size={27} onClick={()=>handleFavoriteClick(video)} className={`cursor-pointer ${video.isFavourite ? 'text-yellow-400 fill-yellow-300 duration-300' : 'text-gray-500'}`}/>}
+          {selectMode ? (selectedVideos.includes(video) ?( <CheckSquare2 size={27} className='text-gray-500 cursor-pointer hover:bg-muted duration-150' onClick={() => handleSelectVideo(video)} />): <Square size={27} className='text-gray-500 cursor-pointer hover:bg-muted duration-150' onClick={() => handleSelectVideo(video)} />): <Star size={27} onClick={()=>handleFavoriteClick(video)} className={`cursor-pointer ${video.isStarred ? 'text-yellow-400 fill-yellow-300 duration-300' : 'text-gray-500'}`}/>}
         <VideoListCard key={video.youtubeId} videoDetails={video} type="standalone" index={index} videoList={videoList} setVideoList={setVideoList} isSelected={selectedVideos.some((selectedVideo) => selectedVideo._id === video._id)} selectMode={selectMode} />
         </div>
       ))) }
@@ -213,14 +213,14 @@ function VideosPage() {
             if(selectMode) handleSelectVideo(video)
           }} key={video._id} className='flex relative gap-4 items-center'>
             {selectMode ? (selectedVideos.includes(video) ?( <CheckSquare2 size={27} className=' cursor-pointer bg- absolute z-50 bottom-4 right-4 duration-150' onClick={() => handleSelectVideo(video)} />): <Square size={27} className=' absolute z-50 bottom-4 right-4  cursor-pointer hover:bg-muted duration-150' onClick={() => handleSelectVideo(video)} />):
-              <Star size={27} onClick={()=>handleFavoriteClick(video)} className={`cursor-pointer absolute z-50 bottom-4 right-4 ${video.isFavourite ? 'text-yellow-400 fill-yellow-300 duration-300' : 'text-gray-500'}`}/>
+              <Star size={27} onClick={()=>handleFavoriteClick(video)} className={`cursor-pointer absolute z-50 bottom-4 right-4 ${video.isStarred ? 'text-yellow-400 fill-yellow-300 duration-300' : 'text-gray-500'}`}/>
             }
        <VideoGridCard key={video.youtubeId} videoDetails={video} type="standalone" index={index} videoList={videoList} setVideoList={setVideoList} isSelected={selectedVideos.some((selectedVideo) => selectedVideo._id === video._id)} selectMode={selectMode}/>
         </div>
         ))}
         </div>}
 
-        {filteredVideoList.length === 0 && !loadingVideos && <p className='text-center text-gray-500'>No videos found</p>}
+        {!loadingVideos && filteredVideoList.length === 0  && <p className='text-center text-gray-500'>No videos found</p>}
       </div>
     </div>
   )

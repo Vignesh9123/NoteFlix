@@ -82,7 +82,7 @@ const librarySchema = new mongoose.Schema({
         required: true,
         default: "to_watch"
     },
-    isFavourite: {
+    isStarred: {
         type: Boolean,
         default: false
     }

@@ -24,7 +24,8 @@ export interface IVideoDetails {
     summary: string;
     status: "watched" | "to_watch" | "in_progress";
     isStandalone: boolean;
-    isFavourite: boolean;
+    isStarred: boolean;
+    playlistId: string;
 }
 
 export interface ILibrary extends Document {
@@ -40,7 +41,8 @@ export interface ILibrary extends Document {
     rating: number;
     addedAt: Date;
     lastUpdated: Date;
-    isFavourite: boolean;
+    isStarred: boolean;
+    videoDetails: IVideoDetails;
 }
 
 export interface IUserNote extends Document {
