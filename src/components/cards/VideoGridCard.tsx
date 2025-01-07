@@ -41,7 +41,7 @@ function VideoGridCard({videoDetails, type, index, videoList, setVideoList, play
           </CardHeader>
           <CardContent>
           <div className='flex flex-col gap-2'>
-            <p className='text-lg font-semibold line-clamp-1'>{videoDetails.title}</p>
+            <p title={videoDetails.title} className='text-lg font-semibold line-clamp-1'>{videoDetails.title}</p>
             <p className='text-gray-500 line-clamp-1'>{videoDetails.channelName}</p>
             <p className='text-gray-500 flex gap-2'><Calendar /> {new Date(videoDetails.publishedAt).toLocaleDateString('en-IN')}</p><p className='text-gray-500 flex gap-2'><Clock /> {secondsToTime(Number(videoDetails.duration))}</p>
           </div>

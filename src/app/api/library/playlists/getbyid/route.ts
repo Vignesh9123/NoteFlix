@@ -43,7 +43,7 @@ export async function POST(request: NextRequest) {
                 {
                     $addFields: {
                         videoDetails: {
-                            $mergeObjects: ["$videoDetails", { libraryId: "$_id", status: "$status" }]
+                            $mergeObjects: ["$videoDetails", { libraryId: "$_id", status: "$status", isFavourite: "$isFavourite" }]
                         }
                     }
                 },

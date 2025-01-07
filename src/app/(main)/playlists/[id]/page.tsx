@@ -4,13 +4,14 @@ import React, {useEffect, useState} from 'react'
 import { api } from '@/config/config'
 import { IPlaylist, IVideoDetails } from '@/types'
 import VideoListCard from '@/components/cards/VideoListCard'
-import { ListVideo, Grid2X2, CheckSquare2, Square } from 'lucide-react'
+import { ListVideo, Grid2X2, CheckSquare2, Square, Star } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuLabel, DropdownMenuRadioGroup, DropdownMenuRadioItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
 import VideoGridCard from '@/components/cards/VideoGridCard'
 import VideoListCardSkeleton from '@/components/skeletons/VideoListCardSkeleton'
 import MoveToPlaylist from '@/components/dialogs/MoveToPlaylist'
+import { useDebouncedCallback } from 'use-debounce'
 function PlaylistIDPage() {
     const {id} = useParams()
     const [playlist, setPlaylist] = useState<IPlaylist | null>(null)
@@ -75,6 +76,17 @@ function PlaylistIDPage() {
             setLoadingVideos(false)
         })
         }
+        const handleFavoriteClick = useDebouncedCallback(async(video: IVideoDetails) => {
+          try {
+            video.isFavourite = !video.isFavourite
+            setVideos([...videos])
+            await api.post(`/library/videos/favourite`,{libraryId:video.libraryId} )
+          } catch (error) {
+            console.log(error)
+            video.isFavourite = !video.isFavourite
+            setVideos([...videos])
+          }
+        }, 500)
     useEffect(() => {
         fetchVideos()
     }, [])
@@ -129,13 +141,13 @@ function PlaylistIDPage() {
         <VideoListCard key={video.youtubeId} videoDetails={video} type="playlist_entry" index={index} playlistId={id as string} videoList={videos} setVideoList={setVideos} isSelected={selectedVideos.some((selectedVideo) => selectedVideo._id === video._id)} selectMode={selectMode} />
         </div>
       )))}
- {displayMode === 'grid' && <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-4'>
+ {displayMode === 'grid' && <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-4 mt-5'>
         {loadingVideos ? [1,2,3,4,5].map((num)=> <VideoListCardSkeleton key={num} />): 
         filteredVideoList.map((video, index) => (
           <div onClick={()=>{
             if(selectMode) handleSelectVideo(video)
           }} key={video._id} className='flex relative gap-4 items-center'>
-            {selectMode && (selectedVideos.includes(video) ?( <CheckSquare2 size={27} className=' cursor-pointer bg- absolute z-50 bottom-4 right-4 duration-150' onClick={() => handleSelectVideo(video)} />): <Square size={27} className=' absolute z-50 bottom-4 right-4  cursor-pointer hover:bg-muted duration-150' onClick={() => handleSelectVideo(video)} />)}
+            {selectMode ? (selectedVideos.includes(video) ?( <CheckSquare2 size={27} className=' cursor-pointer bg- absolute z-50 bottom-4 right-4 duration-150' onClick={() => handleSelectVideo(video)} />): <Square size={27} className=' absolute z-50 bottom-4 right-4  cursor-pointer hover:bg-muted duration-150' onClick={() => handleSelectVideo(video)} />):<Star size={27} onClick={()=>handleFavoriteClick(video)} className={`cursor-pointer absolute z-50 bottom-4 right-4 ${video.isFavourite ? 'text-yellow-400 fill-yellow-300 duration-300' : 'text-gray-500'}`}/>}
        <VideoGridCard key={video.youtubeId} videoDetails={video} type="playlist_entry" index={index} videoList={videos} setVideoList={setVideos} playlistId={id as string} isSelected={selectedVideos.some((selectedVideo) => selectedVideo._id === video._id)} selectMode={selectMode}/>
         </div>
         ))}

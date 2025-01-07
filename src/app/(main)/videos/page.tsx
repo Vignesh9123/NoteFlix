@@ -20,6 +20,7 @@ import { DropdownMenu, DropdownMenuTrigger, DropdownMenuLabel, DropdownMenuConte
 import VideoListCardSkeleton from '@/components/skeletons/VideoListCardSkeleton'
 import MoveToPlaylist from '@/components/dialogs/MoveToPlaylist'
 import VideoGridCard from '@/components/cards/VideoGridCard'
+import { useDebouncedCallback } from 'use-debounce'
 function VideosPage() {
   const [ytLinkDialogOpen, setYtLinkDialogOpen] = useState(false)
   const [youtubeUrl, setYoutubeUrl] = useState('')
@@ -114,7 +115,7 @@ function VideosPage() {
     fetchVideos()
   }, [])
 
-  const handleFavoriteClick = async(video: IVideoDetails) => {
+  const handleFavoriteClick = useDebouncedCallback(async(video: IVideoDetails) => {
     try {
       video.isFavourite = !video.isFavourite
       setVideoList([...videoList])
@@ -124,7 +125,7 @@ function VideosPage() {
       video.isFavourite = !video.isFavourite
       setVideoList([...videoList])
     }
-  }
+  },500)
 
   return (
     <div className='m-5'>
@@ -191,7 +192,7 @@ function VideosPage() {
       {displayMode === 'list' && (loadingVideos ? [1,2,3,4,5].map((num)=> <VideoListCardSkeleton key={num} />): filteredVideoList.map((video, index) => (
         <div onClick={()=>{
           if(selectMode) handleSelectVideo(video)}} key={video._id} className='flex gap-4 items-center'>
-          {selectMode && (selectedVideos.includes(video) ?( <CheckSquare2 size={27} className='text-gray-500 cursor-pointer hover:bg-muted duration-150' onClick={() => handleSelectVideo(video)} />): <Square size={27} className='text-gray-500 cursor-pointer hover:bg-muted duration-150' onClick={() => handleSelectVideo(video)} />)}
+          {selectMode ? (selectedVideos.includes(video) ?( <CheckSquare2 size={27} className='text-gray-500 cursor-pointer hover:bg-muted duration-150' onClick={() => handleSelectVideo(video)} />): <Square size={27} className='text-gray-500 cursor-pointer hover:bg-muted duration-150' onClick={() => handleSelectVideo(video)} />): <Star size={27} onClick={()=>handleFavoriteClick(video)} className={`cursor-pointer ${video.isFavourite ? 'text-yellow-400 fill-yellow-300 duration-300' : 'text-gray-500'}`}/>}
         <VideoListCard key={video.youtubeId} videoDetails={video} type="standalone" index={index} videoList={videoList} setVideoList={setVideoList} isSelected={selectedVideos.some((selectedVideo) => selectedVideo._id === video._id)} selectMode={selectMode} />
         </div>
       ))) }
@@ -202,7 +203,7 @@ function VideosPage() {
             if(selectMode) handleSelectVideo(video)
           }} key={video._id} className='flex relative gap-4 items-center'>
             {selectMode ? (selectedVideos.includes(video) ?( <CheckSquare2 size={27} className=' cursor-pointer bg- absolute z-50 bottom-4 right-4 duration-150' onClick={() => handleSelectVideo(video)} />): <Square size={27} className=' absolute z-50 bottom-4 right-4  cursor-pointer hover:bg-muted duration-150' onClick={() => handleSelectVideo(video)} />):
-              <Star size={27} onClick={()=>handleFavoriteClick(video)} className={`cursor-pointer absolute z-50 bottom-4 right-4 ${video.isFavourite ? 'text-yellow-400 fill-yellow-300' : 'text-gray-500'}`}/>
+              <Star size={27} onClick={()=>handleFavoriteClick(video)} className={`cursor-pointer absolute z-50 bottom-4 right-4 ${video.isFavourite ? 'text-yellow-400 fill-yellow-300 duration-300' : 'text-gray-500'}`}/>
             }
        <VideoGridCard key={video.youtubeId} videoDetails={video} type="standalone" index={index} videoList={videoList} setVideoList={setVideoList} isSelected={selectedVideos.some((selectedVideo) => selectedVideo._id === video._id)} selectMode={selectMode}/>
         </div>

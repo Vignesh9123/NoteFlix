@@ -42,7 +42,7 @@ function VideoListCard({videoDetails, type, index, videoList, setVideoList, play
     <Image src={videoDetails.thumbnailUrl} alt='logo' width={200} height={200} className='w-[200px] h-full object-cover' />
     </div>
     <div className='flex flex-col items-start gap-2'>
-        <h1 className='text-md md:text-xl lg:text-2xl font-bold line-clamp-1'>{videoDetails.title}</h1>
+        <h1 title={videoDetails.title} className='text-md md:text-xl lg:text-2xl font-bold line-clamp-1'>{videoDetails.title}</h1>
         <div className='flex lg:flex-col flex-row items-center lg:items-start gap-4 lg:gap-1'>
 
         <div className='flex items-center gap-2'>
