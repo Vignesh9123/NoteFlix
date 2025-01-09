@@ -10,6 +10,8 @@ import { Input } from '@/components/ui/input';
 import NotesListCard from '@/components/cards/NotesListCard';
 import { MultiStepLoader as Loader } from '@/components/ui/multi-step-loader';
 import AddNoteDialog from '@/components/cards/AddNoteDialog';
+import { AxiosError } from 'axios';
+import toast from 'react-hot-toast';
 function VideoPage() {
   const flag: number = 1;
   const { id } = useParams();
@@ -53,7 +55,11 @@ function VideoPage() {
         setAddNoteDialogOpen(true);
       }
       catch (error) {
-        console.log(error)
+        if(error instanceof AxiosError){
+          toast.error(error.response?.data.message || "Something went wrong, please try again later.");
+        }else{
+          toast.error("Something went wrong, please try again later.");
+        }
       }
       finally {
         setAILoading(false);
@@ -70,7 +76,11 @@ function VideoPage() {
         setNoteTitle("Summary of the video");
         setAddNoteDialogOpen(true);
       } catch (error) {
-        console.log(error);
+        if(error instanceof AxiosError){
+          toast.error(error.response?.data.message || "Something went wrong, please try again later.");
+        }else{
+          toast.error("Something went wrong, please try again later.");
+        }
       }
       finally {
         setAILoading(false);
@@ -92,6 +102,9 @@ function VideoPage() {
       setUserNotes(res.data.data.userNotes);
       setFilteredNotes(res.data.data.userNotes);
     })
+      .catch((err) => {
+        toast.error(err.response.data.message || "Something went wrong, please try again later.");
+      })
       .finally(() => {
         setLoading(false);
 

@@ -21,6 +21,8 @@ import VideoListCardSkeleton from '@/components/skeletons/VideoListCardSkeleton'
 import MoveToPlaylist from '@/components/dialogs/MoveToPlaylist'
 import VideoGridCard from '@/components/cards/VideoGridCard'
 import { useDebouncedCallback } from 'use-debounce'
+import { toast } from 'react-hot-toast'
+import { AxiosError } from 'axios'
 function VideosPage() {
   const [ytLinkDialogOpen, setYtLinkDialogOpen] = useState(false)
   const [youtubeUrl, setYoutubeUrl] = useState('')
@@ -65,8 +67,12 @@ function VideosPage() {
       setYoutubeUrl('')
       setOpenAddVideoDialog(true)
     } catch (error) {
-      console.log(error)
       setOpenAddVideoDialog(false)
+      if(error instanceof AxiosError){
+        toast.error(error.response?.data.message || "Something went wrong, please try again later")
+      }else{
+        toast.error("Something went wrong, please try again later")
+      }
     }
     finally {
       setLoading(false)
@@ -83,7 +89,11 @@ function VideosPage() {
       fetchVideos()
       setSelectedVideos([])
     } catch (error) {
-      console.log(error)
+      if(error instanceof AxiosError){
+        toast.error(error.response?.data.message || "Something went wrong, please try again later")
+      }else{
+        toast.error("Something went wrong, please try again later")
+      }
     }
     }
 
@@ -106,7 +116,11 @@ function VideosPage() {
       setVideoList(videos)
       setFilteredVideoList(videos)
     } catch (error) {
-      console.log(error)
+      if(error instanceof AxiosError){
+        toast.error(error.response?.data.message || "Something went wrong, please try again later")
+      }else{
+        toast.error("Something went wrong, please try again later")
+      }
     }
     finally {
       setLoadingVideos(false)
@@ -123,7 +137,12 @@ function VideosPage() {
       setVideoList([...videoList])
       await api.post(`/library/videos/starred`,{libraryId:video.libraryId} )
     } catch (error) {
-      console.log(error)
+      if(error instanceof AxiosError){
+        toast.error(error.response?.data.message || "Something went wrong, please try again later")
+      }
+      else{
+        toast.error("Something went wrong, please try again later")
+      }
       video.isStarred = !video.isStarred
       setVideoList([...videoList])
     }

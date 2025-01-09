@@ -6,6 +6,8 @@ import { Label } from '@radix-ui/react-label'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select'
 import { Loader2 } from 'lucide-react'
 import { Button } from '../ui/button'
+import toast from 'react-hot-toast'
+import { AxiosError } from 'axios'
 function MoveToPlaylist({open, setOpen, videoDetails,videoList, setVideoList, setIsDeleting, currentPlaylist, bulk, bulkVideos}: {open: boolean, setOpen: (open: boolean) => void, videoDetails?: IVideoDetails, videoList?: IVideoDetails[], setVideoList?: (videoList: IVideoDetails[]) => void, setIsDeleting?: (isDeleting: boolean) => void, currentPlaylist?: string, bulk?: boolean, bulkVideos?: IVideoDetails[]}) {
     const [playlists, setPlaylists] = useState<IPlaylist[]>([])
     const [selectedPlaylist, setSelectedPlaylist] = useState<string | null>(null)
@@ -21,6 +23,7 @@ function MoveToPlaylist({open, setOpen, videoDetails,videoList, setVideoList, se
                 setPlaylists(playlists);
             }
         })
+        .catch((err) => toast.error(err.response.data.message || "Something went wrong, please try again later."))
         .finally(() => {
             setPlaylistLoading(false);
         })
@@ -44,7 +47,12 @@ function MoveToPlaylist({open, setOpen, videoDetails,videoList, setVideoList, se
                         setVideoList(videoList.filter((video) => video.libraryId !== videoDetails?.libraryId));
                 }
             } catch (err) {
-                console.log(err);
+                if(err instanceof AxiosError){
+                    toast.error(err.response?.data.message || "Something went wrong, please try again later.");
+                }
+                else {
+                    toast.error("Something went wrong, please try again later.");
+                }
             } finally {
                 setOpen(false);
                 setIsDeleting?.(false);

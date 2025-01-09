@@ -5,6 +5,8 @@ import { useAuth } from '@/context/AuthContext'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { api } from '@/config/config'
+import toast from 'react-hot-toast'
+import { AxiosError } from 'axios'
 function page() {
     const {user} = useAuth()
     const [name, setName] = useState(user?.name)
@@ -48,7 +50,11 @@ function page() {
             }
 
         } catch (error) {
-            console.log(error)
+            if(error instanceof AxiosError){
+                toast.error(error.response?.data.message || "Something went wrong, please try again later")
+            }else{
+                toast.error("Something went wrong, please try again later")
+            }
         }
         finally{
             setLoading({...loading, name:false})
@@ -70,7 +76,11 @@ function page() {
                 })
             }
         } catch (error) {
-            console.log(error)
+            if(error instanceof AxiosError){
+                toast.error(error.response?.data.message || "Something went wrong, please try again later")
+            }else{
+                toast.error("Something went wrong, please try again later")
+            }
         }
         finally{
             setLoading({...loading, password:false})

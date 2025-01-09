@@ -10,8 +10,9 @@ import  Link  from "next/link";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { secondsToTime, timeToSeconds } from "@/lib/utils";
-import { useRouter } from 'nextjs-toploader/app';
-function NoteTestPage() {
+import toast from "react-hot-toast";
+import { AxiosError } from "axios";
+function NotePage() {
   const [text, setText] = useState('')
   const [note, setNote] = useState<IUserNote | null>(null)
   const [library, setLibrary] = useState<ILibrary | null>(null)
@@ -22,7 +23,6 @@ function NoteTestPage() {
   const [updateDisabled, setUpdateDisabled] = useState(true)
   const { id } = useParams()
 
-  const router = useRouter()
 
   const getNote = async () => {
     try {
@@ -34,7 +34,12 @@ function NoteTestPage() {
         setLibrary(response.data.data.library);
         setVideo(response.data.data.library.videoDetails);
     } catch (error) {
-        console.log(error);
+      if(error instanceof AxiosError){
+          toast.error(error.response?.data.message || "Something went wrong, please try again later.");
+      }
+      else{
+        toast.error("Something went wrong, please try again later.");
+      }
     }    
   }
 
@@ -47,7 +52,12 @@ function NoteTestPage() {
         await api.put('/video/notes', {noteId: note?._id, notes: {text, title, timestamp: timeToSeconds(timestamp)}});
         getNote();
     } catch (error) {
-        console.log(error);
+      if(error instanceof AxiosError){
+        toast.error(error.response?.data.message || "Something went wrong, please try again later.");
+      }
+      else{
+        toast.error("Something went wrong, please try again later.");
+      }
     }    
   }
 
@@ -104,4 +114,4 @@ function NoteTestPage() {
   )
 }
 
-export default NoteTestPage
+export default NotePage

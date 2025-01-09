@@ -10,6 +10,8 @@ import { api } from '@/config/config';
 import { IVideoDetails } from '@/types';
 import { secondsToTime } from '@/lib/utils';
 import AddVideoUsingYTDetails from '@/components/dialogs/AddVideoUsingYTDetails';
+import { AxiosError } from 'axios';
+import toast from 'react-hot-toast';
 function Page() {
     const [searchQuery, setSearchQuery] = useState('');
     const [searchResults, setSearchResults] = useState<IVideoDetails[]>([]);
@@ -26,7 +28,13 @@ function Page() {
             setSearchedQuery(searchQuery);
             setSearchResults(res.data.data);
         }).catch((err) => {
-            console.log(err);
+          if(err instanceof AxiosError){
+            toast.error(err.response?.data.message || "Something went wrong, please try again later.");
+          }
+          else{
+            toast.error("Something went wrong, please try again later.");
+          }
+
         }).finally(() => {
             setLoading(false);
         })

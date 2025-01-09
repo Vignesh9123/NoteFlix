@@ -10,6 +10,8 @@ import { api } from '@/config/config'
 import { Loader2 } from 'lucide-react'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select'
 import { secondsToTime } from '@/lib/utils'
+import toast from 'react-hot-toast'
+import { AxiosError } from 'axios'
 function AddVideo({open, setOpen, videoDetails, setVideoDetails, setVideoList, videoList}: {open: boolean, setOpen: (open: boolean) => void, videoDetails: IVideoDetails, setVideoDetails: (videoDetails: IVideoDetails|null) => void, setVideoList: (videoList: IVideoDetails[]) => void, videoList: IVideoDetails[]}) {
     const [title, setTitle] = useState(videoDetails.title || '');
     const [duration, setDuration] = useState(videoDetails.duration || '');
@@ -24,6 +26,9 @@ function AddVideo({open, setOpen, videoDetails, setVideoDetails, setVideoList, v
         api.get('/library/playlists').then((res) => {
             console.log("res", res)
             setPlaylists(res.data.data)
+        })
+        .catch((err) => {
+            toast.error(err.response.data.message || "Something went wrong, please try again later.");
         })
         .finally(() => {
             setPlaylistLoading(false);
@@ -59,13 +64,20 @@ function AddVideo({open, setOpen, videoDetails, setVideoDetails, setVideoList, v
             libraryId: response.data.data._id,
             status: response.data.data.status,
             isStandalone: response.data.data.type === 'standalone' ? true : false,
+            isStarred: false,
+            playlistId: response.data.data.playlistId || null
          }
          if(videoList && newVideo.isStandalone ){
             setVideoList([...videoList, newVideo]);
          }
          setOpen(false);
         } catch (error) {
-            console.log("error", error)
+            if(error instanceof AxiosError) {
+                toast.error(error.response?.data.message || "Something went wrong, please try again later");
+            }
+            else {
+                toast.error("Something went wrong, please try again later");
+            }
         }
         finally {
            setVideoDetails(null);

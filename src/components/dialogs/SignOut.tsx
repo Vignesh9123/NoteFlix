@@ -5,6 +5,7 @@ import { useAuth } from '@/context/AuthContext'
 import { api } from '@/config/config'
 import { useRouter } from 'nextjs-toploader/app';
 import { Button } from '../ui/button'
+import toast from 'react-hot-toast'
 function SignOut({open, setOpen}: {open: boolean, setOpen: (open: boolean) => void}) {
     const {user, setUser} = useAuth();
     const router = useRouter();
@@ -12,8 +13,9 @@ function SignOut({open, setOpen}: {open: boolean, setOpen: (open: boolean) => vo
         if(user){
             api.get('/user/auth/logout').then(() => {
                 setUser(null);
+                toast.success("Signed out successfully");
                 router.push('/login');
-            }).catch((err) => console.log(err))
+            }).catch((err) => toast.error(err.response.data.message || "Something went wrong, please try again later."))
             .finally(() => setOpen(false));
         }
         else{

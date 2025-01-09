@@ -11,6 +11,8 @@ import VideoListCardSkeleton from '@/components/skeletons/VideoListCardSkeleton'
 import { useDebouncedCallback } from 'use-debounce';
 import VideoListCard from '@/components/cards/VideoListCard';
 import MoveToPlaylist from '@/components/dialogs/MoveToPlaylist';
+import { AxiosError } from 'axios';
+import toast from 'react-hot-toast';
 
 function Starred() {
     const [searchQuery, setSearchQuery] = useState('');
@@ -51,7 +53,14 @@ function Starred() {
             setVideos(videos)
             setFilteredVideos(videos)
         }catch(e){
-            console.log(e)
+          if(e instanceof AxiosError){
+            setVideos([])
+            setFilteredVideos([])
+            toast.error(e.response?.data.message || "Something went wrong, please try again later.");
+          }
+          else{
+            toast.error("Something went wrong, please try again later.");
+          }
         }
         finally{
             setLoading(false)
@@ -65,7 +74,6 @@ function Starred() {
             videos.filter((v) => (v._id !== video._id))
           )
         } catch (error) {
-          console.log(error)
           video.isStarred = !video.isStarred
         }
       },500)
@@ -85,9 +93,14 @@ function Starred() {
           fetchAllStarredVideos()
           setSelectedVideos([])
         } catch (error) {
-          console.log(error)
+          if(error instanceof AxiosError){
+            toast.error(error.response?.data.message || "Something went wrong, please try again later.");
+          }
+          else{
+            toast.error("Something went wrong, please try again later.");
+          }
         }
-        }
+    }
     useEffect(()=>{
         fetchAllStarredVideos()
     },[])

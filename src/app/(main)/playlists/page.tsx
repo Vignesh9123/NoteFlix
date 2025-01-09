@@ -6,6 +6,7 @@ import { IPlaylist } from '@/types'
 import { Input } from '@/components/ui/input'
 import AddPlaylist from '@/components/dialogs/AddPlaylist'
 import PlaylistGridCardSkeleton from '@/components/skeletons/PlaylistGridCardSkeleton'
+import toast from 'react-hot-toast'
 function PlaylistsPage() {
   const [playlists, setPlaylists] = useState<IPlaylist[]>([])
   const [loading, setLoading] = useState(true)
@@ -18,6 +19,7 @@ function PlaylistsPage() {
       setPlaylists(res.data.data)
       setFilteredPlaylists(res.data.data)
     })
+    .catch((err) => toast.error(err.response.data.message || "Something went wrong, please try again later."))
     .finally(() => {
       setLoading(false)
     })

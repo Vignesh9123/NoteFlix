@@ -4,7 +4,7 @@ import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
 import { AuthProvider } from "@/context/AuthContext";
 import NextTopLoader from 'nextjs-toploader';
-
+import {Toaster} from 'react-hot-toast';
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -41,7 +41,8 @@ export default function RootLayout({
             enableSystem
             disableTransitionOnChange
           >
-                    <NextTopLoader showSpinner={false}/>
+          <NextTopLoader showSpinner={false}/>
+          <Toaster/>
 
             {children}
           </ThemeProvider>

@@ -7,6 +7,8 @@ import { Label } from '../ui/label';
 import { timeToSeconds } from '@/lib/utils';
 import Editor from '../TipTap';
 import { Loader2 } from 'lucide-react';
+import { AxiosError } from 'axios';
+import toast from 'react-hot-toast';
 function AddNoteDialog({ open, setOpen, libraryId, fetchNotes, youtubeId, text, noteTitle }: { open: boolean, setOpen: (open: boolean) => void, libraryId: string, fetchNotes: () => void, youtubeId: string, text?: string, noteTitle?: string }) {
     const [note, setNote] = useState<string | null>(null);
     const [timestamp, setTimestamp] = useState<string | null>(null);
@@ -35,7 +37,12 @@ function AddNoteDialog({ open, setOpen, libraryId, fetchNotes, youtubeId, text, 
                 fetchNotes();
             })
             .catch((err) => {
-                console.log(err);
+                if(err instanceof AxiosError){
+                    toast.error(err.response?.data.message || "Something went wrong, please try again later.");
+                }
+                else{
+                    toast.error("Something went wrong, please try again later.");
+                }
             })
             .finally(() => {
                 setLoading(false);

@@ -3,15 +3,15 @@ import React, { useState, useEffect } from 'react';
 import { AnimatePresence } from 'framer-motion';
 import { AnimatedCard } from '@/components/cards/AnimatedCard';
 import { api } from '@/config/config';
+import toast from 'react-hot-toast';
 function App() {
-  // TODO: Stats fetching
   const [playlistCount, setPlaylistCount] = useState(0);
   const [videoCount, setVideoCount] = useState(0);
   const [loading, setLoading] = useState(true);
   const cards = [
     { title: 'Playlists', value: playlistCount },
     { title: 'Videos', value: videoCount },
-    { title: 'Hours Completed', value: 10 },
+    { title: 'Hours Completed', value: 0 },
   ];
   useEffect(() => {
     setLoading(true);
@@ -19,7 +19,7 @@ function App() {
       setPlaylistCount(res.data.data.playlistCount);
       setVideoCount(res.data.data.videoCount);
     })
-    .catch((err) => console.log(err))
+    .catch((err) => toast.error(err.response.data.message || "Something went wrong, please try again later."))
     .finally(() => setLoading(false));
 
   }, []);

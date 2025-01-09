@@ -4,10 +4,11 @@ import { Dialog,DialogHeader,DialogTitle,DialogDescription, DialogContent } from
 import { Select, SelectContent,SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from '../ui/select';
 import { Button } from '../ui/button';
 import { api } from '@/config/config';
+import toast from 'react-hot-toast';
 function UpdateVideo({video, open, setOpen, updateStatusAnimation}: {open: boolean, setOpen: (open: boolean) => void, video:IVideoDetails,  updateStatusAnimation:()=>void}) {
     const [status, setStatus] = useState(video.status);
     const handleUpdateClick = async () => {
-        api.patch('/library/videos', {id: video.libraryId, status}).then(() =>{ video.status = status; updateStatusAnimation()}).catch((err) => console.log(err)).finally(() => setOpen(false));
+        api.patch('/library/videos', {id: video.libraryId, status}).then(() =>{ video.status = status; updateStatusAnimation()}).catch((err) => toast.error(err.response.data.message || "Something went wrong, please try again later.")).finally(() => setOpen(false));
         
     }
   return (

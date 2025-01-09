@@ -3,6 +3,8 @@ import {Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, Dia
 import { IVideoDetails } from '@/types'
 import { Button } from '../ui/button'
 import { api } from '@/config/config'
+import { AxiosError } from 'axios'
+import toast from 'react-hot-toast'
 function DeleteVideo({open, setOpen, videoDetails, setVideoList, videoList, setIsDeleting}: {open: boolean, setOpen: (open: boolean) => void, videoDetails: IVideoDetails, setVideoList: (videoList: IVideoDetails[]) => void, videoList: IVideoDetails[], setIsDeleting: (isDeleting: boolean) => void}) {
     const handleDeleteVideo = async () => {
         setIsDeleting(true);
@@ -11,7 +13,12 @@ function DeleteVideo({open, setOpen, videoDetails, setVideoList, videoList, setI
                 await api.delete('/library/videos', {data: {id: videoDetails.libraryId}});
                 setVideoList(videoList.filter((video) => video.libraryId !== videoDetails.libraryId));
             } catch (err) {
-                console.log(err);
+                if(err instanceof AxiosError){
+                    toast.error(err.response?.data.message || "Something went wrong, please try again later.");
+                }
+                else {
+                    toast.error("Something went wrong, please try again later.");
+                }
             } finally {
                 setOpen(false);
                 setIsDeleting(false);

@@ -10,13 +10,20 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuSeparator, DropdownMenuL
 import { Button } from '../ui/button';
 import { EllipsisVertical } from 'lucide-react';
 import { api } from '@/config/config';
+import { toast } from 'react-hot-toast';
+import { AxiosError } from 'axios';
 function NotesListCard({note, videoDetails, index, noteList, setNoteList}: {note: IUserNote, videoDetails: IVideoDetails, index: number, noteList: IUserNote[], setNoteList: (noteList: IUserNote[]) => void}) {
   const deleteClick = async () => {
     try {
         await api.delete('/video/notes', {data: {noteId: note?._id}});
         setNoteList(noteList.filter((noteItem) => noteItem._id !== note._id));
     } catch (error) {
-        console.log(error);
+      if(error instanceof AxiosError){
+        toast.error(error.response?.data.message || "Something went wrong, please try again later.");
+      }
+      else{
+        toast.error("Something went wrong, please try again later.");
+      }
     }    
   }
   const router = useRouter()

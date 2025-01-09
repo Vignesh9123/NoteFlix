@@ -5,6 +5,7 @@ import { Input } from '../ui/input'
 import { Button } from '../ui/button'
 import { Label } from '../ui/label'
 import { api } from '@/config/config'
+import toast from 'react-hot-toast'
 function UpdatePlaylist({open, setOpen, playlistDetails, setPlaylistList, playlistList}: {open: boolean, setOpen: (open: boolean) => void, playlistDetails: IPlaylist, setPlaylistList: (playlistList: IPlaylist[]) => void, playlistList: IPlaylist[]}) {
     const [name, setName] = useState(playlistDetails.name || '');
     const [description, setDescription] = useState(playlistDetails.description || '');
@@ -17,7 +18,7 @@ function UpdatePlaylist({open, setOpen, playlistDetails, setPlaylistList, playli
         .then(() => {
             setPlaylistList(playlistList.map((playlist) => playlist._id === playlistDetails._id ? {...playlist, name, description} : playlist));
         })
-        .catch((err) => console.log(err))
+        .catch((err) => toast.error(err.response.data.message || "Something went wrong, please try again later."))
         .finally(() => {
             setUpdatingPlaylist(false);
             setOpen(false);

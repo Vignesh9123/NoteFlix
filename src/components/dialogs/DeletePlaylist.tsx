@@ -3,13 +3,14 @@ import React from 'react'
 import { Dialog, DialogContent, DialogTitle, DialogDescription, DialogHeader } from '../ui/dialog'
 import { Button } from '../ui/button'
 import { api } from '@/config/config'
+import toast from 'react-hot-toast'
 function DeletePlaylist({playlistDetails, open, setOpen, playlists, setPlaylists}:{playlistDetails: IPlaylist, open: boolean, setOpen: (open: boolean) => void, playlists: IPlaylist[], setPlaylists: (playlists: IPlaylist[]) => void}) {
     const deleteClick = async () => {
         api.delete('/playlist', {data: {id: playlistDetails._id}})
         .then(() =>{
             setPlaylists(playlists.filter((playlist) => playlist._id.toString() !== playlistDetails._id.toString()));
         })
-        .catch((err) => console.log(err))
+        .catch((err) => toast.error(err.response.data.message || "Something went wrong, please try again later."))
         .finally(() => setOpen(false));
     }
   return (

@@ -10,6 +10,8 @@ import { useRouter } from 'nextjs-toploader/app';
 import { getAuth, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
 import { api } from "@/config/config"
 import {FaGoogle} from 'react-icons/fa'
+import { AxiosError } from "axios"
+import toast from "react-hot-toast"
 export default function LoginForm({
 className,
 ...props
@@ -31,50 +33,32 @@ const handleGoogleSignIn = async()=>{
       password: result.user.refreshToken,
     }
     api.post('/user/auth/googleauth', userData ).then((res) => {
-      console.log(res.data);
       setUser(res.data.user);
       router.push('/dashboard');
     })
   }catch(error){
-    console.log(error)
+    if(error instanceof AxiosError){
+      toast.error(error.response?.data.message || "Something went wrong, please try again later."); 
+    } 
+    else{
+      toast.error("Something went wrong, please try again later.");
+    }
   }
 }
 const handleSubmit = async(e: React.FormEvent<HTMLFormElement>) => {
   e.preventDefault()
   try {
-    const response = await fetch("/api/user/auth/signin", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ email, password }),
-    })
-    const data = await response.json()
-    if (!response.ok) {
-      // Handle different error status codes
-      switch (response.status) {
-        case 404:
-          alert("User not found. Please check your email.")
-          break
-        case 401:
-          alert("Invalid password. Please try again.")
-          break
-        case 400:
-          alert(data.message) // For "Login with Google" message
-          break
-        default:
-          alert("An error occurred while logging in")
-      }
-      return
-    }
-
-    // Success case
-    alert(data.message)
-    setUser(data.user)
+    const response = await api.post('/user/auth/login', { email, password });
+    toast.success("Logged in successfully");
+    setUser(response.data.data.user);
     router.push('/dashboard')    
   } catch (error) {
-    console.log(error)
-    alert("An error occurred while logging in")
+    if(error instanceof AxiosError){
+      toast.error(error.response?.data.message || "Something went wrong, please try again later.");
+    }
+    else{
+      toast.error("Something went wrong, please try again later.");
+    }
   }
 }
 return (

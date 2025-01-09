@@ -5,6 +5,7 @@ import { Input } from '../ui/input'
 import { Label } from '../ui/label'
 import { Button } from '../ui/button'
 import { api } from '@/config/config'
+import toast from 'react-hot-toast'
 function AddPlaylist({ open, setOpen }: { open: boolean, setOpen: (open: boolean) => void }) {
     const [playlistName, setPlaylistName] = useState('')
     const [playlistDescription, setPlaylistDescription] = useState('')
@@ -13,7 +14,7 @@ function AddPlaylist({ open, setOpen }: { open: boolean, setOpen: (open: boolean
         setLoading(true)
         api.post('/playlist', { name: playlistName, description: playlistDescription })
         .then((res) => console.log(res.data))
-        .catch((err) => console.log(err))
+        .catch((err) => toast.error(err.response.data.message || "Something went wrong, please try again later."))
         .finally(() =>{
             setLoading(false)
             setOpen(false)

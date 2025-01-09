@@ -12,6 +12,8 @@ import VideoGridCard from '@/components/cards/VideoGridCard'
 import VideoListCardSkeleton from '@/components/skeletons/VideoListCardSkeleton'
 import MoveToPlaylist from '@/components/dialogs/MoveToPlaylist'
 import { useDebouncedCallback } from 'use-debounce'
+import toast from 'react-hot-toast'
+import { AxiosError } from 'axios'
 function PlaylistIDPage() {
     const {id} = useParams()
     const [playlist, setPlaylist] = useState<IPlaylist | null>(null)
@@ -55,10 +57,16 @@ function PlaylistIDPage() {
           setLoading(true)
           const ids = selectedVideos.map((video) => video.libraryId)
           const response = await api.delete(`/library/videos/bulk`,  { data:{libraryIds:ids} })
+          toast.success("Video(s) deleted successfully")
           fetchVideos()
           setSelectedVideos([])
         } catch (error) {
-          console.log(error)
+          if(error instanceof AxiosError){
+            toast.error(error.response?.data.message || "Something went wrong, please try again later.");
+          }
+          else{
+            toast.error("Something went wrong, please try again later.");
+          }
         }
         }
         const fetchVideos = async () => {
@@ -71,7 +79,7 @@ function PlaylistIDPage() {
             setFilteredVideoList(res.data.data.videoDetails)
         })
         .catch((err) => {
-            console.log(err)
+            toast.error(err.response.data.message || "Something went wrong, please try again later.")
         })
         .finally(() => {
             setLoading(false)
@@ -84,7 +92,9 @@ function PlaylistIDPage() {
             setVideos([...videos])
             await api.post(`/library/videos/starred`,{libraryId:video.libraryId} )
           } catch (error) {
-            console.log(error)
+            if(error instanceof AxiosError){
+              toast.error(error.response?.data.message || "Something went wrong, please try again later.");
+            }
             video.isStarred = !video.isStarred
             setVideos([...videos])
           }
