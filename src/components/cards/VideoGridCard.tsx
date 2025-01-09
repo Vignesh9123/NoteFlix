@@ -2,7 +2,6 @@ import { IPlaylist, IVideoDetails } from '@/types'
 import { Calendar, Clock, EllipsisVertical, ListVideo } from 'lucide-react'
 import Image from 'next/image'
 import React, { useState } from 'react'
-import Link from 'next/link'
 import { motion } from 'framer-motion'
 import { secondsToTime } from '@/lib/utils'
 import { Badge } from '../ui/badge'
@@ -11,7 +10,7 @@ import UpdateVideo from '../dialogs/UpdateVideo'
 import DeleteVideo from '../dialogs/DeleteVideo'
 import MoveToPlaylist from '../dialogs/MoveToPlaylist'
 import { Card, CardContent, CardFooter, CardHeader } from '../ui/card'
-import { useRouter } from 'next/navigation'
+import { useRouter } from 'nextjs-toploader/app';
 function VideoGridCard({videoDetails, type, index, videoList, setVideoList, playlistId, isSelected, selectMode, playlistDetails}: {videoDetails: IVideoDetails, type: string, index: number, videoList: IVideoDetails[], setVideoList: (videoList: IVideoDetails[]) => void, playlistId?: string, isSelected?: boolean, selectMode?: boolean, playlistDetails?:IPlaylist}) {
     const [updateDialogOpen, setUpdateDialogOpen] = useState(false)
     const [animationClass, setAnimationClass] = useState('');

@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import Link from "next/link"
 import { useAuth } from "@/context/AuthContext"
-import { useRouter } from "next/navigation"
+import { useRouter } from 'nextjs-toploader/app';
 import { getAuth, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
 import { api } from "@/config/config"
 import {FaGoogle} from 'react-icons/fa'

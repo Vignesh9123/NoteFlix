@@ -10,7 +10,7 @@ import  Link  from "next/link";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { secondsToTime, timeToSeconds } from "@/lib/utils";
-import {useRouter} from 'next/navigation'
+import { useRouter } from 'nextjs-toploader/app';
 function NoteTestPage() {
   const [text, setText] = useState('')
   const [note, setNote] = useState<IUserNote | null>(null)

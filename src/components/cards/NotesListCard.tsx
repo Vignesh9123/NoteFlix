@@ -2,11 +2,10 @@ import React, { useState } from 'react'
 import { IUserNote, IVideoDetails } from '@/types'
 import { Checkbox } from '../ui/checkbox'
 import { secondsToTime } from '@/lib/utils';
-import Link from 'next/link';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '../ui/tooltip';
 import { motion } from 'framer-motion'
 import Editor from '../TipTap';
-import { useRouter } from 'next/navigation';
+import { useRouter } from 'nextjs-toploader/app';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuSeparator, DropdownMenuLabel, DropdownMenuTrigger, DropdownMenuGroup, DropdownMenuItem } from '../ui/dropdown-menu';
 import { Button } from '../ui/button';
 import { EllipsisVertical } from 'lucide-react';

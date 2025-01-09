@@ -9,7 +9,7 @@ import { FaGoogle } from "react-icons/fa"
 import { getAuth, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
 import { api } from "@/config/config"
 import { useAuth } from "@/context/AuthContext"
-import { useRouter } from "next/navigation"
+import { useRouter } from 'nextjs-toploader/app';
 
 export default function RegisterForm({
   className,

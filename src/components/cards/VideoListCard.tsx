@@ -10,7 +10,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import UpdateVideo from '../dialogs/UpdateVideo'
 import DeleteVideo from '../dialogs/DeleteVideo'
 import MoveToPlaylist from '../dialogs/MoveToPlaylist'
-import {useRouter} from 'next/navigation'
+import { useRouter } from 'nextjs-toploader/app';
 function VideoListCard({videoDetails, type, index, videoList, setVideoList, playlistId, isSelected, selectMode, playlistDetails}: {videoDetails: IVideoDetails, type: string, index: number, videoList: IVideoDetails[], setVideoList: (videoList: IVideoDetails[]) => void, playlistId?: string, isSelected?: boolean, selectMode?: boolean, playlistDetails?:IPlaylist}) {
     const [updateDialogOpen, setUpdateDialogOpen] = useState(false)
     const [animationClass, setAnimationClass] = useState('');

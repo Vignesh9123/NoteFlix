@@ -3,7 +3,7 @@ import React from 'react'
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '../ui/dialog'
 import { useAuth } from '@/context/AuthContext'
 import { api } from '@/config/config'
-import { useRouter } from 'next/navigation'
+import { useRouter } from 'nextjs-toploader/app';
 import { Button } from '../ui/button'
 function SignOut({open, setOpen}: {open: boolean, setOpen: (open: boolean) => void}) {
     const {user, setUser} = useAuth();
