@@ -43,6 +43,7 @@ export interface ILibrary extends Document {
     lastUpdated: Date;
     isStarred: boolean;
     videoDetails: IVideoDetails;
+    playlistDetails: IPlaylist;
 }
 
 export interface IUserNote extends Document {

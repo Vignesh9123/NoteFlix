@@ -3,7 +3,7 @@ import {useEffect, useState} from 'react'
 import { api } from '@/config/config'
 import { Input } from '@/components/ui/input'
 import { Grid2X2, ListVideo, Filter, Star, CheckSquare2, Square } from 'lucide-react';
-import { ILibrary, IVideoDetails } from '@/types';
+import { ILibrary, IPlaylist, IVideoDetails } from '@/types';
 import VideoGridCard from '@/components/cards/VideoGridCard';
 import { Button } from '@/components/ui/button';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuLabel, DropdownMenuRadioGroup, DropdownMenuRadioItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
@@ -23,6 +23,7 @@ function Starred() {
     const [selectedVideos, setSelectedVideos] = useState<IVideoDetails[]>([])
     const [selectMode, setSelectMode] = useState(false)
     const [moveToPlaylistOpen, setMoveToPlaylistOpen] = useState(false)
+    const [playlists, setPlaylists] = useState<IPlaylist[]>([]);
 
     useEffect(() => {
         setFilteredVideos(
@@ -45,6 +46,8 @@ function Starred() {
             const libraries = response.data.data
             console.log(libraries)
             const videos = libraries.map((library: ILibrary) => library.videoDetails)
+            const playlist = libraries.map((library: ILibrary) => library.playlistDetails != null ? library.playlistDetails : null)
+            setPlaylists(playlist)          
             setVideos(videos)
             setFilteredVideos(videos)
         }catch(e){
@@ -149,7 +152,7 @@ function Starred() {
             {selectMode ? (selectedVideos.includes(video) ?( <CheckSquare2 size={27} className=' cursor-pointer bg- absolute z-50 bottom-4 right-4 duration-150' onClick={() => handleSelectVideo(video)} />): <Square size={27} className=' absolute z-50 bottom-4 right-4  cursor-pointer hover:bg-muted duration-150' onClick={() => handleSelectVideo(video)} />):
               <Star size={27} onClick={()=>handleFavoriteClick(video)} className={`cursor-pointer absolute z-50 bottom-4 right-4 ${video.isStarred ? 'text-yellow-400 fill-yellow-300 duration-300' : 'text-gray-500'}`}/>
             }
-       <VideoGridCard key={video.youtubeId} videoDetails={video} type={video.playlistId?'playlist_entry':'standalone'} index={index} videoList={videos} setVideoList={setVideos} isSelected={selectedVideos.some((selectedVideo) => selectedVideo._id === video._id)} selectMode={selectMode} playlistId={video.playlistId} />
+       <VideoGridCard key={video.youtubeId} videoDetails={video} type={video.playlistId?'playlist_entry':'standalone'} index={index} videoList={videos} setVideoList={setVideos} isSelected={selectedVideos.some((selectedVideo) => selectedVideo._id === video._id)} selectMode={selectMode} playlistId={video.playlistId} playlistDetails={playlists.find((playlist) => playlist!=null && playlist._id === video.playlistId)} />
         </div>
         ))}
         </div>}
@@ -157,7 +160,7 @@ function Starred() {
         <div onClick={()=>{
           if(selectMode) handleSelectVideo(video)}} key={video._id} className='flex gap-4 items-center'>
           {selectMode ? (selectedVideos.includes(video) ?( <CheckSquare2 size={27} className='text-gray-500 cursor-pointer hover:bg-muted duration-150' onClick={() => handleSelectVideo(video)} />): <Square size={27} className='text-gray-500 cursor-pointer hover:bg-muted duration-150' onClick={() => handleSelectVideo(video)} />): <Star size={27} onClick={()=>handleFavoriteClick(video)} className={`cursor-pointer ${video.isStarred ? 'text-yellow-400 fill-yellow-300 duration-300' : 'text-gray-500'}`}/>}
-        <VideoListCard key={video.youtubeId} videoDetails={video} type={video.playlistId?'playlist_entry':'standalone'} index={index} videoList={videos} setVideoList={setVideos} isSelected={selectedVideos.some((selectedVideo) => selectedVideo._id === video._id)} selectMode={selectMode} playlistId={video.playlistId} />
+        <VideoListCard key={video.youtubeId} videoDetails={video} type={video.playlistId?'playlist_entry':'standalone'} index={index} videoList={videos} setVideoList={setVideos} isSelected={selectedVideos.some((selectedVideo) => selectedVideo._id === video._id)} selectMode={selectMode} playlistId={video.playlistId} playlistDetails={video.playlistId ? playlists.find((playlist) => playlist!=null && playlist._id === video.playlistId) : undefined}/>
         </div>
       ))) }
       {!loading && filteredVideos.length === 0 && <p className='text-center text-gray-500'>No videos found</p>}

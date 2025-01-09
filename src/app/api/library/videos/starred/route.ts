@@ -48,6 +48,18 @@ export async function GET(request: NextRequest) {
                 }
             },
             {
+               //if playlistId is null then playlistDetails will be empty array else it will be playlistDetails[0]
+               $addFields: {
+                   playlistDetails: {
+                       $cond: {
+                           if: { $eq: ["$playlistId", null] },
+                           then: null,
+                           else: { $arrayElemAt: ["$playlistDetails", 0] }
+                       }
+                   }
+               }
+            },
+            {
                 $project: {
                     videoId:0,
                     playlistId:0,
