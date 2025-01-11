@@ -72,8 +72,9 @@ function AddVideo({open, setOpen, videoDetails, setVideoDetails, setVideoList, v
          }
          setOpen(false);
         } catch (error) {
+            console.log("Error adding video", error);
             if(error instanceof AxiosError) {
-                toast.error(error.response?.data.message || "Something went wrong, please try again later");
+                toast.error(error.response?.data.error || "Something went wrong, please try again later");
             }
             else {
                 toast.error("Something went wrong, please try again later");

@@ -48,9 +48,9 @@ const handleGoogleSignIn = async()=>{
 const handleSubmit = async(e: React.FormEvent<HTMLFormElement>) => {
   e.preventDefault()
   try {
-    const response = await api.post('/user/auth/login', { email, password });
+    const response = await api.post('/user/auth/signin', { email, password });
     toast.success("Logged in successfully");
-    setUser(response.data.data.user);
+    setUser(response.data.data);
     router.push('/dashboard')    
   } catch (error) {
     if(error instanceof AxiosError){
