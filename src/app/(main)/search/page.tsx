@@ -94,7 +94,8 @@ function Page() {
           );
         })}
         {loading && (
-          <motion.div
+          [1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((index) => <motion.div
+            key={index}
             initial={{ opacity: 0, y: 100, scale: 0.6 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             transition={{ delay: 0.1, duration: 0.3 }}
@@ -108,7 +109,7 @@ function Page() {
               <p className='text-sm text-muted-foreground h-1'></p>
               <p className='text-sm text-muted-foreground'></p>
             </div>
-          </motion.div>
+          </motion.div>)
         )}
         {
             searched && !loading && searchResults.length == 0 && <div className='text-xl font-bold'>No results found</div>

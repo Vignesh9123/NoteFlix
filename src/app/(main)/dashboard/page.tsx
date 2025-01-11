@@ -4,6 +4,7 @@ import { AnimatePresence } from 'framer-motion';
 import { AnimatedCard } from '@/components/cards/AnimatedCard';
 import { api } from '@/config/config';
 import toast from 'react-hot-toast';
+import YouTubeExploreSection from '@/components/YouTubeExploreSection';
 function App() {
   const [playlistCount, setPlaylistCount] = useState(0);
   const [videoCount, setVideoCount] = useState(0);
@@ -39,6 +40,7 @@ function App() {
           ))}
         </AnimatePresence>
       </div>
+      <YouTubeExploreSection />
     </div>
   );
 }

@@ -12,10 +12,12 @@ export async function GET(req: NextRequest) {
         if(auth.status === 401) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
         const response = await Library
         .find({userId: req.user?._id, isStarred: true})
-        .populate("videoId", "channelName");
-        const starredVideos = response.map((library:any) => library.videoId.channelName);
+        .populate({path: "videoId",model: Video, populate: {path: "channelName"}});
+        const starredVideosChannels = response.map((library:any) => library.videoId.channelName);
         // const query = starredVideos.sort(() => Math.random() - 0.5).join(" ").split("|").sort(() => Math.random() - 0.5).join(" ");
-        starredVideos.sort(() => Math.random() - 0.5);
+        // starredVideos.sort(() => Math.random() - 0.5) ;
+        const uniqueStarredVideosChannels = Array.from(new Set(starredVideosChannels));
+        const starredVideos = uniqueStarredVideosChannels.sort(() => Math.random() - 0.5);
         console.log({starredVideos});
         const res = await Promise.all(
             starredVideos.map(async (channelName: string, index: number) => {
@@ -67,6 +69,7 @@ export async function GET(req: NextRequest) {
             });
         return NextResponse.json({data: videos }, { status: 200 });
     } catch (error) {
+        console.log("Error fetching videos", error);
         return NextResponse.json({ error: "Internal server error" }, { status: 500 });
     }
 }

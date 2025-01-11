@@ -69,6 +69,7 @@ function AddVideo({open, setOpen, videoDetails, setVideoDetails, setVideoList, v
          }
          if(videoList && newVideo.isStandalone ){
             setVideoList([...videoList, newVideo]);
+            toast.success("Video added successfully");
          }
          setOpen(false);
         } catch (error) {
