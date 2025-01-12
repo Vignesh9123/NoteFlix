@@ -54,7 +54,7 @@ export function AppSidebar() {
     const { user } = useAuth()
     const pathname = usePathname()
   return (
-    <Sidebar>
+    <Sidebar >
       {signOutDialogOpen && <SignOut open={signOutDialogOpen} setOpen={setSignOutDialogOpen} />}
       <SidebarContent>
         <SidebarGroup>

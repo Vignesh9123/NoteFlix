@@ -48,7 +48,7 @@ function YouTubeExploreSection() {
   return (
     <div className='w-full bg-slate-700 rounded-xl p-2 my-5'>
         <h1 className='text-3xl font-bold text-center my-5'>Explore</h1>
-      <div className='w-[95%] mx-auto m-5 grid grid-cols-3 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4'>
+      <div className='w-[95%] mx-auto m-5 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4'>
         {!loading && videoList && videoList.map((video,index) => {
           return (
             <motion.div
