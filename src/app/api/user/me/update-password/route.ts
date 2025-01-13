@@ -19,7 +19,8 @@ export async function POST(req: NextRequest, res: NextResponse) {
         if(!user) {
             return NextResponse.json({ error: "User not found" }, { status: 404 });
         }
-        if(!user.matchPassword(oldPassword)) {
+        const isMatched = await user.matchPassword(oldPassword);
+        if(!isMatched) {
             return NextResponse.json({ error: "Old password is incorrect" }, { status: 400 });
         }
         user.password = newPassword;

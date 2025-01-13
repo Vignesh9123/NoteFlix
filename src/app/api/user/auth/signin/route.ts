@@ -16,7 +16,7 @@ export const POST = async (req: NextRequest, res: NextResponse) => {
     }
     if(user.loginType === "google") {
         return NextResponse.json({
-            message: "Login with Google",
+            error: "Login with Google",
         }, { status: 400 });
     }
     const isMatch = await user.matchPassword(password);

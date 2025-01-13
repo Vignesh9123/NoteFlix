@@ -26,7 +26,7 @@ function App() {
   }, []);
 
   return (
-    <div className="min-h-screen p-8">
+    <div className="min-h-screen p-8 pt-2 md:pt-8">
       <div className="grid md:grid-cols-2 lg:grid-cols-3 place-items-center w-full mt-10 gap-6">
         <AnimatePresence>
           {cards.map((card, index) => (

@@ -38,7 +38,7 @@ const handleGoogleSignIn = async()=>{
     })
   }catch(error){
     if(error instanceof AxiosError){
-      toast.error(error.response?.data.message || "Something went wrong, please try again later."); 
+      toast.error(error.response?.data.error || "Something went wrong, please try again later."); 
     } 
     else{
       toast.error("Something went wrong, please try again later.");
@@ -54,7 +54,7 @@ const handleSubmit = async(e: React.FormEvent<HTMLFormElement>) => {
     router.push('/dashboard')    
   } catch (error) {
     if(error instanceof AxiosError){
-      toast.error(error.response?.data.message || "Something went wrong, please try again later.");
+      toast.error(error.response?.data.error || "Something went wrong, please try again later.");
     }
     else{
       toast.error("Something went wrong, please try again later.");

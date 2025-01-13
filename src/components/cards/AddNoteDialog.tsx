@@ -80,7 +80,7 @@ function AddNoteDialog({ open, setOpen, libraryId, fetchNotes, youtubeId, text, 
     }, [text])
     return (
         <Dialog open={open} onOpenChange={setOpen}>
-            <DialogContent className='w-auto'>
+            <DialogContent className='md:w-auto'>
                 <DialogHeader className='w-full'>
                     <DialogTitle>Add a note</DialogTitle>
                 </DialogHeader>

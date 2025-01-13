@@ -46,12 +46,12 @@ function page() {
             const response = await api.patch('/user/me', {name})
             if(response.status === 200){
                 setName(response.data.data.name)
-
+                toast.success("Name updated successfully")
             }
 
         } catch (error) {
             if(error instanceof AxiosError){
-                toast.error(error.response?.data.message || "Something went wrong, please try again later")
+                toast.error(error.response?.data.error || "Something went wrong, please try again later")
             }else{
                 toast.error("Something went wrong, please try again later")
             }
@@ -74,10 +74,12 @@ function page() {
                     new:'',
                     confirm:''
                 })
+                toast.success("Password updated successfully")
             }
+
         } catch (error) {
             if(error instanceof AxiosError){
-                toast.error(error.response?.data.message || "Something went wrong, please try again later")
+                toast.error(error.response?.data.error || "Something went wrong, please try again later")
             }else{
                 toast.error("Something went wrong, please try again later")
             }
@@ -88,7 +90,7 @@ function page() {
     }
     
   return (
-    <div className='m-5'>
+    <div className='m-5 flex flex-col gap-4'>
         <Card>
             <CardHeader>
             <CardTitle>Name</CardTitle>

@@ -98,7 +98,7 @@
     margin-top: 0;
   }
   
-  max-height: 200px;
+  @apply md:max-h-[200px] max-h-[150px]; 
   overflow-y: auto;
   outline: none;
   @apply focus:ring-1 focus:ring-ring focus:ring-offset-2;

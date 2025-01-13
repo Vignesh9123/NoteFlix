@@ -140,20 +140,24 @@ function VideoPage() {
         </div>
       </div>
       <div className="filterheader m-5">
-        <div className='flex justify-between items-center'>
-          <div className="flex gap-2">
+        <div className='grid md:grid-cols-3 grid-cols-2'>
+          {/* <div className="flex gap-2">
             <List size={27} className='text-gray-500 cursor-pointer bg-muted duration-150' />
             <Grid2X2 size={27} className='text-gray-500 cursor-pointer hover:bg-muted duration-150' />
-          </div>
-          <div className='flex gap-2 items-center'>
+          </div> */}
 
+            <div className='flex flex-col md:flex-row lg:w-max items-center gap-2 hover:bg-muted duration-150 cursor-pointer p-1'>
             <Plus onClick={() => setAddNoteDialogOpen(true)} size={27} className='text-gray-500 cursor-pointer hover:bg-muted duration-150' />
-            <Stars size={27} onClick={handleAISummaryClick} className='text-gray-500 cursor-pointer hover:bg-muted duration-150' />
+            <p className='text-gray-500 text-xs text-center'>Add Note</p>
+            </div>
+              <div className='flex flex-col md:flex-row lg:w-max items-center gap-2 hover:bg-muted duration-150 cursor-pointer p-1'>
+            <Stars size={27} onClick={handleAISummaryClick} className='text-gray-500  ' />
+            <p className='text-gray-500 text-xs text-center'>Generate Summary using AI</p>
+            </div>
             {(
               addNoteDialogOpen && <AddNoteDialog youtubeId={video?.youtubeId!} open={addNoteDialogOpen} setOpen={setAddNoteDialogOpen} fetchNotes={fetchNotes} libraryId={library?._id!} text={note} noteTitle={noteTitle} />
             )}
-            <Input placeholder='Search' value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} />
-          </div>
+            <Input placeholder='Search' className='mt-2 md:mt-0 col-span-2 md:col-span-1' value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} />
 
         </div>
       </div>

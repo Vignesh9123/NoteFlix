@@ -41,7 +41,7 @@ export default function RootLayout({
             enableSystem
             disableTransitionOnChange
           >
-          <NextTopLoader showSpinner={false}/>
+          <NextTopLoader showSpinner={false} zIndex={1000000000}/>
           <Toaster/>
 
             {children}

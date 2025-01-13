@@ -14,6 +14,7 @@ function SignOut({open, setOpen}: {open: boolean, setOpen: (open: boolean) => vo
             api.get('/user/auth/logout').then(() => {
                 setUser(null);
                 toast.success("Signed out successfully");
+                localStorage.clear();
                 router.push('/login');
             }).catch((err) => toast.error(err.response.data.message || "Something went wrong, please try again later."))
             .finally(() => setOpen(false));

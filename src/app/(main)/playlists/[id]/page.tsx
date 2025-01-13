@@ -105,7 +105,7 @@ function PlaylistIDPage() {
     return <div>{loading ? <div>Loading...</div> :
     <div className='m-5'>
         <div className='flex w-full justify-between items-center mb-5'>
-        <div className='flex m-1 items-center gap-2'>
+        <div className='hidden md:flex m-1 items-center gap-2'>
           <ListVideo size={27} className={`text-gray-500 cursor-pointer ${displayMode === 'list' ? 'bg-muted' : ''} duration-150`} onClick={() => setDisplayMode('list')} />
           <Grid2X2 size={27} className={`text-gray-500 cursor-pointer ${displayMode === 'grid' ? 'bg-muted' : ''} duration-150`} onClick={() => setDisplayMode('grid')} />
         </div>
@@ -139,12 +139,12 @@ function PlaylistIDPage() {
         <h1 className='text-2xl font-bold'>{playlist?.name}</h1>
         <p className='text-sm text-gray-500'>{playlist?.description}</p>
         {selectMode && 
-        <div className='flex gap-4 items-center'>
+        <div className='flex flex-wrap justify-around mt-2 gap-4 items-center'>
         <Button onClick={() => {setSelectMode(false); setSelectedVideos([])}} variant='secondary' className='w-16 mx-2'>Cancel</Button>
-        <Button onClick={() => setSelectedVideos([])} variant='destructive' className='w-16 mx-2'>Clear</Button>
-        <Button onClick={() =>{setSelectedVideos(filteredVideoList)}} variant='secondary' className='w-16 mx-2'>Select All</Button>
-        <Button onClick={()=>setMoveToPlaylistOpen(true)} variant='secondary' className=''>Move to Playlist</Button>
-        <Button onClick={handleDelete} variant='secondary' className='w-16 mx-2'>Delete</Button>
+        <Button disabled={selectedVideos.length === 0} onClick={() => setSelectedVideos([])} variant='secondary' className='w-16 mx-2'>Clear</Button>
+        <Button disabled={filteredVideoList.length === selectedVideos.length} onClick={() =>{setSelectedVideos(filteredVideoList)}} variant='secondary' className='w-16 mx-2'>Select All</Button>
+        <Button disabled={selectedVideos.length === 0} onClick={()=>setMoveToPlaylistOpen(true)} variant='secondary' className=''>Move to Playlist</Button>
+        <Button disabled={selectedVideos.length === 0} onClick={handleDelete} variant='destructive' className='w-16 mx-2'>Delete</Button>
         </div>
         }
         {
