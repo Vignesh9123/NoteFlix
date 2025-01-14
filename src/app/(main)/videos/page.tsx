@@ -23,6 +23,7 @@ import VideoGridCard from '@/components/cards/VideoGridCard'
 import { useDebouncedCallback } from 'use-debounce'
 import { toast } from 'react-hot-toast'
 import { AxiosError } from 'axios'
+import { extractVideoId } from '@/lib/utils'
 function VideosPage() {
   const [ytLinkDialogOpen, setYtLinkDialogOpen] = useState(false)
   const [youtubeUrl, setYoutubeUrl] = useState('')
@@ -57,7 +58,7 @@ function VideosPage() {
   const handleGetVideoDetails = async () => {
     try {
       setLoading(true)
-      const videoId = youtubeUrl.split('v=')[1] || youtubeUrl.split('youtu.be/')[1]
+      const videoId = extractVideoId( youtubeUrl)
       if (!videoId) return
 
       const response = await api.post(`/youtube/getvideodetails`, { videoId })
@@ -73,6 +74,7 @@ function VideosPage() {
       }else{
         toast.error("Something went wrong, please try again later")
       }
+      console.log(error)
     }
     finally {
       setLoading(false)
@@ -95,7 +97,10 @@ function VideosPage() {
         toast.error("Something went wrong, please try again later")
       }
     }
+    finally {
+      setLoading(false)
     }
+  }
 
   const handleSelectVideo = (video: IVideoDetails) => {
     if (selectedVideos.some((v) => v._id === video._id)) {

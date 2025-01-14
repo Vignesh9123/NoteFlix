@@ -18,7 +18,7 @@ export async function POST(request: NextRequest) {
         if (!dbVideo) {
             return NextResponse.json({ error: "Video not found" }, { status: 404 });
         }
-        if(Number(dbVideo.duration) > 9000){
+        if(Number(dbVideo.duration) > 900){
             return NextResponse.json({ error: "Video duration is too long" }, { status: 400 });
         }
         if(dbVideo.summary){

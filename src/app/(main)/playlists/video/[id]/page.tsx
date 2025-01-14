@@ -56,7 +56,7 @@ function VideoPage() {
       }
       catch (error) {
         if(error instanceof AxiosError){
-          toast.error(error.response?.data.message || "Something went wrong, please try again later.");
+          toast.error(error.response?.data.error || "Something went wrong, please try again later.");
         }
         else{
           toast.error("Something went wrong, please try again later.");
@@ -78,7 +78,7 @@ function VideoPage() {
         setAddNoteDialogOpen(true);
       } catch (error) {
         if(error instanceof AxiosError){
-          toast.error(error.response?.data.message || "Something went wrong, please try again later.");
+          toast.error(error.response?.data.error || "Something went wrong, please try again later.");
         }
         else{
           toast.error("Something went wrong, please try again later.");

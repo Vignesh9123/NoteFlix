@@ -8,17 +8,19 @@ import YouTubeExploreSection from '@/components/YouTubeExploreSection';
 function App() {
   const [playlistCount, setPlaylistCount] = useState(0);
   const [videoCount, setVideoCount] = useState(0);
+  const [starredCount, setStarredCount] = useState(0);
   const [loading, setLoading] = useState(true);
   const cards = [
     { title: 'Playlists', value: playlistCount },
     { title: 'Videos', value: videoCount },
-    { title: 'Hours Completed', value: 0 },
+    { title: 'Starred', value: starredCount },
   ];
   useEffect(() => {
     setLoading(true);
     api.get('/user/stats').then((res) => {
       setPlaylistCount(res.data.data.playlistCount);
       setVideoCount(res.data.data.videoCount);
+      setStarredCount(res.data.data.starredCount);
     })
     .catch((err) => toast.error(err.response.data.message || "Something went wrong, please try again later."))
     .finally(() => setLoading(false));

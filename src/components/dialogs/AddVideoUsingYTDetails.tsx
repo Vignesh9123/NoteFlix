@@ -13,10 +13,6 @@ import { secondsToTime } from '@/lib/utils'
 import toast from 'react-hot-toast'
 import { AxiosError } from 'axios'
 function AddVideo({open, setOpen, videoDetails, setVideoDetails, setVideoList, videoList}: {open: boolean, setOpen: (open: boolean) => void, videoDetails: IVideoDetails, setVideoDetails: (videoDetails: IVideoDetails|null) => void, setVideoList: (videoList: IVideoDetails[]) => void, videoList: IVideoDetails[]}) {
-    const [title, setTitle] = useState(videoDetails.title || '');
-    const [duration, setDuration] = useState(videoDetails.duration || '');
-    const [channelName, setChannelName] = useState(videoDetails.channelName || '');
-    const [publishedAt, setPublishedAt] = useState(videoDetails.publishedAt || '');
     const [addingVideo, setAddingVideo] = useState(false);
     const [playlists, setPlaylists] = useState<IPlaylist[]>([])
     const [selectedPlaylist, setSelectedPlaylist] = useState<string | null>(null)
@@ -42,16 +38,15 @@ function AddVideo({open, setOpen, videoDetails, setVideoDetails, setVideoList, v
        try {
          const data = {
              youtubeId: videoDetails.youtubeId,
-             title: title,
-             channelName: channelName,
+             title: videoDetails.title,
+             channelName: videoDetails.channelName,
              thumbnailUrl: videoDetails.thumbnailUrl,
-             duration: duration,
-             publishedAt: publishedAt,
+             duration: videoDetails.duration,
+             publishedAt: videoDetails.publishedAt,
              isStandalone: selectedPlaylist ? false : true,
              playlistId: selectedPlaylist ? selectedPlaylist : null
          }
          const response = await api.post('/video/addvideo', data);
-         console.log("response", response)
          const newVideo:IVideoDetails = {
             _id: response.data.data.videoId,
             title: videoDetails.title,
@@ -83,13 +78,13 @@ function AddVideo({open, setOpen, videoDetails, setVideoDetails, setVideoList, v
         }
         finally {
            setVideoDetails(null);
-        setAddingVideo(false);
+            setAddingVideo(false);
        }
     }
 
   return (
     videoDetails && (<Dialog open={open} onOpenChange={setOpen}>
-      <DialogContent>
+      <DialogContent className='max-h-[95vh]'>
         <DialogHeader>
           <DialogTitle>Add Video</DialogTitle>
           <DialogDescription>Add a video to your library</DialogDescription>
@@ -101,13 +96,13 @@ function AddVideo({open, setOpen, videoDetails, setVideoDetails, setVideoList, v
             </div>
             <div className='flex flex-col gap-2'>
                 <Label>Title</Label>
-                <Input value={title} onChange={(e) => setTitle(e.target.value)}  readOnly />
+                <Input value={videoDetails.title} readOnly />
                 <Label>Duration</Label>
                 <Input value={typeof videoDetails.duration === 'string' ? videoDetails.duration.replace('PT', '').replace('H', 'h ').replace('M', 'm ').replace('S', 's '): secondsToTime(videoDetails.duration)} readOnly />
                 <Label>Channel Name</Label>
-                <Input value={channelName} readOnly />
+                <Input value={videoDetails.channelName} readOnly />
                 <Label>Published At</Label>
-                <Input value={new Date(publishedAt).toLocaleDateString('en-IN', { year: 'numeric', month: 'long', day: 'numeric' })} readOnly />
+                <Input value={new Date(videoDetails.publishedAt).toLocaleDateString('en-IN', { year: 'numeric', month: 'long', day: 'numeric' })} readOnly />
                 <Label>Playlists</Label>
                 <Select value={selectedPlaylist!} onValueChange={setSelectedPlaylist}>
                     <SelectTrigger>
@@ -123,7 +118,7 @@ function AddVideo({open, setOpen, videoDetails, setVideoDetails, setVideoList, v
             </div>
         </div>
         <div className='flex justify-end gap-2'>
-        <Button onClick={() => setOpen(false)}>Cancel</Button>
+        <Button disabled={addingVideo} variant={'outline'} onClick={() => setOpen(false)}>Cancel</Button>
         <Button onClick={handleAddVideo} disabled={addingVideo}>{addingVideo ? <div className='flex justify-center items-center'><Loader2 className='animate-spin' /></div> : 'Add'}</Button>
         </div>
       </DialogContent>

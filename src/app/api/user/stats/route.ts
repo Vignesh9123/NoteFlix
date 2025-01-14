@@ -12,10 +12,12 @@ export async function GET(request: NextRequest) {
         const userId = request.user?._id.toString();
         const playlistCount = await Playlist.countDocuments({ userId });
         const videoCount = await Library.countDocuments({ userId, type: "standalone" });
+        const starredCount = await Library.countDocuments({ userId, isStarred:true });
         return NextResponse.json({
             data: {
                 playlistCount,
-                videoCount
+                videoCount,
+                starredCount
             },
             message: "Stats fetched successfully",
         }, {

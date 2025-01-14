@@ -46,7 +46,6 @@ function VideoPage() {
         setLoadingIndex(1);
         const res = await api.post('/youtube/gettranscript', { videoId: video?.youtubeId });
         setLoadingIndex(2);
-        console.log('Transcript extracted', res);
         const transcript = res.data.data
         const summary = await api.post('/gemini/generatesummary', { transcript, videoId: video?.youtubeId });
         // setLoadingIndex(2);
@@ -56,7 +55,7 @@ function VideoPage() {
       }
       catch (error) {
         if(error instanceof AxiosError){
-          toast.error(error.response?.data.message || "Something went wrong, please try again later.");
+          toast.error(error.response?.data.error || "Something went wrong, please try again later.");
         }else{
           toast.error("Something went wrong, please try again later.");
         }
@@ -76,8 +75,9 @@ function VideoPage() {
         setNoteTitle("Summary of the video");
         setAddNoteDialogOpen(true);
       } catch (error) {
+        console.log(error);
         if(error instanceof AxiosError){
-          toast.error(error.response?.data.message || "Something went wrong, please try again later.");
+          toast.error(error.response?.data.error || "Something went wrong, please try again later.");
         }else{
           toast.error("Something went wrong, please try again later.");
         }
@@ -146,12 +146,12 @@ function VideoPage() {
             <Grid2X2 size={27} className='text-gray-500 cursor-pointer hover:bg-muted duration-150' />
           </div> */}
 
-            <div className='flex flex-col md:flex-row lg:w-max items-center gap-2 hover:bg-muted duration-150 cursor-pointer p-1'>
-            <Plus onClick={() => setAddNoteDialogOpen(true)} size={27} className='text-gray-500 cursor-pointer hover:bg-muted duration-150' />
+            <div onClick={() => setAddNoteDialogOpen(true)} className='flex flex-col md:flex-row lg:w-max items-center gap-2 hover:bg-muted duration-150 cursor-pointer p-1'>
+            <Plus  size={27} className='text-gray-500 cursor-pointer hover:bg-muted duration-150' />
             <p className='text-gray-500 text-xs text-center'>Add Note</p>
             </div>
-              <div className='flex flex-col md:flex-row lg:w-max items-center gap-2 hover:bg-muted duration-150 cursor-pointer p-1'>
-            <Stars size={27} onClick={handleAISummaryClick} className='text-gray-500  ' />
+              <div onClick={handleAISummaryClick} className='flex flex-col md:flex-row lg:w-max items-center gap-2 hover:bg-muted duration-150 cursor-pointer p-1'>
+            <Stars size={27}  className='text-gray-500  ' />
             <p className='text-gray-500 text-xs text-center'>Generate Summary using AI</p>
             </div>
             {(

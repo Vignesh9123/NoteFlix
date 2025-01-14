@@ -7,6 +7,9 @@ import Spline from "@splinetool/react-spline"
 export default function RegisterPage() {
   return (
     <div className="grid min-h-svh lg:grid-cols-2">
+      <Link href="/" className="flex absolute top-7 left-8 z-30 items-center gap-2 font-medium">
+      VidScribe
+      </Link>
       <div className="relative hidden  lg:block">
         
       <Spline

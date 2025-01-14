@@ -4,7 +4,7 @@ export function middleware(req: NextRequest) {
     const pathname = req.nextUrl.pathname;
     const isPublicPath = pathname === "/login" || pathname === "/register" ;
     const token = req.cookies.get("token")?.value;
-    if(!isPublicPath && !token) {
+    if(!isPublicPath && !token && pathname !== "/") {
         return NextResponse.redirect(new URL("/login", req.url));
     }
     if(isPublicPath && token) {
