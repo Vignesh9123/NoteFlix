@@ -24,12 +24,12 @@ export const POST = async (req: NextRequest) => {
         return NextResponse.json({ error: "Invalid password" }, { status: 401 });
     }
     const token = user.generateToken();
-    (await cookies()).set("token", token, { httpOnly: true, secure: true, sameSite: "strict", maxAge: 60 * 60 * 24 });
+    (await cookies()).set("token", token, { httpOnly: true,  maxAge: 60 * 60 * 24 });
     user.password = undefined;
 
     return NextResponse
     .json({
         message: "User logged in successfully",
-        data: user
+        data: {user, token}
     }, { status: 200 });
 }

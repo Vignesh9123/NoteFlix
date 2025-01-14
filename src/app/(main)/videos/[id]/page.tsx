@@ -69,9 +69,9 @@ function VideoPage() {
     else{
       setAILoading(true);
       try {
-        await api.post(`${api2Url}/youtube/getaudio`, { videoId: video?.youtubeId });
+        await api.post(`${api2Url}/youtube/getaudio`, { videoId: video?.youtubeId }, {headers: { Authorization: `Bearer ${localStorage.getItem('token')}`} });
         setLoadingIndex(1);
-        const res = await api.post(`${api2Url}/gemini/audiosummarizer`, { videoId: video?.youtubeId });
+        const res = await api.post(`${api2Url}/gemini/audiosummarizer`, { videoId: video?.youtubeId }, {headers: { Authorization: `Bearer ${localStorage.getItem('token')}`}});
         setNote(res.data.data.toString());
         setNoteTitle("Summary of the video");
         setAddNoteDialogOpen(true);

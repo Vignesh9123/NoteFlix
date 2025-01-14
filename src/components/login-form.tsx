@@ -50,7 +50,8 @@ const handleSubmit = async(e: React.FormEvent<HTMLFormElement>) => {
   try {
     const response = await api.post('/user/auth/signin', { email, password });
     toast.success("Logged in successfully");
-    setUser(response.data.data);
+    setUser(response.data.data.user);
+    localStorage.setItem('token', response.data.data.token)
     router.push('/dashboard')    
   } catch (error) {
     if(error instanceof AxiosError){

@@ -3,7 +3,7 @@ import jwt from 'jsonwebtoken';
 export async function authMiddleware(req, res, next) {
     try {
         console.log(req.header,req.header("Authorization"));
-        const token = req.cookies.token;
+        const token = req.cookies.token || req.header("Authorization").replace("Bearer ", "");
         if (!token) {
             return res.status(401).json({ error: "Unauthorized" });
         }
