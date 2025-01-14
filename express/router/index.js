@@ -43,6 +43,9 @@ router.post('/youtube/getaudio',authMiddleware,async (req, res) => {
         return res.status(200).json({ message: "Audio downloaded successfully" });
     } catch (error) {
         console.log(error);
+        if(fs.existsSync(`public/${videoId}.mp3`)) {
+            fs.unlinkSync(`public/${videoId}.mp3`);
+        }
         res.status(500).json({ error: "Internal server error" });
     }
 });
@@ -100,6 +103,9 @@ router.post('/gemini/audiosummarizer', authMiddleware, async (req, res) => {
     }
     catch (error) {
         console.log(error);
+        if(fs.existsSync(`public/${videoId}.mp3`)) {
+            fs.unlinkSync(`public/${videoId}.mp3`);
+        }
         res.status(500).json({ error: "Internal server error" });
     }
     });
