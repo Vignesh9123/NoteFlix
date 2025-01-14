@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { cookies } from "next/headers";
 import { authMiddleware } from "@/middleware/auth.middleware";
-export const GET = async (req: NextRequest, res: NextResponse) => {
+export const GET = async (req: NextRequest) => {
     try {
         const auth = await authMiddleware(req);
         if(auth.status == 401) return NextResponse.json({message: "Unauthorized"}, {status: 401});

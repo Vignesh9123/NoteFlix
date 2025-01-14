@@ -6,7 +6,7 @@ import connectDB from "@/dbConfig/connectDB";
 import mongoose from 'mongoose';
 connectDB();
 
-export async function POST(request: NextRequest, response: NextResponse) {
+export async function POST(request: NextRequest) {
     try {
         const auth = await authMiddleware(request);
         if (auth.status == 401) return NextResponse.json({message: "Unauthorized"}, {status: 401});

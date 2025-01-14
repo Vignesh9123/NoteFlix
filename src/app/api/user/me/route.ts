@@ -4,7 +4,7 @@ import connectDB from "@/dbConfig/connectDB";
 import User from "@/models/user.model";
 connectDB();
 
-export const GET = async (req: NextRequest, res: NextResponse) => {
+export const GET = async (req: NextRequest) => {
    try {
     const response = await authMiddleware(req);
     if(response.status === 401) {
@@ -16,7 +16,7 @@ export const GET = async (req: NextRequest, res: NextResponse) => {
    }
 }
 
-export const PATCH = async (req: NextRequest, res: NextResponse) => {
+export const PATCH = async (req: NextRequest) => {
     try {
         const response = await authMiddleware(req);
         if(response.status === 401) {

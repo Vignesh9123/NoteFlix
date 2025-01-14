@@ -2,7 +2,7 @@ import User from "@/models/user.model";
 import { NextRequest, NextResponse } from "next/server";
 import connectDB from "@/dbConfig/connectDB";
 connectDB();
-export const POST = async (req: NextRequest, res: NextResponse) => {
+export const POST = async (req: NextRequest) => {
     const { name, email, password } = await req.json();
     if(!name || !email || !password) {
         return NextResponse.json({ error: "All fields are required" }, { status: 400 });

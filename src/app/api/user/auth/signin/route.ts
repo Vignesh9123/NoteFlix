@@ -3,12 +3,12 @@ import { NextRequest, NextResponse } from "next/server";
 import { cookies } from "next/headers";
 import connectDB from "@/dbConfig/connectDB";
 connectDB();
-export const GET = async (req: NextRequest, res: NextResponse) => {
+export const GET = async (req: NextRequest) => {
     return NextResponse.json({
         message: "Hello World"
     }, { status: 200 });
 }
-export const POST = async (req: NextRequest, res: NextResponse) => {
+export const POST = async (req: NextRequest) => {
     const { email, password } = await req.json();
     const user = await User.findOne({ email });
     if(!user) {

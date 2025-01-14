@@ -4,7 +4,7 @@ import { authMiddleware } from "@/middleware/auth.middleware";
 import User from "@/models/user.model";
 connectDB()
 
-export async function POST(req: NextRequest, res: NextResponse) {
+export async function POST(req: NextRequest) {
     try {
         const auth = await authMiddleware(req);
         if(auth.status === 401) {
