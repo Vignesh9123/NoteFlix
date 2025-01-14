@@ -4,13 +4,14 @@ import cors from 'cors';
 import router from './router/index.js';
 import { connectDB } from './connectDB/index.js';
 import cookieParser from 'cookie-parser';
+import { frontendUrl } from './constants/index.js';
 const app = express();
 
 dotenv.config();
 
 app.use(cors(
     {
-        origin: 'http://localhost:3000',
+        origin: frontendUrl,
         credentials: true
     }
 ));
