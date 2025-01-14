@@ -24,7 +24,7 @@ app.use(cookieParser());
 app.use('/api', router);
 
 
-app.listen(3001, () => {
+app.listen(process.env.PORT || 3001, () => {
     connectDB()
     .then(
         () => {
