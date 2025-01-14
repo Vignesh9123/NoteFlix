@@ -51,6 +51,6 @@ export async function POST(request: NextRequest) {
         if(fs.existsSync(`public/${videoId!}.mp3`)) {
             fs.unlinkSync(`public/${videoId!}.mp3`);
         }
-        return NextResponse.json({ error: error }, { status: 500 });
+        return NextResponse.json({ error: "Something went wrong" }, { status: 500 });
     }
 }

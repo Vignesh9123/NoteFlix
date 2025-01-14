@@ -198,7 +198,7 @@ function VideosPage() {
                 <Input value={youtubeUrl} onChange={(e) => setYoutubeUrl(e.target.value)} placeholder='Enter YouTube Video URL' />
               </DialogDescription>
               <DialogFooter>
-                <Button onClick={handleGetVideoDetails}>{loading ? <div className='flex items-center gap-2'><Loader2 size={20} className='animate-spin' /></div> : 'Proceed'}</Button>
+                <Button disabled={loading} onClick={handleGetVideoDetails}>{loading ? <div className='flex items-center gap-2'><Loader2 size={20} className='animate-spin' /></div> : 'Proceed'}</Button>
               </DialogFooter>
             </DialogContent>
           </Dialog>

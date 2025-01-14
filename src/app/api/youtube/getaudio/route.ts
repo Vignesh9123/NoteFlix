@@ -30,20 +30,24 @@ export async function POST(request: NextRequest) {
         const videoUrl = `https://www.youtube.com/watch?v=${videoId}`;
 
         await new Promise<void>((resolve, reject) => {
-            const stream = ytdlp.stream(videoUrl, { filter: 'audioonly', command: ['-x', '--audio-format', 'mp3'] })
-                .pipe(fs.createWriteStream(`public/${videoId}.mp3`));
+            const stream = ytdlp.stream(videoUrl, { filter: 'audioonly', command: ['-x', '--audio-format', 'mp3'] });
+            const writeStream = fs.createWriteStream(`public/${videoId}.mp3`);
 
-            stream.on('progress', (progress) => {
-                console.log(progress);
-            });
+            stream.pipe(writeStream);
 
-            stream.on('finished', () => {
+            // Listen for stream events
+            writeStream.on('finish', () => {
                 console.log('Audio downloaded successfully');
                 resolve();
             });
 
+            writeStream.on('error', (error) => {
+                console.error('Error writing to file:', error);
+                reject(error);
+            });
+
             stream.on('error', (error) => {
-                console.log(error);
+                console.error('Error in stream:', error);
                 reject(error);
             });
         });

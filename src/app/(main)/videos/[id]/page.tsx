@@ -12,6 +12,7 @@ import { MultiStepLoader as Loader } from '@/components/ui/multi-step-loader';
 import AddNoteDialog from '@/components/cards/AddNoteDialog';
 import { AxiosError } from 'axios';
 import toast from 'react-hot-toast';
+import { api2Url } from '@/constants';
 function VideoPage() {
   const flag: number = 1;
   const { id } = useParams();
@@ -68,9 +69,9 @@ function VideoPage() {
     else{
       setAILoading(true);
       try {
-        await api.post('/youtube/getaudio', { videoId: video?.youtubeId });
+        await api.post(`${api2Url}/youtube/getaudio`, { videoId: video?.youtubeId });
         setLoadingIndex(1);
-        const res = await api.post('/gemini/audiosummarizer', { videoId: video?.youtubeId });
+        const res = await api.post(`${api2Url}/gemini/audiosummarizer`, { videoId: video?.youtubeId });
         setNote(res.data.data.toString());
         setNoteTitle("Summary of the video");
         setAddNoteDialogOpen(true);
