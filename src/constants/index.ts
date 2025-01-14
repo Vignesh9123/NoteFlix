@@ -1,1 +1,1 @@
-export const api2Url = 'http://localhost:3001/api'
+export const api2Url = 'https://vidscribe.onrender.com/api'
