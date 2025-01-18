@@ -14,7 +14,7 @@ import { AxiosError } from 'axios';
 import toast from 'react-hot-toast';
 import { api2Url } from '@/constants';
 function VideoPage() {
-  const flag: number = 1;
+  const flag: number = 0;
   const { id } = useParams();
   const [video, setVideo] = useState<IVideoDetails | null>(null);
   const [library, setLibrary] = useState<ILibrary | null>(null);
@@ -43,7 +43,7 @@ function VideoPage() {
     if (flag == 0) {
       setAILoading(true);
       try {
-        await api.post('/youtube/getaudio', { videoId: video?.youtubeId });
+        // await api.post('/youtube/getaudio', { videoId: video?.youtubeId });
         setLoadingIndex(1);
         const res = await api.post('/youtube/gettranscript', { videoId: video?.youtubeId });
         setLoadingIndex(2);

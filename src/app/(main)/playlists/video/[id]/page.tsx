@@ -13,7 +13,7 @@ import AddNoteDialog from '@/components/cards/AddNoteDialog';
 import { AxiosError } from 'axios';
 import toast from 'react-hot-toast';
 function VideoPage() {
-  const flag: number = 1;
+  const flag: number = 0;
   const { id } = useParams();
   const [video, setVideo] = useState<IVideoDetails | null>(null);
   const [library, setLibrary] = useState<ILibrary | null>(null);
@@ -42,11 +42,10 @@ function VideoPage() {
     if (flag == 0) {
       setAILoading(true);
       try {
-        await api.post('/youtube/getaudio', { videoId: video?.youtubeId });
+        // await api.post('/youtube/getaudio', { videoId: video?.youtubeId });
         setLoadingIndex(1);
         const res = await api.post('/youtube/gettranscript', { videoId: video?.youtubeId });
         setLoadingIndex(2);
-        console.log('Transcript extracted', res);
         const transcript = res.data.data
         const summary = await api.post('/gemini/generatesummary', { transcript, videoId: video?.youtubeId });
         // setLoadingIndex(2);
@@ -152,12 +151,12 @@ function VideoPage() {
             <Grid2X2 size={27} className='text-gray-500 cursor-pointer hover:bg-muted duration-150' />
           </div> */}
 
-            <div className='flex flex-col md:flex-row lg:w-max items-center gap-2 hover:bg-muted duration-150 cursor-pointer p-1'>
-            <Plus onClick={() => setAddNoteDialogOpen(true)} size={27} className='text-gray-500 cursor-pointer hover:bg-muted duration-150' />
+            <div onClick={() => setAddNoteDialogOpen(true)} className='flex flex-col md:flex-row lg:w-max items-center gap-2 hover:bg-muted duration-150 cursor-pointer p-1'>
+            <Plus  size={27} className='text-gray-500 cursor-pointer hover:bg-muted duration-150' />
             <p className='text-gray-500 text-xs text-center'>Add Note</p>
             </div>
-              <div className='flex flex-col md:flex-row lg:w-max items-center gap-2 hover:bg-muted duration-150 cursor-pointer p-1'>
-            <Stars size={27} onClick={handleAISummaryClick} className='text-gray-500  ' />
+              <div onClick={handleAISummaryClick} className='flex flex-col md:flex-row lg:w-max items-center gap-2 hover:bg-muted duration-150 cursor-pointer p-1'>
+            <Stars size={27}  className='text-gray-500  ' />
             <p className='text-gray-500 text-xs text-center'>Generate Summary using AI</p>
             </div>
             {(

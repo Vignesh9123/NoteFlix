@@ -1,46 +1,24 @@
+import { authMiddleware } from "@/middleware/auth.middleware";
 import { NextRequest, NextResponse } from "next/server";
-// import {getSubtitles} from 'youtube-captions-scraper'
-import {createClient} from '@deepgram/sdk'
-import fs from 'fs'
+import {Innertube} from 'youtubei.js'
 import Video from "@/models/video.model";
+import connectDB from "@/dbConfig/connectDB";
+connectDB();
 export async function POST(request: NextRequest) {
-    let videoId: string;
     try {
-        // const { videoID }:{videoID: string} = await request.json();
-        // const subtitles = await getSubtitles({videoID, lang: "en"});
-        // const fullSubtitles = subtitles.map((subtitle) => subtitle.text).join('\n');
-        // console.log(fullSubtitles);
-        // return NextResponse.json({data: subtitles}, {status: 200});
-        ({videoId} = await request.json());
-        const video = await Video.findOne({youtubeId: videoId});
-        if(!video) {
-            return NextResponse.json({error: "Video not found"}, {status: 404});
-        };
-        if(video.summary) {
-            if(fs.existsSync(`public/${videoId}.mp3`)) {
-                fs.unlinkSync(`public/${videoId}.mp3`);
-            }
-            return NextResponse.json({data: video.summary, message: "Video transcript fetched successfully"}, {status: 200});
-        }
-        const deepgram = createClient(process.env.NEXT_PUBLIC_DEEPGRAM_API_KEY);
-        const {result, error} = await deepgram.listen.prerecorded.transcribeFile(
-            fs.readFileSync(`public/${videoId}.mp3`),
-            {
-                model: "nova-2",
-                smart_format: true,
-            }
-        )
-        if(error) {
-            throw error;
-        }
-        fs.unlinkSync(`public/${videoId}.mp3`); 
-        await video.save();
-        return NextResponse.json({data: result.results.channels[0].alternatives[0].transcript, message: "Video transcript fetched successfully"}, {status: 200});
+        const auth = await authMiddleware(request);
+        if (auth.status == 401) return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
+        const { videoId } = await request.json();
+        if(!videoId) return NextResponse.json({ error: "Invalid request" }, { status: 400 });
+        const dbVideo = await Video.findOne({ youtubeId: videoId });
+        if (!dbVideo) return NextResponse.json({ error: "Video not found" }, { status: 404 });
+        if(dbVideo.summary) return NextResponse.json({ data: dbVideo.summary, message: "Transcript already generated" }, { status: 200 });
+
+        const youtube = await Innertube.create();
+        const info = await youtube.getInfo(videoId);
+        const transcript = await info.getTranscript();
+        return NextResponse.json({ data: transcript.transcript.content?.body?.initial_segments.map((segment) => segment.snippet.text).join(' ') , message: "Transcript fetched successfully" }, { status: 200 });
     } catch (error) {
-        console.log(error);
-        if(fs.existsSync(`public/${videoId!}.mp3`)) {
-            fs.unlinkSync(`public/${videoId!}.mp3`);
-        }
-        return NextResponse.json({error: "Internal Server Error"}, {status: 500});
+        return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
     }
 }
