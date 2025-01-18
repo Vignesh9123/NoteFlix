@@ -18,10 +18,12 @@ className,
 }: React.ComponentPropsWithoutRef<"form">) {
 const [email, setEmail] = useState("")
 const [password, setPassword] = useState("")
+const [loading, setLoading] = useState(false)
 const {setUser} = useAuth()
 const router = useRouter()
 
 const handleGoogleSignIn = async()=>{
+  setLoading(true)
   const provider = new GoogleAuthProvider();
   const auth = getAuth();
   try{
@@ -34,6 +36,8 @@ const handleGoogleSignIn = async()=>{
     }
     api.post('/user/auth/googleauth', userData ).then((res) => {
       setUser(res.data.user);
+      localStorage.setItem('token', res.data.token)
+      toast.success("Logged in successfully");
       router.push('/dashboard');
     })
   }catch(error){
@@ -44,9 +48,13 @@ const handleGoogleSignIn = async()=>{
       toast.error("Something went wrong, please try again later.");
     }
   }
+  finally{
+    setLoading(false)
+  }
 }
 const handleSubmit = async(e: React.FormEvent<HTMLFormElement>) => {
   e.preventDefault()
+  setLoading(true)
   try {
     const response = await api.post('/user/auth/signin', { email, password });
     toast.success("Logged in successfully");
@@ -60,6 +68,9 @@ const handleSubmit = async(e: React.FormEvent<HTMLFormElement>) => {
     else{
       toast.error("Something went wrong, please try again later.");
     }
+  }
+  finally{
+    setLoading(false)
   }
 }
 return (
@@ -88,7 +99,7 @@ return (
         </div>
         <Input id="password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} required />
       </div>
-      <Button type="submit" className="w-full">
+      <Button disabled={loading} type="submit" className="w-full">
         Login
       </Button>
       
@@ -105,7 +116,7 @@ return (
           Or continue with
         </span>
       </div>
-  <Button variant="outline" className="w-full mt-5 flex" onClick={handleGoogleSignIn}>
+  <Button variant="outline" className="w-full mt-5 flex" onClick={handleGoogleSignIn} disabled={loading}>
       <FaGoogle />
         Login with Google
       </Button>

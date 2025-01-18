@@ -5,14 +5,15 @@ import { IUser } from "@/types";
 import { initializeApp } from "firebase/app";
 import { firebaseConfig } from "@/config/firebase";
 import { getAnalytics } from "firebase/analytics";
-const AuthContext = createContext<{ user: IUser|null; setUser: any }>({ user: null, setUser: null });
+import { usePathname } from "next/navigation";
+const AuthContext = createContext<{ user: IUser|null; setUser: any, loading: boolean|null}>({ user: null, setUser: null, loading: null });
 
 export const useAuth = () => useContext(AuthContext);
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(true);
-    
+    const pathname = usePathname();
     useEffect(() => {
         const awaitDelay = async () => {
             await new Promise(resolve => setTimeout(resolve, 1000));
@@ -36,5 +37,5 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         const app = initializeApp(firebaseConfig);
         getAnalytics(app);
     }, []);
-    return <AuthContext.Provider value={{ user, setUser }}>{loading ? <Loader /> : children}</AuthContext.Provider>;
+    return <AuthContext.Provider value={{ user, setUser, loading }}>{(loading && pathname !== "/") ? <Loader /> : children}</AuthContext.Provider>;
 }

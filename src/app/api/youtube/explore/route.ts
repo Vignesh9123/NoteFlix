@@ -30,8 +30,6 @@ export async function GET(req: NextRequest) {
             })
         )
         res.filter((res: any) => res !== null);
-        console.log({res});
-        console.log(res.map((res: any) => res?.data.items?.map((video: any) => video.id.videoId)));
         // console.log(res.data.items);
         const videosWithDuration = await Promise.all(
             res.flatMap((res: any) => res?.data.items?.map(async(video: any) => {
@@ -51,7 +49,6 @@ export async function GET(req: NextRequest) {
                 }
             }) || [])
         );
-        console.log({videosWithDuration});
         const videos = videosWithDuration.map((video: any) => {
             if(!video) return null;
             return (

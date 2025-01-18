@@ -11,16 +11,17 @@ export async function POST(req: NextRequest){
             return NextResponse.json({ error: "Please login with email and password" }, { status: 400 });
         }
         if(user?.loginType === "google") {
-            (await cookies()).set("token", user.generateToken(), { httpOnly: true, secure: true, sameSite: "strict", maxAge: 60 * 60 * 24 });
+            const token = user.generateToken();
+            (await cookies()).set("token", token, { httpOnly: true, secure: true, sameSite: "strict", maxAge: 60 * 60 * 24 });
             user.password = undefined;
-            return NextResponse.json({ message: "User logged in successfully", user }, { status: 200 });
+            return NextResponse.json({ message: "User logged in successfully", user,token  }, { status: 200 });
         }
         if(!user) {
             const newUser = await User.create({ name, email, password, loginType: "google" });
             const token = newUser.generateToken();
             (await cookies()).set("token", token, { httpOnly: true, secure: true, sameSite: "strict", maxAge: 60 * 60 * 24 });
             newUser.password = undefined;
-            return NextResponse.json({ message: "User logged in successfully", user: newUser }, { status: 200 });
+            return NextResponse.json({ message: "User logged in successfully", user: newUser, token }, { status: 200 });
         }
         return NextResponse.json({ error: "User already exists" }, { status: 400 });
         

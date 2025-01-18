@@ -20,18 +20,18 @@ export const GoogleGeminiEffect = ({
   description?: string;
   className?: string;
 }) => {
-  const {user} = useAuth();
+  const {user, loading} = useAuth();
   return (
     <div className={cn("sticky top-40 2xl:top-52", className)}>
-      <p className="text-lg md:text-7xl 2xl:text-9xl font-normal pb-4 text-center bg-clip-text text-transparent bg-gradient-to-b from-neutral-100 to-neutral-300">
+      <div className="text-lg md:text-7xl 2xl:text-9xl font-normal pb-4 text-center bg-clip-text text-transparent bg-gradient-to-b from-neutral-100 to-neutral-300">
         {title || `Welcome to VidScribe`}
-      </p>
+      </div>
       <p className="text-xs md:text-xl 2xl:text-3xl font-normal text-center text-neutral-400 mt-4 max-w-lg 2xl:max-w-2xl mx-auto">
         {description ||
           `Transform how you watch YouTube videos with personalized playlists, time-stamped notes, and content organization all in one place.`}
       </p>
       <div className="w-full h-[890px] 2xl:h-[1780px] -top-60 md:-top-40 2xl:-top-[25rem] flex items-center justify-center bg-red-transparent absolute ">
-        <Link href={user ? "/dashboard" : "/login"} className="font-bold bg-white rounded-full md:px-4 md:py-2 px-2 py-1 md:mt-24 xl:mt-36 2xl:mt-56 mt-8 z-30 md:text-base text-black text-xs 2xl:text-3xl  w-fit mx-auto ">
+        <Link href={loading ? "" : user ? "/dashboard" : "/login"} className="font-bold bg-white rounded-full md:px-4 md:py-2 px-2 py-1 md:mt-24 xl:mt-36 2xl:mt-56 mt-8 z-30 md:text-base text-black text-xs 2xl:text-3xl  w-fit mx-auto ">
           Get Started
         </Link>
       </div>

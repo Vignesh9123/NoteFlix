@@ -79,8 +79,13 @@ export function AppSidebar() {
             <SidebarMenuItem>
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <SidebarMenuButton>
-                    <User2 /> {user?.name}
+                  <SidebarMenuButton className="w-full h-full">
+                    <div className="h-full flex flex-col ">
+                      <div className="flex items-center gap-2">
+                        <User2 /> {user?.name}
+                      </div>
+                    <p className="pl-8 text-xs text-muted-foreground"><span className={`${user?.creditsUsed! > 3 ? "text-red-500" : user?.creditsUsed! > 1 ? "text-yellow-500" : "text-green-500"}`}>{user?.creditsUsed}</span> Credits used out of 5</p>
+                    </div>
                     <ChevronUp className="ml-auto" />
                   </SidebarMenuButton>
                 </DropdownMenuTrigger>
