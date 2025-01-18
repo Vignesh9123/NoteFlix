@@ -39,8 +39,8 @@ function PlaylistsPage() {
     filteredPlaylists.map((playlist, index) => (
         <PlaylistGridCard playlists={playlists} setPlaylists={setPlaylists} key={playlist._id} playlist={playlist} index={index} />
     ))}
-    {!loading && filteredPlaylists.length === 0 && <p className='text-center text-gray-500'>No playlists found</p>}
     </div>
+    {!loading && filteredPlaylists.length === 0 && <p className='text-center text-gray-500'>No playlists found</p>}
     </>
   )
 }

@@ -5,13 +5,14 @@ import { api } from '@/config/config';
 import { ILibrary, IUserNote, IVideoDetails } from '@/types';
 import Image from 'next/image';
 import Link from 'next/link';
-import { Grid2X2, List, Plus, Stars } from 'lucide-react';
+import { Plus, Stars } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import NotesListCard from '@/components/cards/NotesListCard';
 import { MultiStepLoader as Loader } from '@/components/ui/multi-step-loader';
 import AddNoteDialog from '@/components/cards/AddNoteDialog';
 import { AxiosError } from 'axios';
 import toast from 'react-hot-toast';
+import YoutubePlayerDialog from '@/components/dialogs/YoutubePlayerDialog';
 function VideoPage() {
   const flag: number = 0;
   const { id } = useParams();
@@ -26,9 +27,25 @@ function VideoPage() {
   const [note, setNote] = useState("");
   const [noteTitle, setNoteTitle] = useState("");
   const [loadingIndex, setLoadingIndex] = useState(0);
+  const [youtubePlayerOpen, setYoutubePlayerOpen] = useState(false);
+  const [youtubeURL, setYoutubeURL] = useState('');
   useEffect(() => {
     setSearchQuery("");
   }, [id])
+
+  const handleYoutubePlayerOpen = (youtubeURL?: string) => {
+    if (youtubeURL) setYoutubeURL(youtubeURL);
+    setYoutubePlayerOpen(true);
+  }
+
+  const handleYoutubePlayerClose = () => {
+    setYoutubePlayerOpen(false);
+    setYoutubeURL('');
+  }
+
+  useEffect(() => {
+    if(!youtubePlayerOpen) setYoutubeURL('');
+  }, [youtubePlayerOpen])
   useEffect(() => {
     setFilteredNotes(
       userNotes.filter((note) => {
@@ -134,10 +151,10 @@ function VideoPage() {
         {loading && <div className='w-full h-full flex justify-center items-center animate-pulse bg-muted'></div> }
         {!loading && video?.thumbnailUrl && <Image src={!loading && video?.thumbnailUrl } alt='thumbnail' width={1920} height={1080} quality={100} className='w-full h-full object-cover rounded-lg' style={{ filter: "brightness(0.2) contrast(1.1) blur(2px)" }} />}
         <div className='absolute top-0 left-0 w-full h-full flex flex-col gap-4 justify-center items-center'>
-          <div className='text-2xl font-bold hover:underline line-clamp-1 text-center'>
-            <Link href={`https://www.youtube.com/watch?v=${video?.youtubeId}`} target='_blank'>
+          <div className='text-2xl font-bold hover:underline line-clamp-1 text-center cursor-pointer'>
+            {/* <Link href={`https://www.youtube.com/watch?v=${video?.youtubeId}`} target='_blank'> */}
               {video?.title}
-            </Link>
+            {/* </Link> */}
           </div>
           <div className='text-sm text-muted-foreground'>
             {video?.channelName}

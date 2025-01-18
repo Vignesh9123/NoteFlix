@@ -19,6 +19,7 @@ className,
 const [email, setEmail] = useState("")
 const [password, setPassword] = useState("")
 const [loading, setLoading] = useState(false)
+const [loggedIn, setLoggedIn] = useState(false)
 const {setUser} = useAuth()
 const router = useRouter()
 
@@ -36,6 +37,7 @@ const handleGoogleSignIn = async()=>{
     }
     api.post('/user/auth/googleauth', userData ).then((res) => {
       setUser(res.data.user);
+      if(res.data.token) setLoggedIn(true)
       localStorage.setItem('token', res.data.token)
       toast.success("Logged in successfully");
       router.push('/dashboard');
@@ -59,6 +61,7 @@ const handleSubmit = async(e: React.FormEvent<HTMLFormElement>) => {
     const response = await api.post('/user/auth/signin', { email, password });
     toast.success("Logged in successfully");
     setUser(response.data.data.user);
+    if(response.data.data.token) setLoggedIn(true)
     localStorage.setItem('token', response.data.data.token)
     router.push('/dashboard')    
   } catch (error) {
@@ -99,7 +102,7 @@ return (
         </div>
         <Input id="password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} required />
       </div>
-      <Button disabled={loading} type="submit" className="w-full">
+      <Button disabled={loading || loggedIn} type="submit" className="w-full">
         Login
       </Button>
       
@@ -116,7 +119,7 @@ return (
           Or continue with
         </span>
       </div>
-  <Button variant="outline" className="w-full mt-5 flex" onClick={handleGoogleSignIn} disabled={loading}>
+  <Button variant="outline" className="w-full mt-5 flex" onClick={handleGoogleSignIn} disabled={loading || loggedIn}>
       <FaGoogle />
         Login with Google
       </Button>

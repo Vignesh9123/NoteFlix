@@ -13,6 +13,7 @@ import AddNoteDialog from '@/components/cards/AddNoteDialog';
 import { AxiosError } from 'axios';
 import toast from 'react-hot-toast';
 import { api2Url } from '@/constants';
+import YoutubePlayerDialog from '@/components/dialogs/YoutubePlayerDialog';
 function VideoPage() {
   const flag: number = 0;
   const { id } = useParams();
@@ -27,6 +28,21 @@ function VideoPage() {
   const [note, setNote] = useState("");
   const [noteTitle, setNoteTitle] = useState("");
   const [loadingIndex, setLoadingIndex] = useState(0);
+  const [youtubePlayerOpen, setYoutubePlayerOpen] = useState(false);
+  const [youtubeURL, setYoutubeURL] = useState('');
+  const handleYoutubePlayerOpen = (youtubeURL?: string) => {
+    if(youtubeURL) setYoutubeURL(youtubeURL);
+    setYoutubePlayerOpen(true);
+  }
+
+  const handleYoutubePlayerClose = () => {
+    setYoutubePlayerOpen(false);
+    setYoutubeURL('');
+  }
+
+  useEffect(() => {
+    if(!youtubePlayerOpen) setYoutubeURL('');
+  },[youtubePlayerOpen])
   useEffect(() => {
     setSearchQuery("");
   }, [id])
@@ -125,15 +141,17 @@ function VideoPage() {
   return (
     <div>
       <Loader loadingStates={loadingStates} duration={60000} loading={AILoading} value={loadingIndex} />
-
+      {youtubePlayerOpen && <YoutubePlayerDialog videoURL={youtubeURL} open={youtubePlayerOpen} setOpen={setYoutubePlayerOpen}  />}
       <div className='w-full h-[20vh] relative'>
         {loading && <div className='w-full h-full flex justify-center items-center animate-pulse bg-muted'></div> }
         {!loading && video?.thumbnailUrl && <Image src={!loading && video?.thumbnailUrl } alt='thumbnail' width={1920} height={1080} quality={100} className='w-full h-full object-cover rounded-lg' style={{ filter: "brightness(0.2) contrast(1.1) blur(2px)" }} />}
         <div className='absolute top-0 left-0 w-full h-full flex flex-col gap-4 justify-center items-center'>
-          <div className='text-2xl font-bold hover:underline line-clamp-1 text-center'>
-            <Link href={`https://www.youtube.com/watch?v=${video?.youtubeId}`} target='_blank'>
+          <div onClick={()=>{
+            handleYoutubePlayerOpen(`https://www.youtube.com/watch?v=${video?.youtubeId}`);
+          }} className='text-2xl cursor-pointer font-bold hover:underline line-clamp-1 text-center'>
+            {/* <Link href={`https://www.youtube.com/watch?v=${video?.youtubeId}`} target='_blank'> */}
               {video?.title}
-            </Link>
+            {/* </Link> */}
           </div>
           <div className='text-sm text-muted-foreground'>
             {video?.channelName}

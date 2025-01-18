@@ -22,7 +22,9 @@ export default function RegisterForm({
   const router = useRouter()
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
+  const [loading, setLoading] = useState(false)
   const handleGoogleSignIn = async()=>{
+    setLoading(true)
     const provider = new GoogleAuthProvider();
     const auth = getAuth();
     try{
@@ -36,6 +38,8 @@ export default function RegisterForm({
       api.post('/user/auth/googleauth', userData ).then((res) => {
         console.log(res.data);
         setUser(res.data.user);
+        localStorage.setItem('token', res.data.token)
+        toast.success("Logged in successfully");
         router.push('/dashboard');
       })
     }catch(error){
@@ -46,10 +50,14 @@ export default function RegisterForm({
         toast.error("Something went wrong, please try again later.");
       }
     }
+    finally{
+      setLoading(false)
+    }
   }
   const handleSubmit = async(e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     try {
+      setLoading(true)
       const response = await api.post('/user/auth/register', { name, email, password });
       toast.success("Account created successfully, please log in");
       router.push('/login')
@@ -60,6 +68,8 @@ export default function RegisterForm({
       else{
         toast.error("Something went wrong, please try again later.");
       }
+    }finally{
+      setLoading(false)
     }
   }
   return (
@@ -87,7 +97,7 @@ export default function RegisterForm({
           </div>
           <Input id="password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} required />
         </div>
-        <Button type="submit" className="w-full">
+        <Button disabled={loading} type="submit" className="w-full">
           Create Account
         </Button>
       </div>
@@ -103,7 +113,7 @@ export default function RegisterForm({
           Or continue with
         </span>
       </div>
-  <Button variant="outline" className="w-full mt-5 flex" onClick={handleGoogleSignIn}>
+  <Button disabled={loading} variant="outline" className="w-full mt-5 flex" onClick={handleGoogleSignIn}>
       <FaGoogle />
         Sign up with Google
       </Button>
