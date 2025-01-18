@@ -30,6 +30,7 @@ const MenuBar = () => {
               .toggleBold()
               .run()
           }
+          title='Bold'
           className={`p-1 ${editor.isActive('bold') ? 'bg-muted' : ''}`}
         >
           <Bold />
@@ -43,6 +44,7 @@ const MenuBar = () => {
               .toggleItalic()
               .run()
           }
+          title='Italic'
           className={`p-1 ${editor.isActive('italic') ? 'bg-muted' : ''}`}
         >
           <Italic />
@@ -56,6 +58,7 @@ const MenuBar = () => {
               .toggleCode()
               .run()
           }
+          title='Code'
           className={`p-1 ${editor.isActive('code') ? 'bg-muted' : ''}`}
         >
           <Code />
@@ -66,42 +69,49 @@ const MenuBar = () => {
         <button
           onClick={() => editor.chain().focus().toggleHeading({ level: 1 }).run()}
           className={`p-1 ${editor.isActive('heading', { level: 1 }) ? 'bg-muted' : ''}`}
+          title='Heading 1'
         >
           H1
         </button>
         <button
           onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()}
           className={`p-1 ${editor.isActive('heading', { level: 2 }) ? 'bg-muted' : ''}`}
+          title='Heading 2'
         >
           H2
         </button>
         <button
           onClick={() => editor.chain().focus().toggleHeading({ level: 3 }).run()}
           className={`p-1 ${editor.isActive('heading', { level: 3 }) ? 'bg-muted' : ''}`}
+          title='Heading 3'
         >
           H3
         </button>
         <button
           onClick={() => editor.chain().focus().toggleBulletList().run()}
           className={`p-1 ${editor.isActive('bulletList') ? 'bg-muted' : ''}`}
+          title='Bullet List'
         >
           <List />
         </button>
         <button
           onClick={() => editor.chain().focus().toggleOrderedList().run()}
           className={`p-1 ${editor.isActive('orderedList') ? 'bg-muted' : ''}`}
+          title='Ordered List'
         >
           <ListOrdered />
         </button>
         <button
           onClick={() => editor.chain().focus().toggleCodeBlock().run()}
           className={`p-1 ${editor.isActive('codeBlock') ? 'bg-muted' : ''}`}
+          title='Code Block'
         >
           Code Block
         </button>
         <button
           onClick={() => editor.chain().focus().toggleBlockquote().run()}
           className={`p-1 ${editor.isActive('blockquote') ? 'bg-muted' : ''}`}
+          title='Blockquote'
         >
           <TextQuote />
         </button>
@@ -115,6 +125,7 @@ const MenuBar = () => {
               .run()
           }
           className='disabled:opacity-50'
+          title='Undo'
         >
           <Undo />
         </button>
@@ -128,12 +139,14 @@ const MenuBar = () => {
               .run()
           }
           className='disabled:opacity-50'
+          title='Redo'
         >
           <Redo />
         </button>
         <button
           onClick={() => editor.chain().focus().toggleTaskList().run()}
           className={`p-1 ${editor.isActive('taskList') ? 'bg-muted' : ''}`}
+          title='Task List'
         >
           <CheckSquare />
         </button>
