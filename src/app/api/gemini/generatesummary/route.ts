@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import {GoogleGenerativeAI} from '@google/generative-ai'
 import { authMiddleware } from "@/middleware/auth.middleware";
 import Video from "@/models/video.model";
+import User from "@/models/user.model";
 
 export async function POST(request: NextRequest) {
     try {
@@ -14,7 +15,11 @@ export async function POST(request: NextRequest) {
         if (!video) {
             return NextResponse.json({ error: "Invalid request" }, { status: 400 });
         }
+        const user = await User.findById(request.user?._id);
+        if(!user) return NextResponse.json({ error: "User not found" }, { status: 404 });
         if(video.summary) {
+            user.creditsUsed += 1;
+            await user.save();
             return NextResponse.json({ data: video.summary, message: "Summary generated successfully" }, { status: 200 });
         }
         if (!transcript) {
@@ -39,6 +44,9 @@ const response = await chatSession.sendMessage(transcript + '\nSummarize the giv
         summary = summary?.replaceAll('`','')
         video.summary = summary!;
         await video.save();
+        user.creditsUsed += 1;
+        await user.save();
+        
 
         return NextResponse.json({ data: summary , message: "Summary generated successfully" }, { status: 200 });
     } catch (error) {

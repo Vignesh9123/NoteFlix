@@ -10,6 +10,7 @@ export interface IUser extends Document {
     loginType?: string;
     matchPassword(password: string): Promise<boolean>;
     generateToken(): string;
+    creditsUsed: number;
 }
 
 export interface IVideoDetails {

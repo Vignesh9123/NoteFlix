@@ -3,19 +3,29 @@ import fs from "fs";
 import {GoogleGenerativeAI} from '@google/generative-ai'
 import Video from "@/models/video.model";
 import connectDB from '@/dbConfig/connectDB'
+import { authMiddleware } from "@/middleware/auth.middleware";
+import User from "@/models/user.model";
 connectDB();
 export async function POST(request: NextRequest) {
     let videoId: string;
     try {
+        const auth = await authMiddleware(request);
+        if (auth.status == 401) {
+            return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+        }
         ({videoId} = await request.json());
         const video = await Video.findOne({youtubeId: videoId});
         if(!video) {
             return NextResponse.json({error: "Video not found"}, {status: 404});
         }
+        const user = await User.findById(request.user?._id);
+        if(!user) return NextResponse.json({error: "User not found"}, {status: 404});
         if(video?.summary) {
             if(fs.existsSync(`public/${videoId}.mp3`)) {
                 fs.unlinkSync(`public/${videoId}.mp3`);
             }
+            user.creditsUsed += 1;
+            await user.save();
             return NextResponse.json({data: video.summary, message: "Summary generated successfully"}, {status: 200});
         }
         const base64Audio = fs.readFileSync(`public/${videoId}.mp3`);
@@ -45,12 +55,15 @@ export async function POST(request: NextRequest) {
         if(fs.existsSync(`public/${videoId}.mp3`)) {
             fs.unlinkSync(`public/${videoId}.mp3`);
         }
+        user.creditsUsed += 1;
+        await user.save();
         return NextResponse.json({ data:summary, message: "Summary extracted successfully" }, { status: 200 });
     } catch (error) {
         console.log(error);
         if(fs.existsSync(`public/${videoId!}.mp3`)) {
             fs.unlinkSync(`public/${videoId!}.mp3`);
         }
+
         return NextResponse.json({ error: "Something went wrong" }, { status: 500 });
     }
 }

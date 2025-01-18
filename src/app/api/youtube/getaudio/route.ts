@@ -3,6 +3,8 @@ import { NextRequest, NextResponse } from "next/server";
 import fs from 'fs';
 import ytdlp from 'ytdlp-nodejs';
 import Video from "@/models/video.model";
+import connectDB from "@/dbConfig/connectDB";
+connectDB();
 export async function POST(request: NextRequest) {
     let videoId: string;
     try {
@@ -20,6 +22,9 @@ export async function POST(request: NextRequest) {
         }
         if(Number(dbVideo.duration) > 900){
             return NextResponse.json({ error: "Video duration is too long" }, { status: 400 });
+        }
+        if(request.user?.creditsUsed! >= 5){
+            return NextResponse.json({ error: "You have reached your credit limit" }, { status: 400 });
         }
         if(dbVideo.summary){
             return NextResponse.json({ message: "Audio downloaded successfully" }, { status: 200 });

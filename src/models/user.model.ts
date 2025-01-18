@@ -20,6 +20,11 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: true,
         default: "email"
+    },
+    creditsUsed: {
+        type: Number,
+        required: true,
+        default: 0
     }
 }, { timestamps: true });
 
