@@ -8,7 +8,9 @@ export async function GET(request: NextRequest){
         if(auth.status == 401){
             return NextResponse.json({error: "Unauthorized"}, {status: 401})
         }
-        
+        const currentPage = request.nextUrl.searchParams.get("currentPage") || 1;
+        const limit = 8;
+        const skip = (limit * ( Number(currentPage)-1));
         const videos = await Library
         .aggregate([
             {
@@ -36,9 +38,19 @@ export async function GET(request: NextRequest){
                 $project: {
                     videoId: 0,
                 }
+            },
+            {
+                $skip: skip
+            },
+            {
+            
+                $limit: limit
             }
         ])
-        return NextResponse.json({data: videos}, {status: 200})
+        
+        const total = await Library.countDocuments({userId: request.user?._id, type: "standalone"});
+        const totalPages = Math.ceil(total / limit);
+        return NextResponse.json({data: videos, total, totalPages,message: "Videos fetched successfully"}, {status: 200})
     } catch (error) {
         console.log(error);
         return NextResponse.json({message: "Internal server error"}, {status: 500});

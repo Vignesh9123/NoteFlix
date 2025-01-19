@@ -1,8 +1,8 @@
 'use client'
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, use } from 'react'
 import VideoListCard from '@/components/cards/VideoListCard'
 import { Input } from '@/components/ui/input'
-import { CheckSquare2, Filter, Grid2X2, ListVideo, Loader2, Plus, Square, Star } from 'lucide-react'
+import { CheckSquare2, ChevronLeftSquare, ChevronRightSquare, Filter, Grid2X2, ListVideo, Loader2, Plus, Square, Star } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import {
   Dialog,
@@ -40,6 +40,8 @@ function VideosPage() {
   const [selectMode, setSelectMode] = useState(false)
   const [moveToPlaylistOpen, setMoveToPlaylistOpen] = useState(false)
   const [displayMode, setDisplayMode] = useState<'grid' | 'list'>('grid')
+  const [currentPage, setCurrentPage] = useState(1)
+  const [totalPages, setTotalPages] = useState(1)
   
   useEffect(() => {
     const filteredVideos = videoList.filter((video) => {
@@ -110,15 +112,16 @@ function VideosPage() {
     }
   }
 
-  const fetchVideos = async () => {
+  const fetchVideos = useDebouncedCallback( async () => {
     try {
       setLoadingVideos(true)
-      const response = await api.get('/library/videos')
+      const response = await api.get(`/library/videos?currentPage=${currentPage}`)
       const responseData = response.data.data
       const videos = responseData.map((data: any) => ({
         ...data.videoDetails,
       }))
       setVideoList(videos)
+      setTotalPages(response.data.totalPages)
       setFilteredVideoList(videos)
     } catch (error) {
       if(error instanceof AxiosError){
@@ -130,7 +133,7 @@ function VideosPage() {
     finally {
       setLoadingVideos(false)
     }
-  }
+  },500)
 
   useEffect(() => {
     fetchVideos()
@@ -152,6 +155,23 @@ function VideosPage() {
       setVideoList([...videoList])
     }
   },500)
+
+  const handlePrevPage = () => {
+    if (currentPage > 1) {
+      setCurrentPage(currentPage - 1)
+    }
+  }
+
+  const handleNextPage = () => {
+    setCurrentPage(currentPage + 1)
+  }
+
+  useEffect(() => {
+    setLoadingVideos(true)
+    if(currentPage < 1) setCurrentPage(1)
+    if(currentPage > totalPages) setCurrentPage(totalPages)
+    fetchVideos()
+  }, [currentPage])
 
   return (
     <div className='m-5'>
@@ -243,6 +263,16 @@ function VideosPage() {
         </div>
         ))}
         </div>}
+
+        <div className='flex gap-4 items-center justify-around'>
+          <ChevronLeftSquare size={27} className={`cursor-pointer hover:bg-muted duration-300 ${currentPage === 1 ? 'opacity-50 cursor-not-allowed' : ''}`} onClick={handlePrevPage} />
+          <div>
+            <p className='text-sm text-gray-500'>Page {currentPage} / {totalPages}</p>
+            <p className='text-sm text-gray-500'>{filteredVideoList.length} results</p>
+          </div>
+          <ChevronRightSquare size={27} className={`cursor-pointer hover:bg-muted duration-300 ${currentPage === totalPages ? 'opacity-50 cursor-not-allowed' : ''}`} onClick={handleNextPage} />
+
+        </div>
 
         {!loadingVideos && filteredVideoList.length === 0  && <p className='text-center text-gray-500'>No videos found</p>}
       </div>

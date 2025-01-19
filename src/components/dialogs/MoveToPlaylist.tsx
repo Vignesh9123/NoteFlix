@@ -18,9 +18,9 @@ function MoveToPlaylist({open, setOpen, videoDetails,videoList, setVideoList, se
             console.log("res", res)
             const playlists = res.data.data;
             if(currentPlaylist){
-                setPlaylists(playlists.filter((playlist: IPlaylist) => playlist._id !== currentPlaylist));
+                setPlaylists(playlists.filter((playlist: IPlaylist) => playlist._id !== currentPlaylist).sort((a: IPlaylist, b: IPlaylist) => a.name.localeCompare(b.name)));
             } else {
-                setPlaylists(playlists);
+                setPlaylists(playlists.sort((a: IPlaylist, b: IPlaylist) => a.name.localeCompare(b.name)));
             }
         })
         .catch((err) => toast.error(err.response.data.message || "Something went wrong, please try again later."))
@@ -77,7 +77,7 @@ function MoveToPlaylist({open, setOpen, videoDetails,videoList, setVideoList, se
                     <SelectTrigger>
                         <SelectValue placeholder='Select a playlist'/>
                     </SelectTrigger>
-                    <SelectContent>
+                    <SelectContent className='z-[1000000]'>
                         {playlistLoading ? <div className='flex justify-center items-center'><Loader2 className='animate-spin' /></div> : playlists.map((playlist) => (
                             <SelectItem key={playlist._id} value={playlist._id}>{playlist.name}</SelectItem>
                         ))}

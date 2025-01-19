@@ -14,9 +14,11 @@ import { AxiosError } from 'axios';
 import toast from 'react-hot-toast';
 import { api2Url } from '@/constants';
 import YoutubePlayerDialog from '@/components/dialogs/YoutubePlayerDialog';
+import { useAuth } from '@/context/AuthContext';
 function VideoPage() {
   const flag: number = 0;
   const { id } = useParams();
+  const { user, setUser } = useAuth();
   const [video, setVideo] = useState<IVideoDetails | null>(null);
   const [library, setLibrary] = useState<ILibrary | null>(null);
   const [loading, setLoading] = useState(false);
@@ -67,6 +69,12 @@ function VideoPage() {
         const summary = await api.post('/gemini/generatesummary', { transcript, videoId: video?.youtubeId });
         // setLoadingIndex(2);
         setNote(summary.data.data.toString());
+        setUser(
+          {
+            ...user,
+            creditsUsed: user?.creditsUsed!+1
+          }
+        )
         setNoteTitle("Summary of the video");
         setAddNoteDialogOpen(true);
       }

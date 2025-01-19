@@ -27,7 +27,7 @@ function UpdateVideo({video, open, setOpen, updateStatusAnimation}: {open: boole
             <SelectTrigger>
                 <SelectValue placeholder="Select a status" />
             </SelectTrigger>
-            <SelectContent>
+            <SelectContent className='z-[1000000]'>
                 <SelectGroup>
                     <SelectLabel>Video Status</SelectLabel>
                     <SelectItem value="to_watch">To Watch</SelectItem>

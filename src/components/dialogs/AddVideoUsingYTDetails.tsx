@@ -108,7 +108,7 @@ function AddVideo({open, setOpen, videoDetails, setVideoDetails, setVideoList, v
                     <SelectTrigger>
                         <SelectValue placeholder='Select a playlist'/>
                     </SelectTrigger>
-                    <SelectContent>
+                    <SelectContent className='z-[1000000]'>
                         {playlistLoading ? <div className='flex justify-center items-center'><Loader2 className='animate-spin' /></div> : playlists.map((playlist) => (
                             <SelectItem key={playlist._id} value={playlist._id}>{playlist.name}</SelectItem>
                         ))}
