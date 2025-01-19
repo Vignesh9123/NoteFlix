@@ -20,7 +20,7 @@ export async function POST(req: NextRequest) {
             User.updateOne({ _id: user._id }, { $set: { creditsUsed: 0 } });
         })
         await Promise.all(updatedUsers);
-        return NextResponse.json({ message: `Credits reset successfully for ${updatedUsers.length} users` }, { status: 200 });
+        return NextResponse.json({ data: updatedUsers, message: `Credits reset successfully for ${updatedUsers.length} users` }, { status: 200 });
     } catch (error) {
         return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
     }
