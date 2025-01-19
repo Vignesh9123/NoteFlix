@@ -10,7 +10,7 @@ const shouldResetCredits = (createdAt: string) => {
     const yearsDiff = now.getFullYear() - joinDate.getFullYear();
     const monthsDiff = now.getMonth() - joinDate.getMonth();
     const totalMonths = yearsDiff * 12 + monthsDiff;
-    return totalMonths > 0 && joinDate.getDate() === now.getDate() && now.getHours() === 0 && now.getMinutes() >= 0  && now.getMinutes() <= 5;
+    return totalMonths > 0 && joinDate.getDate() === now.getDate()
 }
 
 export async function POST(req: NextRequest) {
