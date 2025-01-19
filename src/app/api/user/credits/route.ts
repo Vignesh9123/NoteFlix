@@ -15,6 +15,7 @@ const shouldResetCredits = (createdAt: string) => {
 
 export async function POST(req: NextRequest) {
     try {
+        if(req.headers.get("authorization") != `Bearer ${process.env.NEXT_PUBLIC_JWT_SECRET}`) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
         const users = await User.find({}).sort({ createdAt: -1 });
         const updatedUsers = users.filter((user) => shouldResetCredits(user.createdAt as string))
         .map(async(user:IUser) => {
