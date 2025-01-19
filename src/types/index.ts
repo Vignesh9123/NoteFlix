@@ -11,6 +11,7 @@ export interface IUser extends Document {
     matchPassword(password: string): Promise<boolean>;
     generateToken(): string;
     creditsUsed: number;
+    createdAt: string | Date;
 }
 
 export interface IVideoDetails {
