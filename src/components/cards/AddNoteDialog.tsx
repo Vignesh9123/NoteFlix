@@ -9,7 +9,7 @@ import Editor from '../TipTap';
 import { Loader2 } from 'lucide-react';
 import { AxiosError } from 'axios';
 import toast from 'react-hot-toast';
-function AddNoteDialog({ open, setOpen, libraryId, fetchNotes, youtubeId, text, noteTitle }: { open: boolean, setOpen: (open: boolean) => void, libraryId: string, fetchNotes: () => void, youtubeId: string, text?: string, noteTitle?: string }) {
+function AddNoteDialog({ open, setOpen, libraryId, fetchNotes, youtubeId, text, noteTitle, setText , setNoteTitle}: { open: boolean, setOpen: (open: boolean) => void, libraryId: string, fetchNotes: () => void, youtubeId: string, text?: string, noteTitle?: string, setText?: (text: string) => void, setNoteTitle?: (text: string) => void }) {
     const [note, setNote] = useState<string | null>(null);
     const [timestamp, setTimestamp] = useState<string | null>(null);
     const [title, setTitle] = useState<string | null>(null);
@@ -59,15 +59,11 @@ function AddNoteDialog({ open, setOpen, libraryId, fetchNotes, youtubeId, text, 
         setNote(null);
         setTimestamp(null);
         setTitle(null);
+        setText && setText("");
+        setNoteTitle && setNoteTitle("");
        } 
     },[])
-    useEffect(() => {
-        if(!open){
-            setNote(null);
-            setTimestamp(null);
-            setTitle(null);
-        }
-    },[open])
+    
 
     
     useEffect(() => {
@@ -79,7 +75,17 @@ function AddNoteDialog({ open, setOpen, libraryId, fetchNotes, youtubeId, text, 
         }
     }, [text])
     return (
-        <Dialog open={open} onOpenChange={setOpen}>
+        <Dialog open={open} onOpenChange={(val)=>{
+            if(!val){
+                console.log("clearing")
+                setNote(null);
+                setTimestamp(null);
+                setTitle(null);
+                setText && setText("");
+                setNoteTitle && setNoteTitle("");
+            }
+            setOpen(val);
+        }}>
             <DialogContent className='md:w-auto xl:max-w-[90vw] xl:w-[80vw] max-h-[95vh] overflow-auto'>
                 <DialogHeader className='w-full'>
                     <DialogTitle>Add a note</DialogTitle>

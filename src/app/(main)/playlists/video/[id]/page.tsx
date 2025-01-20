@@ -146,12 +146,13 @@ function VideoPage() {
   return (
     <div>
       <Loader loadingStates={loadingStates} duration={60000} loading={AILoading} value={loadingIndex} />
+      {youtubePlayerOpen && <YoutubePlayerDialog videoURL={youtubeURL} open={youtubePlayerOpen} setOpen={setYoutubePlayerOpen}  />}
 
       <div className='w-full h-[20vh] relative'>
         {loading && <div className='w-full h-full flex justify-center items-center animate-pulse bg-muted'></div> }
         {!loading && video?.thumbnailUrl && <Image src={!loading && video?.thumbnailUrl } alt='thumbnail' width={1920} height={1080} quality={100} className='w-full h-full object-cover rounded-lg' style={{ filter: "brightness(0.2) contrast(1.1) blur(2px)" }} />}
         <div className='absolute top-0 left-0 w-full h-full flex flex-col gap-4 justify-center items-center'>
-          <div className='text-2xl font-bold hover:underline line-clamp-1 text-center cursor-pointer'>
+          <div onClick={() => handleYoutubePlayerOpen(`https://www.youtube.com/watch?v=${video?.youtubeId}`)} className='text-2xl font-bold hover:underline line-clamp-1 text-center cursor-pointer'>
             {/* <Link href={`https://www.youtube.com/watch?v=${video?.youtubeId}`} target='_blank'> */}
               {video?.title}
             {/* </Link> */}
@@ -177,7 +178,7 @@ function VideoPage() {
             <p className='text-gray-500 text-xs text-center'>Generate Summary using AI</p>
             </div>
             {(
-              addNoteDialogOpen && <AddNoteDialog youtubeId={video?.youtubeId!} open={addNoteDialogOpen} setOpen={setAddNoteDialogOpen} fetchNotes={fetchNotes} libraryId={library?._id!} text={note} noteTitle={noteTitle} />
+              addNoteDialogOpen && <AddNoteDialog youtubeId={video?.youtubeId!} open={addNoteDialogOpen} setOpen={setAddNoteDialogOpen} fetchNotes={fetchNotes} libraryId={library?._id!} text={note} noteTitle={noteTitle} setText={setNote} setNoteTitle={setNoteTitle} />
             )}
             <Input placeholder='Search' className='mt-2 md:mt-0 col-span-2 md:col-span-1' value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} />
 
