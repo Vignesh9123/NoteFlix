@@ -32,7 +32,7 @@ export const GoogleGeminiEffect = ({
       </p>
       <div className="w-full h-[890px] 2xl:h-[1780px] -top-60 md:-top-40 2xl:-top-[25rem] flex items-center justify-center bg-red-transparent absolute ">
         <Link href={loading ? "" : user ? "/dashboard" : "/login"} className="font-bold bg-white rounded-full md:px-4 md:py-2 px-2 py-1 md:mt-24 xl:mt-36 2xl:mt-56 mt-8 z-30 md:text-base text-black text-xs 2xl:text-3xl  w-fit mx-auto ">
-          Get Started
+          {loading?<div className="h-6 w-[80px] animate-pulse bg-muted"></div>:"Get Started"}
         </Link>
       </div>
       <div className="2xl:hidden">

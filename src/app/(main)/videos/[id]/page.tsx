@@ -191,9 +191,12 @@ function VideoPage() {
       <div className="usernotes m-5">
         <div className='flex flex-col gap-2'>
           {loading && [1, 2, 3, 4, 5, 6].map((index) => <div key={index} className='h-40 w-full bg-muted animate-pulse'></div>)}
+          <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4'>
+
           {filteredNotes.map((note, index) => (
             <NotesListCard setNoteList={setUserNotes} noteList={userNotes} key={note._id} note={note} videoDetails={video!} index={index} />
           ))}
+          </div>
           {!loading &&( filteredNotes.length === 0 )&& <div className='text-center text-muted-foreground'>No notes found</div>}
         </div>
       </div>

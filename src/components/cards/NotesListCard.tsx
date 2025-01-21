@@ -12,9 +12,11 @@ import { api } from '@/config/config';
 import { toast } from 'react-hot-toast';
 import { AxiosError } from 'axios';
 import YoutubePlayerDialog from '../dialogs/YoutubePlayerDialog';
+import ViewNoteDialog from '../dialogs/ViewNoteDialog';
 function NotesListCard({note, videoDetails, index, noteList, setNoteList}: {note: IUserNote, videoDetails: IVideoDetails, index: number, noteList: IUserNote[], setNoteList: (noteList: IUserNote[]) => void}) {
   const [youtubePlayerOpen, setYoutubePlayerOpen] = useState(false);
   const [youtubeURL, setYoutubeURL] = useState('');
+  const [viewOpen, setViewOpen] = useState(false)
   const deleteClick = async () => {
     try {
         await api.delete('/video/notes', {data: {noteId: note?._id}});
@@ -47,6 +49,7 @@ function NotesListCard({note, videoDetails, index, noteList, setNoteList}: {note
   return (
     <>
     {youtubePlayerOpen && <YoutubePlayerDialog videoURL={youtubeURL} open={youtubePlayerOpen} setOpen={setYoutubePlayerOpen}/>}
+    {viewOpen && <ViewNoteDialog note={note} open={viewOpen} setOpen={setViewOpen}/>}
    <motion.div initial={{opacity: 0, y: 100, scale: 0.6}} animate={{opacity: 1, y: 0, scale: 1}} transition={{delay: index * 0.1, duration: 0.3}} onClick={() => console.log("clicked")} key={note.text} className='flex flex-col gap-2 p-2 rounded-lg bg-muted dark:hover:bg-slate-900 duration-150 hover:scale-[1.01] cursor-pointer'>
     <div className='flex items-center justify-between'>
     <div className='text-md md:text-xl lg:text-2xl font-bold'>{note.title}</div>
@@ -67,12 +70,14 @@ function NotesListCard({note, videoDetails, index, noteList, setNoteList}: {note
       </DropdownMenuContent>
     </DropdownMenu>
     </div>
-    {/* <li className='text-sm text-muted-foreground mt-2'> */}
+    <div className='md:max-h-[200px] max-h-[150px] xl:max-h-[300px] overflow-auto noteGrid' onClick={()=>setViewOpen(true)}>
+
         <Editor text={note.text} isEditable={false} />
+    </div>
     {/* </li> */}
    {note.timestamp && <TooltipProvider >
     <Tooltip >
-    <TooltipTrigger className='cursor-pointer inline w-fit'>
+    <TooltipTrigger className='cursor-pointer inline w-fit mt-auto'>
 
     <div onClick={(e) =>{ 
       e.stopPropagation()

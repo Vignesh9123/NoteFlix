@@ -22,6 +22,7 @@ const MenuBar = () => {
     <div className="m-1">
       <div className="button-group border rounded-lg flex flex-wrap gap-3 lg:gap-4 xl:gap-6 justify-center p-1">
         <button
+        tabIndex={-1}
           onClick={() => editor.chain().focus().toggleBold().run()}
           disabled={
             !editor.can()
@@ -44,6 +45,7 @@ const MenuBar = () => {
               .toggleItalic()
               .run()
           }
+          tabIndex={-1}
           title='Italic'
           className={`p-1 ${editor.isActive('italic') ? 'bg-muted' : ''}`}
         >
@@ -58,18 +60,21 @@ const MenuBar = () => {
               .toggleCode()
               .run()
           }
+          tabIndex={-1}
           title='Code'
           className={`p-1 ${editor.isActive('code') ? 'bg-muted' : ''}`}
         >
           <Code />
         </button>
-        <button onClick={() => editor.chain().focus().unsetAllMarks().run()} title='Remove formatting'>
+        <button onClick={() => editor.chain().focus().unsetAllMarks().run()} title='Remove formatting'
+          tabIndex={-1}>
           <RemoveFormatting />
         </button>
         <button
           onClick={() => editor.chain().focus().toggleHeading({ level: 1 }).run()}
           className={`p-1 ${editor.isActive('heading', { level: 1 }) ? 'bg-muted' : ''}`}
           title='Heading 1'
+          tabIndex={-1}
         >
           H1
         </button>
@@ -77,6 +82,7 @@ const MenuBar = () => {
           onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()}
           className={`p-1 ${editor.isActive('heading', { level: 2 }) ? 'bg-muted' : ''}`}
           title='Heading 2'
+          tabIndex={-1}
         >
           H2
         </button>
@@ -84,6 +90,7 @@ const MenuBar = () => {
           onClick={() => editor.chain().focus().toggleHeading({ level: 3 }).run()}
           className={`p-1 ${editor.isActive('heading', { level: 3 }) ? 'bg-muted' : ''}`}
           title='Heading 3'
+          tabIndex={-1}
         >
           H3
         </button>
@@ -91,6 +98,7 @@ const MenuBar = () => {
           onClick={() => editor.chain().focus().toggleBulletList().run()}
           className={`p-1 ${editor.isActive('bulletList') ? 'bg-muted' : ''}`}
           title='Bullet List'
+          tabIndex={-1}
         >
           <List />
         </button>
@@ -98,6 +106,7 @@ const MenuBar = () => {
           onClick={() => editor.chain().focus().toggleOrderedList().run()}
           className={`p-1 ${editor.isActive('orderedList') ? 'bg-muted' : ''}`}
           title='Ordered List'
+          tabIndex={-1}
         >
           <ListOrdered />
         </button>
@@ -105,6 +114,7 @@ const MenuBar = () => {
           onClick={() => editor.chain().focus().toggleCodeBlock().run()}
           className={`p-1 ${editor.isActive('codeBlock') ? 'bg-muted' : ''}`}
           title='Code Block'
+          tabIndex={-1}
         >
           Code Block
         </button>
@@ -112,6 +122,7 @@ const MenuBar = () => {
           onClick={() => editor.chain().focus().toggleBlockquote().run()}
           className={`p-1 ${editor.isActive('blockquote') ? 'bg-muted' : ''}`}
           title='Blockquote'
+          tabIndex={-1}
         >
           <TextQuote />
         </button>
@@ -124,6 +135,7 @@ const MenuBar = () => {
               .undo()
               .run()
           }
+          tabIndex={-1}
           className='disabled:opacity-50'
           title='Undo'
         >
@@ -138,6 +150,7 @@ const MenuBar = () => {
               .redo()
               .run()
           }
+          tabIndex={-1}
           className='disabled:opacity-50'
           title='Redo'
         >
@@ -147,6 +160,7 @@ const MenuBar = () => {
           onClick={() => editor.chain().focus().toggleTaskList().run()}
           className={`p-1 ${editor.isActive('taskList') ? 'bg-muted' : ''}`}
           title='Task List'
+          tabIndex={-1}
         >
           <CheckSquare />
         </button>
@@ -156,7 +170,7 @@ const MenuBar = () => {
 }
 
 const extensions = [
-  Color.configure({ types: [TextStyle.name, ListItem.name] }),
+  // Color.configure({ types: [TextStyle.name, ListItem.name] }),
   TextStyle.configure({}),
   StarterKit.configure({
     bulletList: {
@@ -185,11 +199,11 @@ const extensions = [
 const content = "<h2>Facing a Hiring Freeze? Learn from My Mistakes!</h2>\n\n<p>The current job market is incredibly competitive.  I landed a 30 LPA job in 2020 (while my batchmates struggled), but only after three interviews. This video shares my mistakes to help you avoid similar pitfalls.</p>\n\n<ul>\n<li><p><strong>Mistake 1: Incorrect DSA Practice.</strong> I focused too much on competitive programming (CP) without a structured approach.  Instead, learn DSA systematically (e.g., using Striver's A to Z), mastering various algorithms before tackling CP. Don't get stuck on repetitive questions; focus on challenging problems to expand your knowledge.</p></li>\n<li><p><strong>Mistake 2: Lack of Projects & Development Experience.</strong> My resume was CP-heavy, hindering internship prospects.  Balance CP with projects (web, app, etc.) and deploy them.  A diverse skillset increases interview opportunities.</p></li>\n<li><p><strong>Mistake 3: Introversion.</strong>  Network! Engage with tech communities (Twitter, LinkedIn).  Publicly share your work and achievements to increase visibility and build connections. A strong network can be a lifeline during layoffs.</p></li>\n</ul>\n\n<p>Don't be one-dimensional.  A balanced skillset is crucial for success.  Consider resources like Great Learning Career Academy for structured learning and guaranteed placement opportunities.</p>\n\n<ul data-type=\"taskList\">\n<li data-checked=\"false\" data-type=\"taskItem\"><label><input type=\"checkbox\"><span></span></label><div><p>Follow a structured DSA path</p></div></li>\n<li data-checked=\"false\" data-type=\"taskItem\"><label><input type=\"checkbox\"><span></span></label><div><p>Build and deploy multiple projects</p></div></li>\n<li data-checked=\"false\" data-type=\"taskItem\"><label><input type=\"checkbox\"><span></span></label><div><p>Actively participate in tech communities</p></div></li>\n</ul>\n"
 
 
-export default ({text, setText, isEditable}:{text: string, setText?: (text: string) => void, isEditable?: boolean}) => {
+export default ({text, setText, isEditable, className}:{text: string, setText?: (text: string) => void, isEditable?: boolean, className?: string}) => {
   const [editorText, setEditorText] = useState(text)
   useEffect(() => {setEditorText(text)}, [text])
   const handleUpdate = useDebouncedCallback((text) => {setText && setText(String(text.editor.getHTML()))}, 500)
   return (
-    <EditorProvider slotBefore={isEditable?<MenuBar />:null} shouldRerenderOnTransaction  editable={(isEditable != null)?isEditable:true} editorContainerProps={{className:`${isEditable?'m-1 p-1 editableEditor':''}`}} onUpdate={handleUpdate} extensions={extensions} content={editorText}></EditorProvider>
+    <EditorProvider slotBefore={isEditable?<MenuBar />:null} shouldRerenderOnTransaction  editable={(isEditable != null)?isEditable:true} editorContainerProps={{className:`${isEditable?'m-1 p-1 editableEditor':''} ${className || ''}`}} onUpdate={handleUpdate} extensions={extensions} content={editorText}></EditorProvider>
   )
 }

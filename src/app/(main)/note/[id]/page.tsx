@@ -96,16 +96,16 @@ function NotePage() {
         </div>
         <div className="my-5">
         <Label>Title</Label>
-      <Input value={title} onChange={(e) => setTitle(e.target.value)} style={{fontSize: "2rem", height: "4rem"}} className="font-bold text-5xl" />
+      <Input value={title} onChange={(e) => setTitle(e.target.value)} style={{ height: "4rem"}} className="font-bold text-2xl md:text-2xl lg:text-3xl xl:text-4xl" />
         </div>
         <div>
       <Label>Text</Label>
-      <div className="h-[260px]">
+      <div className="">
 
       <Editor text={text} setText={setText} isEditable={true}/>
       </div>
         </div>
-        <div className="flex justify-between px-10">
+        <div className="flex justify-between p-1">
 
         <Button disabled={updateDisabled} onClick={updateClick}>Save</Button>
         </div>

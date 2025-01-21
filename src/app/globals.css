@@ -98,7 +98,7 @@
     margin-top: 0;
   }
   
-  @apply md:max-h-[200px] max-h-[150px] xl:max-h-[300px] ; 
+  @apply max-h-full ; 
   overflow-y: auto;
   outline: none;
   @apply focus:ring-1 focus:ring-ring focus:ring-offset-2;
@@ -229,7 +229,7 @@
     }
   }
 }
-.tiptap::-webkit-scrollbar-thumb {
+.tiptap::-webkit-scrollbar-thumb, .noteGrid::-webkit-scrollbar-thumb {
   background-color: var(--gray-3);
 }
 .tiptap p.is-editor-empty:first-child::before {
@@ -242,6 +242,7 @@
 
 .editableEditor .tiptap{
   padding: 1rem;
+  @apply md:max-h-[250px] max-h-[150px] xl:max-h-[400px]
 }
 @keyframes fadeOut {
   from {
