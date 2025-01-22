@@ -49,8 +49,8 @@ function NotesListCard({note, videoDetails, index, noteList, setNoteList}: {note
   return (
     <>
     {youtubePlayerOpen && <YoutubePlayerDialog videoURL={youtubeURL} open={youtubePlayerOpen} setOpen={setYoutubePlayerOpen}/>}
-    {viewOpen && <ViewNoteDialog note={note} open={viewOpen} setOpen={setViewOpen}/>}
-   <motion.div initial={{opacity: 0, y: 100, scale: 0.6}} animate={{opacity: 1, y: 0, scale: 1}} transition={{delay: index * 0.1, duration: 0.3}} onClick={() => console.log("clicked")} key={note.text} className='flex flex-col gap-2 p-2 rounded-lg bg-muted dark:hover:bg-slate-900 duration-150 hover:scale-[1.01] cursor-pointer'>
+    {viewOpen && <ViewNoteDialog videoDetails={videoDetails} note={note} open={viewOpen} setOpen={setViewOpen}/>}
+   <motion.div initial={{opacity: 0, y: 100, scale: 0.6}}  animate={{opacity: 1, y: 0, scale: 1}} transition={{delay: index * 0.1, duration: 0.3}} onClick={()=>setViewOpen(true)} key={note.text} className='flex flex-col gap-2 p-2 rounded-lg bg-muted dark:hover:bg-slate-900 duration-150 hover:scale-[1.01] cursor-pointer'>
     <div className='flex items-center justify-between'>
     <div className='text-md md:text-xl lg:text-2xl font-bold'>{note.title}</div>
     <DropdownMenu>
@@ -70,7 +70,7 @@ function NotesListCard({note, videoDetails, index, noteList, setNoteList}: {note
       </DropdownMenuContent>
     </DropdownMenu>
     </div>
-    <div className='md:max-h-[200px] max-h-[150px] xl:max-h-[300px] overflow-auto noteGrid' onClick={()=>setViewOpen(true)}>
+    <div className='md:max-h-[200px] max-h-[150px] xl:max-h-[300px] overflow-auto noteGrid' >
 
         <Editor text={note.text} isEditable={false} />
     </div>
