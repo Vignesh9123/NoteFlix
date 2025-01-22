@@ -25,6 +25,7 @@ function NotePage() {
 
 
   const getNote = async () => {
+    setLoading(true)
     try {
         const response = await api.get(`/library/notes/getbyid?id=${id}`);
         setNote(response.data.data.note);
@@ -40,6 +41,9 @@ function NotePage() {
       else{
         toast.error("Something went wrong, please try again later.");
       }
+    }
+    finally{
+      setLoading(false)
     }    
   }
 
@@ -75,7 +79,7 @@ function NotePage() {
 
   return (
     <>
-    {text && <div className="m-5">
+     <div className="m-5">
       <div className='w-full h-[20vh] relative'>
         {loading && <div className='w-full h-full flex justify-center items-center animate-pulse bg-muted'></div> }
         {!loading && video?.thumbnailUrl && <Image src={!loading && video?.thumbnailUrl } alt='thumbnail' width={1920} height={1080} quality={100} className='w-full h-full object-cover rounded-lg' style={{ filter: "brightness(0.2) contrast(1.1) blur(2px)" }} />}
@@ -92,24 +96,27 @@ function NotePage() {
       </div>
         <div className="my-5">
           <Label>Timestamp</Label>
-          <Input value={timestamp} onChange={(e) => setTimestamp(e.target.value)}  />
+          {loading && <Input className="bg-muted animate-pulse" disabled />}
+          {!loading && <Input value={timestamp} onChange={(e) => setTimestamp(e.target.value)}  />}
         </div>
         <div className="my-5">
         <Label>Title</Label>
-      <Input value={title} onChange={(e) => setTitle(e.target.value)} style={{ height: "4rem"}} className="font-bold text-2xl md:text-2xl lg:text-3xl xl:text-4xl" />
+        {loading && <Input className="bg-muted animate-pulse" disabled />}
+        
+      {!loading && <Input value={title} onChange={(e) => setTitle(e.target.value)} style={{ height: "4rem"}} className="font-bold text-2xl md:text-2xl lg:text-3xl xl:text-4xl" />}
         </div>
         <div>
       <Label>Text</Label>
       <div className="">
-
-      <Editor text={text} setText={setText} isEditable={true}/>
+      {loading && <div className="h-[150px] md:h-[200px] lg:h-[300px] animate-pulse bg-muted"></div>}
+      {!loading && <Editor text={text} setText={setText} isEditable={true}/>}
       </div>
         </div>
         <div className="flex justify-between p-1">
 
         <Button disabled={updateDisabled} onClick={updateClick}>Save</Button>
         </div>
-    </div>}
+    </div>
     </>
   )
 }
