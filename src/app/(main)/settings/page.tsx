@@ -1,5 +1,5 @@
 'use client'
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
 import React, { useState, useEffect } from 'react'
 import { useAuth } from '@/context/AuthContext'
 import { Input } from '@/components/ui/input'
@@ -108,6 +108,15 @@ function page() {
             </CardHeader>
             <CardContent>
                 <p>{user?.email}</p>
+            </CardContent>
+        </Card>
+        <Card>
+            <CardHeader>
+            <CardTitle>Credits Used</CardTitle>
+            <CardDescription>Number of AI Summary Generations used this month</CardDescription>
+            </CardHeader>
+            <CardContent>
+                <span className={`${user?.creditsUsed! > 3 ? "text-red-500" : user?.creditsUsed! > 1 ? "text-yellow-500" : "text-green-500"}`}>{user?.creditsUsed} </span><span> / 5</span> 
             </CardContent>
         </Card>
         <Card>

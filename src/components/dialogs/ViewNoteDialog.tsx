@@ -39,7 +39,7 @@ const router = useRouter();
             <Editor className='max-h-[60vh]' text={note.text} isEditable={false} />
             {note.timestamp && <TooltipProvider >
     <Tooltip >
-    <TooltipTrigger className='cursor-pointer inline w-fit mt-auto'>
+    <TooltipTrigger className='cursor-pointer inline w-fit mt-auto' asChild>
 
     <div onClick={(e) =>{ 
       e.stopPropagation()
