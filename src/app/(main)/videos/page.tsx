@@ -43,19 +43,19 @@ function VideosPage() {
   const [currentPage, setCurrentPage] = useState(1)
   const [totalPages, setTotalPages] = useState(1)
   
-  useEffect(() => {
-    const filteredVideos = videoList.filter((video) => {
-      const matchesSearchText = video.title.toLowerCase().includes(searchText.toLowerCase());
-      const matchesDuration = durationFilter === 'all' || (
-        durationFilter === 'short' && Number(video.duration) <= 300 ||
-        durationFilter === 'medium' && Number(video.duration) > 300 && Number(video.duration) <= 1200 ||
-        durationFilter === 'long' && Number(video.duration) > 1200
-      );
-      const matchesStarred = starredFilter === 'all' || (starredFilter === 'starred' && video.isStarred);
-      return matchesSearchText && matchesDuration && matchesStarred;
-    });
-    setFilteredVideoList(filteredVideos);
-  }, [searchText, videoList, durationFilter, starredFilter]);
+  // useEffect(() => {
+  //   const filteredVideos = videoList.filter((video) => {
+  //     const matchesSearchText = video.title.toLowerCase().includes(searchText.toLowerCase());
+  //     const matchesDuration = durationFilter === 'all' || (
+  //       durationFilter === 'short' && Number(video.duration) <= 300 ||
+  //       durationFilter === 'medium' && Number(video.duration) > 300 && Number(video.duration) <= 1200 ||
+  //       durationFilter === 'long' && Number(video.duration) > 1200
+  //     );
+  //     const matchesStarred = starredFilter === 'all' || (starredFilter === 'starred' && video.isStarred);
+  //     return matchesSearchText && matchesDuration && matchesStarred;
+  //   });
+  //   setFilteredVideoList(filteredVideos);
+  // }, [searchText, videoList, durationFilter, starredFilter]);
 
   const handleGetVideoDetails = async () => {
     try {
@@ -112,32 +112,51 @@ function VideosPage() {
     }
   }
 
-  const fetchVideos = useDebouncedCallback( async () => {
+  const fetchVideos = useDebouncedCallback(async () => {
     try {
-      setLoadingVideos(true)
-      const response = await api.get(`/library/videos?currentPage=${currentPage}`)
-      const responseData = response.data.data
+      setLoadingVideos(true);
+  
+      // Extract filter values from state or props
+      const title = searchText; 
+      const status = '' // Assuming selectedStatus is a state variable
+      const isStarred = starredFilter == 'all'?'':starredFilter; // Assuming selectedIsStarred is a state variable
+      const type = ''; // Assuming selectedType is a state variable
+      const duration = durationFilter == 'all'?'': durationFilter; // Assuming selectedDuration is a state variable
+      const playlistId = ''; // Assuming selectedPlaylistId is a state variable
+  
+      // Build query parameters
+      const queryParams = new URLSearchParams();
+      if (title) queryParams.append('title', title);
+      if (status) queryParams.append('status', status);
+      if (isStarred) queryParams.append('isStarred', isStarred);
+      if (type) queryParams.append('type', type);
+      if (duration) queryParams.append('duration', duration);
+      if (playlistId) queryParams.append('playlistId', playlistId);
+      queryParams.append('currentPage', currentPage.toString());
+  
+      // Make API request with query parameters
+      const response = await api.get(`/library/videos?${queryParams}`);
+      const responseData = response.data.data;
       const videos = responseData.map((data: any) => ({
         ...data.videoDetails,
-      }))
-      setVideoList(videos)
-      setTotalPages(response.data.totalPages)
-      setFilteredVideoList(videos)
+      }));
+      setVideoList(videos);
+      setTotalPages(response.data.totalPages);
+      setFilteredVideoList(videos);
     } catch (error) {
-      if(error instanceof AxiosError){
-        toast.error(error.response?.data.message || "Something went wrong, please try again later")
-      }else{
-        toast.error("Something went wrong, please try again later")
+      if (error instanceof AxiosError) {
+        toast.error(error.response?.data.message || 'Something went wrong, please try again later');
+      } else {
+        toast.error('Something went wrong, please try again later');
       }
+    } finally {
+      setLoadingVideos(false);
     }
-    finally {
-      setLoadingVideos(false)
-    }
-  },500)
+  }, 500);
 
   useEffect(() => {
     fetchVideos()
-  }, [])
+  }, [searchText, durationFilter, starredFilter, currentPage]);
 
   const handleFavoriteClick = useDebouncedCallback(async(video: IVideoDetails) => {
     try {

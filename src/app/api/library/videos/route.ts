@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import {authMiddleware} from "@/middleware/auth.middleware";
 import Library from "@/models/library.model";
+import connectDB from "@/dbConfig/connectDB";
+connectDB();
 
 export async function GET(request: NextRequest){
     try {
@@ -11,11 +13,31 @@ export async function GET(request: NextRequest){
         const currentPage = request.nextUrl.searchParams.get("currentPage") || 1;
         const limit = 8;
         const skip = (limit * ( Number(currentPage)-1));
-        const videos = await Library
-        .aggregate([
-            {
-                $match: {userId: request.user?._id, type: "standalone"}
-            },
+        
+        const title = request.nextUrl.searchParams.get("title");
+        const status = request.nextUrl.searchParams.get("status");
+        const isStarred = request.nextUrl.searchParams.get("isStarred");
+        const type = request.nextUrl.searchParams.get("type");
+        const duration = request.nextUrl.searchParams.get("duration");
+        const playlistId = request.nextUrl.searchParams.get("playlistId");
+
+        const filter: any = { userId: request.user?._id, type: "standalone" };
+
+        if (title) filter["videoDetails.title"] = { $regex: title, $options: "i" };
+        if (status) filter.status = status;
+        if (isStarred) filter.isStarred = isStarred === "starred";
+        if (type) filter.type = type;
+        if (duration) {
+          filter["videoDetails.duration"] =
+            duration === "short"
+              ? { $lt: 300 }
+              : duration === "medium"
+              ? { $gte: 300, $lt: 1200 }
+              : { $gte: 1200 };
+        }
+        if (playlistId) filter.playlistId = playlistId;
+
+        const videos = await Library.aggregate([
             {
                 $lookup: {
                     from: "videos",
@@ -25,12 +47,22 @@ export async function GET(request: NextRequest){
                 }
             },
             {
+                $match: filter
+            },
+            {
                 $unwind: "$videoDetails"
             },
             {
                 $addFields: {
                     videoDetails: {
-                        $mergeObjects: ["$videoDetails", { libraryId: "$_id", status: "$status", isStarred: "$isStarred" }]
+                        $mergeObjects: [
+                            "$videoDetails",
+                            { 
+                                libraryId: "$_id", 
+                                status: "$status", 
+                                isStarred: "$isStarred" 
+                            }
+                        ]
                     }
                 }
             },
@@ -43,13 +75,28 @@ export async function GET(request: NextRequest){
                 $skip: skip
             },
             {
-            
                 $limit: limit
             }
-        ])
+        ]);
         
-        const total = await Library.countDocuments({userId: request.user?._id, type: "standalone"});
-        const totalPages = Math.ceil(total / limit);
+        const total = await Library
+        .aggregate([
+            {
+                $lookup: {
+                    from: "videos",
+                    localField: "videoId",
+                    foreignField: "_id",
+                    as: "videoDetails",
+                }
+            },
+            {
+                $match: filter
+            },
+            {
+                $count: "total"
+            }
+        ]);
+        const totalPages = Math.ceil(total[0].total / limit);
         return NextResponse.json({data: videos, total, totalPages,message: "Videos fetched successfully"}, {status: 200})
     } catch (error) {
         console.log(error);
