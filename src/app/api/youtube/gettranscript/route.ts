@@ -20,6 +20,6 @@ export async function POST(request: NextRequest) {
         const transcript = await info.getTranscript();
         return NextResponse.json({ data: transcript.transcript.content?.body?.initial_segments.map((segment) => segment.snippet.text).join(' ') , message: "Transcript fetched successfully" }, { status: 200 });
     } catch (error) {
-        return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
+        return NextResponse.json({ error: "Sorry, the transcript is not available" }, { status: 500 });
     }
 }
