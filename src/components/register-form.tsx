@@ -58,7 +58,7 @@ export default function RegisterForm({
     e.preventDefault()
     try {
       setLoading(true)
-      const response = await api.post('/user/auth/register', { name, email, password });
+      const response = await api.post('/user/auth/signup', { name, email, password });
       toast.success("Account created successfully, please log in");
       router.push('/login')
     } catch (error) {
