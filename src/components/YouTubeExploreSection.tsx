@@ -10,12 +10,22 @@ import Image from 'next/image'
 import { Button } from './ui/button'
 import { secondsToTime } from '@/lib/utils'
 import { Plus } from 'lucide-react'
+import YoutubePlayerDialog from './dialogs/YoutubePlayerDialog'
 
 function YouTubeExploreSection() {
     const [videoList, setVideoList] = useState<IVideoDetails[]>([])
     const [loading, setLoading] = useState(false)
     const [addVideoDialogOpen, setAddVideoDialogOpen] = useState(false)
     const [selectedVideo, setSelectedVideo] = useState<IVideoDetails | null>(null)
+    const [playerDialogOpen, setPlayerDialogOpen] = useState(false)
+    const [playerSelectedVideo, setPlayerSelectedVideo] = useState<IVideoDetails | null>(null)
+    const [youtubeUrl, setYoutubeUrl] = useState('')
+
+    const handlePlayerDialogOpen = (url: string,video:IVideoDetails ) => {
+        setYoutubeUrl(url)
+        setPlayerDialogOpen(true)
+        setPlayerSelectedVideo(video)
+    }
     useEffect(() => {
         setLoading(true)
         const cachedDate = new Date(JSON.parse(localStorage.getItem('cachedDate')!));
@@ -46,7 +56,7 @@ function YouTubeExploreSection() {
         }
     },[])
   return (
-    <div className='w-full bg-slate-700 rounded-xl p-2 my-5'>
+    <div className='w-full bg-slate-950 rounded-xl p-2 my-5'>
         <h1 className='text-3xl font-bold text-center my-5'>Explore</h1>
       <div className='w-[95%] mx-auto m-5 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4'>
         {!loading && videoList && videoList.map((video,index) => {
@@ -58,7 +68,7 @@ function YouTubeExploreSection() {
               whileHover={{ scale: 1.05,  transition: { duration: 0.2, delay: 0 } }}
               transition={{ delay: index * 0.1, duration: 0.3 }}
               className='bg-gray-900 rounded-md hover:bg-muted duration-150 cursor-pointer'
-              onClick={() => window.open(`https://www.youtube.com/watch?v=${video.youtubeId}`, '_blank') }
+              onClick={() => handlePlayerDialogOpen(`https://www.youtube.com/watch?v=${video.youtubeId}`,video) }
             >
               <div className='relative aspect-video'>
                 <Image src={video.thumbnailUrl} alt='placeholder' layout='fill' className='object-cover hover:brightness-50 duration-150' />
@@ -78,7 +88,7 @@ function YouTubeExploreSection() {
           );
         })}
         {loading && (
-            [1,2,3,4,5,6,7,8,9,10].map((video,index) => {
+            [1,2,3,4,5,6,7,8,9,10].map((_,index) => {
                 return(
                 <motion.div
             key={index}
@@ -100,6 +110,7 @@ function YouTubeExploreSection() {
           
         )}
         {addVideoDialogOpen && selectedVideo && <AddVideoUsingYTDetails open={addVideoDialogOpen} setOpen={setAddVideoDialogOpen} videoDetails={selectedVideo!} videoList={[]} setVideoList={() => {}} setVideoDetails={setSelectedVideo}/>}
+          {playerDialogOpen && playerSelectedVideo && <YoutubePlayerDialog open={playerDialogOpen} setOpen={setPlayerDialogOpen} videoDetails={playerSelectedVideo} videoURL={youtubeUrl}  addShow/>}
       </div>
         {videoList && videoList.length === 0 && !loading && <p className=' text-center '>Add Videos to Library and Star to see suggestions here</p>}
     </div>

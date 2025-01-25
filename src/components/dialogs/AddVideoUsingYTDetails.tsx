@@ -12,7 +12,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '.
 import { secondsToTime } from '@/lib/utils'
 import toast from 'react-hot-toast'
 import { AxiosError } from 'axios'
-function AddVideo({open, setOpen, videoDetails, setVideoDetails, setVideoList, videoList}: {open: boolean, setOpen: (open: boolean) => void, videoDetails: IVideoDetails, setVideoDetails: (videoDetails: IVideoDetails|null) => void, setVideoList: (videoList: IVideoDetails[]) => void, videoList: IVideoDetails[]}) {
+function AddVideo({open, setOpen, videoDetails, setVideoDetails, setVideoList, videoList, setOtherDialogOpen}: {open: boolean, setOpen: (open: boolean) => void, videoDetails: IVideoDetails, setVideoDetails: (videoDetails: IVideoDetails|null) => void, setVideoList: (videoList: IVideoDetails[]) => void, videoList: IVideoDetails[], setOtherDialogOpen?: (open: boolean) => void}) {
     const [addingVideo, setAddingVideo] = useState(false);
     const [playlists, setPlaylists] = useState<IPlaylist[]>([])
     const [selectedPlaylist, setSelectedPlaylist] = useState<string | null>(null)
@@ -66,6 +66,7 @@ function AddVideo({open, setOpen, videoDetails, setVideoDetails, setVideoList, v
             setVideoList([...videoList, newVideo]);
             toast.success("Video added successfully");
          }
+         setOtherDialogOpen && setOtherDialogOpen(false)
          setOpen(false);
         } catch (error) {
             console.log("Error adding video", error);

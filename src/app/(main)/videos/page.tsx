@@ -43,19 +43,9 @@ function VideosPage() {
   const [currentPage, setCurrentPage] = useState(1)
   const [totalPages, setTotalPages] = useState(1)
   
-  // useEffect(() => {
-  //   const filteredVideos = videoList.filter((video) => {
-  //     const matchesSearchText = video.title.toLowerCase().includes(searchText.toLowerCase());
-  //     const matchesDuration = durationFilter === 'all' || (
-  //       durationFilter === 'short' && Number(video.duration) <= 300 ||
-  //       durationFilter === 'medium' && Number(video.duration) > 300 && Number(video.duration) <= 1200 ||
-  //       durationFilter === 'long' && Number(video.duration) > 1200
-  //     );
-  //     const matchesStarred = starredFilter === 'all' || (starredFilter === 'starred' && video.isStarred);
-  //     return matchesSearchText && matchesDuration && matchesStarred;
-  //   });
-  //   setFilteredVideoList(filteredVideos);
-  // }, [searchText, videoList, durationFilter, starredFilter]);
+  useEffect(() => {
+    setFilteredVideoList(videoList)
+  },[videoList])
 
   const handleGetVideoDetails = async () => {
     try {

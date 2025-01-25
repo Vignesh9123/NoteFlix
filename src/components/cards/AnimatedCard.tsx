@@ -1,15 +1,17 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Card, CardContent, CardHeader } from '../ui/card';
-
+import { useRouter } from 'nextjs-toploader/app';
 interface AnimatedCardProps {
   title: string;
   value: number;
   index: number;
   loading: boolean;
+  url: string;
 }
 
-export function AnimatedCard({ title, value, index,loading  }: AnimatedCardProps) {
+export function AnimatedCard({ title, value,url, index,loading  }: AnimatedCardProps) {
+  const router = useRouter();
   return (
     <motion.div
       initial={{ opacity: 0, scale: 0.9 , filter:'blur(10px)' }}
@@ -26,7 +28,8 @@ export function AnimatedCard({ title, value, index,loading  }: AnimatedCardProps
         scale: 1.05,
         transition: { duration: 0.2 }
       }}
-      className={`w-[80%] ${index == 2 ? "md:col-span-2 lg:col-span-1 md:w-[90%] lg:w-[80%]" : ""}`}
+      onClick={() => router.push(url)}
+      className={`w-[80%] cursor-pointer ${index == 2 ? "md:col-span-2 lg:col-span-1 md:w-[90%] lg:w-[80%]" : ""}`}
     >
       <Card className="flex flex-col gap-4 items-center transform-gpu hover:shadow-lg transition-shadow">
         <CardHeader className="text-lg font-bold">{title}</CardHeader>

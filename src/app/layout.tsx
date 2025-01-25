@@ -42,7 +42,7 @@ export default function RootLayout({
             disableTransitionOnChange
           >
           <NextTopLoader showSpinner={false} zIndex={1000000000}/>
-          <Toaster/>
+          <Toaster toastOptions={{style:{zIndex:100000000000}}}/>
 
             {children}
           </ThemeProvider>

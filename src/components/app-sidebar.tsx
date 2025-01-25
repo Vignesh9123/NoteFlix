@@ -9,6 +9,8 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
+  SidebarHeader
+
 } from "@/components/ui/sidebar"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "./ui/dropdown-menu"
 import { usePathname } from "next/navigation"
@@ -56,6 +58,11 @@ export function AppSidebar() {
   return (
     <Sidebar >
       {signOutDialogOpen && <SignOut open={signOutDialogOpen} setOpen={setSignOutDialogOpen} />}
+      <SidebarHeader>
+        <Link href="/" className="px-2">
+            <div className="text-lg font-bold">VidScribe</div>
+        </Link>
+        </SidebarHeader>
       <SidebarContent>
         <SidebarGroup>
           <SidebarGroupContent>
