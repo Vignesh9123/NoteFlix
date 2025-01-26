@@ -24,7 +24,7 @@ NoteFlix is a YouTube library platform that allows users to organize and enhance
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/yourusername/NoteFlix.git
+   git clone https://github.com/Vignesh9123/NoteFlix.git
    ```
 
 2. Navigate to the project directory:
@@ -39,9 +39,16 @@ NoteFlix is a YouTube library platform that allows users to organize and enhance
 
 4. Create a `.env.local` file and add the required environment variables:
    ```env
-   NEXT_PUBLIC_FIREBASE_API_KEY=your_firebase_api_key
-   NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=your_firebase_auth_domain
-   NEXT_PUBLIC_YOUTUBE_API_KEY=your_youtube_api_key
+   NEXT_PUBLIC_MONGODB_URI=MONGODB_URI
+   NEXT_PUBLIC_JWT_SECRET=JWT_SECRET
+   NEXT_PUBLIC_YOUTUBE_API_KEY=youtube_api_key
+   NEXT_PUBLIC_YOUTUBE_API_URL=https://www.googleapis.com/youtube/v3/search
+   NEXT_PUBLIC_DEEPGRAM_API_KEY=deepgram_api_key - # Optional (Required if using its respective endpoint)
+   NEXT_PUBLIC_GEMINI_API_KEY=gemini_api_key
+   NEXT_PUBLIC_FIREBASE_API_KEY=firebase_api_key
+   NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=firebase_messaging_sender_id
+   NEXT_PUBLIC_FIREBASE_APP_ID=firebase_app_id
+   NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID=firebase_measurement_id
    ```
 
 5. Start the development server:
@@ -84,7 +91,7 @@ This project is licensed under the MIT License.
 
 ## Contact
 
-For any inquiries, reach out via email at `your.email@example.com` or open an issue on GitHub.
+For any inquiries, reach out via email at `vignesh.d9123@gmail.com` or open an issue on GitHub.
 
 ---
 
