@@ -100,9 +100,7 @@ export function AppSidebar() {
                   side="top"
                   className="w-[--radix-popper-anchor-width] z-[10000]"
                 >
-                  <DropdownMenuItem>
-                    <span>Account</span>
-                  </DropdownMenuItem>
+                
 
                   <DropdownMenuItem onClick={() => setSignOutDialogOpen(true)}>
                     <span>Sign out</span>

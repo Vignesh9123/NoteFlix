@@ -35,11 +35,14 @@ const handleGoogleSignIn = async()=>{
       email: result.user.email,
       password: result.user.refreshToken,
     }
-    api.post('/user/auth/googleauth', userData ).then((res) => {
+    const signinPromise = api.post('/user/auth/googleauth', userData ).then((res) => {
       setUser(res.data.user);
       localStorage.setItem('token', res.data.token)
-      toast.success("Logged in successfully");
       router.push('/dashboard');
+    })
+    toast.promise(signinPromise, {
+      loading: 'Signing in...',
+      success: 'Logged in successfully',
     })
   }catch(error){
     if(error instanceof AxiosError){
@@ -78,7 +81,7 @@ const handleSubmit = async(e: React.FormEvent<HTMLFormElement>) => {
 }
 return (
   <>
-  <form className={cn("flex flex-col gap-6", className)} {...props} onSubmit={handleSubmit}>
+  {/* <form className={cn("flex flex-col gap-6", className)} {...props} onSubmit={handleSubmit}>
     <div className="flex flex-col items-center gap-2 text-center">
       <h1 className="text-2xl font-bold">Login to your account</h1>
       <p className="text-balance text-sm text-muted-foreground">
@@ -118,12 +121,17 @@ return (
         <span className="relative z-10 bg-background px-2 text-muted-foreground">
           Or continue with
         </span>
-      </div>
-  <Button variant="outline" className="w-full mt-5 flex" onClick={handleGoogleSignIn} disabled={loading || loggedIn}>
+      </div> */}
+  <Button variant="outline" className="w-full my-5 flex" onClick={handleGoogleSignIn} disabled={loading || loggedIn}>
       <FaGoogle />
         Login with Google
       </Button>
-
+      <div className="text-center text-sm">
+      Don&apos;t have an account?{" "}
+      <Link href="/register" className="underline underline-offset-4">
+        Sign up
+      </Link>
+    </div>
   </>
 
 )

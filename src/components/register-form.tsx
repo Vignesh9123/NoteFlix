@@ -23,24 +23,28 @@ export default function RegisterForm({
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [loading, setLoading] = useState(false)
+  const [loggedIn, setLoggedIn] = useState(false)
   const handleGoogleSignIn = async()=>{
     setLoading(true)
     const provider = new GoogleAuthProvider();
     const auth = getAuth();
     try{
       const result = await signInWithPopup(auth, provider)
-      console.log(result.user)
+      if(result.user) setLoggedIn(true)
       const userData = {
         name: result.user.displayName,
         email: result.user.email,
         password: result.user.refreshToken,
       }
-      api.post('/user/auth/googleauth', userData ).then((res) => {
+      const signupPromise = api.post('/user/auth/googleauth', userData ).then((res) => {
         console.log(res.data);
         setUser(res.data.user);
         localStorage.setItem('token', res.data.token)
-        toast.success("Logged in successfully");
         router.push('/dashboard');
+      })
+      toast.promise(signupPromise, {
+        loading: 'Signing in...',
+        success: 'Logged in successfully',
       })
     }catch(error){
       if(error instanceof AxiosError){
@@ -49,6 +53,7 @@ export default function RegisterForm({
       else{
         toast.error("Something went wrong, please try again later.");
       }
+      setLoggedIn(false)
     }
     finally{
       setLoading(false)
@@ -74,7 +79,7 @@ export default function RegisterForm({
   }
   return (
     <>
-    <form className={cn("flex flex-col gap-6", className)} {...props} onSubmit={handleSubmit}>
+    {/* <form className={cn("flex flex-col gap-6", className)} {...props} onSubmit={handleSubmit}>
       <div className="flex flex-col items-center gap-2 text-center">
         <h1 className="text-2xl font-bold">Create an account</h1>
         <p className="text-balance text-sm text-muted-foreground">
@@ -112,11 +117,17 @@ export default function RegisterForm({
         <span className="relative z-10 bg-background px-2 text-muted-foreground">
           Or continue with
         </span>
-      </div>
-  <Button disabled={loading} variant="outline" className="w-full mt-5 flex" onClick={handleGoogleSignIn}>
+      </div> */}
+  <Button disabled={loading || loggedIn} variant="outline" className="w-full my-5 flex"  onClick={handleGoogleSignIn}>
       <FaGoogle />
         Sign up with Google
       </Button>
+      <div className="text-center text-sm">
+        Already have an account?{" "}
+        <Link href="/login" className="underline underline-offset-4">
+          Sign in
+        </Link>
+      </div>
     </>
   )
 }

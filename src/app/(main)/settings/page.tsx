@@ -138,7 +138,22 @@ function page() {
                 <Button disabled={disabled.password || loading.password} onClick={passwordUpdateClick}>Update</Button>
             </CardFooter>
         </Card>}
+
+        {/*Contact Card */}
+
+        <Card>
+            <CardHeader>
+            <CardTitle>Contact</CardTitle>
+            </CardHeader>
+            <CardContent>
+                <p>For any queries or feedback, please contact <a href="mailto:vignesh.d9123@gmail.com">
+                    vignesh.d9123@gmail.com
+                </a>
+                </p>
+            </CardContent>
+        </Card>
       
+
     </div>
   )
 }
