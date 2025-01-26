@@ -341,7 +341,7 @@ export default function Home() {
           </div>
           <div className="relative w-full  bg-blue-600/10 rounded-2xl overflow-hidden">
             <video
-              src="/videos/NoteFlix.mp4"
+              src="https://res.cloudinary.com/dxygc9jz4/video/upload/f_auto:video,q_auto/qh4bg6rwghmre9ut1tlh"
               className="w-full h-full object-fit"
               autoPlay={true}
               muted
