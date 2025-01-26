@@ -8,10 +8,11 @@ import { formatDistanceToNow } from 'date-fns';
 import { motion } from 'framer-motion';
 import { api } from '@/config/config';
 import { IVideoDetails } from '@/types';
-import { secondsToTime } from '@/lib/utils';
+import { convertHtmlTextToPlainText, secondsToTime } from '@/lib/utils';
 import AddVideoUsingYTDetails from '@/components/dialogs/AddVideoUsingYTDetails';
 import { AxiosError } from 'axios';
 import toast from 'react-hot-toast';
+import YoutubePlayerDialog from '@/components/dialogs/YoutubePlayerDialog';
 function Page() {
     const [searchQuery, setSearchQuery] = useState('');
     const [searchResults, setSearchResults] = useState<IVideoDetails[]>([]);
@@ -20,9 +21,23 @@ function Page() {
     const [searchedQuery, setSearchedQuery] = useState('');
     const [selectedVideo, setSelectedVideo] = useState<IVideoDetails | null>(null);
     const [addVideoDialogOpen, setAddVideoDialogOpen] = useState(false);
+    const [openPlayerDialog, setOpenPlayerDialog] = useState(false);
+    const [youtubeURL, setYoutubeURL] = useState('');
+    const [playerSelectedVideo, setPlayerSelectedVideo] = useState<IVideoDetails | null>(null);
+
+    const handlePlayerOpen = (youtubeURL?:string, videoDetails?:IVideoDetails)=>{
+        setYoutubeURL(youtubeURL || '');
+        setPlayerSelectedVideo(videoDetails || null);
+        setOpenPlayerDialog(true);
+    }
     const handleSearchClick = ()=>{
         setLoading(true)
         setSearched(true);
+        if(searchQuery === ''){
+            setSearched(false);
+            setLoading(false);
+            return;
+        }
         api.get(`/youtube/search?q=${searchQuery}`).then((res) => {
             console.log(res.data.data);
             setSearchedQuery(searchQuery);
@@ -34,7 +49,6 @@ function Page() {
           else{
             toast.error("Something went wrong, please try again later.");
           }
-
         }).finally(() => {
             setLoading(false);
         })
@@ -48,6 +62,7 @@ function Page() {
 
   return (
     <div className='h-full w-full'>
+      {openPlayerDialog && <YoutubePlayerDialog videoURL={youtubeURL} open={openPlayerDialog} setOpen={setOpenPlayerDialog} videoDetails={playerSelectedVideo!} addShow/>}
       <div className='w-[95%] flex gap-2 items-center justify-center mx-auto m-5'>
         <Input onKeyDown={(e) => e.key === 'Enter' && handleSearchClick()} placeholder='Search' value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} />
         <Button disabled={!searchQuery || loading} onClick={handleSearchClick} className=''><Search /></Button>
@@ -74,7 +89,7 @@ function Page() {
               whileHover={{ scale: 1.05,  transition: { duration: 0.2, delay: 0 } }}
               transition={{ delay: index * 0.1, duration: 0.3 }}
               className='bg-gray-900 rounded-md hover:bg-muted duration-150 cursor-pointer'
-              onClick={() => window.open(`https://www.youtube.com/watch?v=${video.youtubeId}`, '_blank') }
+              onClick={() => handlePlayerOpen(`https://www.youtube.com/watch?v=${video.youtubeId}`, video)}
             >
               <div className='relative aspect-video'>
                 <Image src={video.thumbnailUrl} alt='placeholder' layout='fill' className='object-cover hover:brightness-50 duration-150' />
@@ -86,7 +101,7 @@ function Page() {
                 }} size='icon'><Plus/></Button>
               </div>
               <div className='py-4 p-1'>
-                <p title={video.title} className='font-bold text-lg line-clamp-1'>{video.title}</p>
+                <p title={convertHtmlTextToPlainText(video.title)} className='font-bold text-lg line-clamp-1'>{convertHtmlTextToPlainText(video.title)}</p>
                 <p className='text-sm text-muted-foreground line-clamp-1'>{video.channelName}</p>
                 <p className='text-sm text-muted-foreground'>{formatDistanceToNow(new Date(video.publishedAt), { addSuffix: true })}</p>
               </div>

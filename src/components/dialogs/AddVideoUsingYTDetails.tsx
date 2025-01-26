@@ -9,7 +9,7 @@ import Image from 'next/image'
 import { api } from '@/config/config'
 import { Loader2 } from 'lucide-react'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select'
-import { secondsToTime } from '@/lib/utils'
+import { convertHtmlTextToPlainText, secondsToTime } from '@/lib/utils'
 import toast from 'react-hot-toast'
 import { AxiosError } from 'axios'
 function AddVideo({open, setOpen, videoDetails, setVideoDetails, setVideoList, videoList, setOtherDialogOpen}: {open: boolean, setOpen: (open: boolean) => void, videoDetails: IVideoDetails, setVideoDetails: (videoDetails: IVideoDetails|null) => void, setVideoList: (videoList: IVideoDetails[]) => void, videoList: IVideoDetails[], setOtherDialogOpen?: (open: boolean) => void}) {
@@ -38,7 +38,7 @@ function AddVideo({open, setOpen, videoDetails, setVideoDetails, setVideoList, v
        try {
          const data = {
              youtubeId: videoDetails.youtubeId,
-             title: videoDetails.title,
+             title: convertHtmlTextToPlainText(videoDetails.title),
              channelName: videoDetails.channelName,
              thumbnailUrl: videoDetails.thumbnailUrl,
              duration: videoDetails.duration,
@@ -97,7 +97,7 @@ function AddVideo({open, setOpen, videoDetails, setVideoDetails, setVideoList, v
             </div>
             <div className='flex flex-col gap-2'>
                 <Label>Title</Label>
-                <Input value={videoDetails.title} readOnly />
+                <Input value={convertHtmlTextToPlainText(videoDetails.title)} readOnly />
                 <Label>Duration</Label>
                 <Input value={typeof videoDetails.duration === 'string' ? videoDetails.duration.replace('PT', '').replace('H', 'h ').replace('M', 'm ').replace('S', 's '): secondsToTime(videoDetails.duration)} readOnly />
                 <Label>Channel Name</Label>

@@ -60,10 +60,16 @@ function NotesListCard({note, videoDetails, index, noteList, setNoteList}: {note
         <DropdownMenuLabel>Actions</DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
-          <DropdownMenuItem onClick={() => router.push(`/note/${note._id}`)}>
+          <DropdownMenuItem onClick={(e) =>{
+            e.stopPropagation();
+            router.push(`/note/${note._id}`)
+          }}>
             <div>Update Note</div>
           </DropdownMenuItem>
-          <DropdownMenuItem onClick={deleteClick}>
+          <DropdownMenuItem onClick={(e)=>{
+            e.stopPropagation();
+            deleteClick();
+          }}>
             <div>Delete Note</div>
           </DropdownMenuItem>
         </DropdownMenuGroup>

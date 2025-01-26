@@ -41,3 +41,8 @@ export function extractVideoId(youtubeUrl: string): string | null {
 
   return videoId || null;
 }
+
+export function convertHtmlTextToPlainText(htmlText: string): string {
+  const doc = new DOMParser().parseFromString(htmlText, 'text/html');
+  return doc.body.textContent || "Unknown Title";
+}

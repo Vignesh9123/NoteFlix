@@ -4,6 +4,7 @@ import { Button } from '../ui/button'
 import YoutubePlayer from '../YoutubePlayer'
 import { IVideoDetails } from '@/types'
 import AddVideoUsingYTDetails from './AddVideoUsingYTDetails'
+import { convertHtmlTextToPlainText } from '@/lib/utils'
 function YoutubePlayerDialog({open, setOpen, videoDetails, videoURL, addShow}:{open: boolean, setOpen: (open: boolean) => void, videoDetails?:IVideoDetails, videoURL?:string, addShow?:boolean}) {
   const [addVideoDialogOpen, setAddVideoDialogOpen] = useState(false)
   return (
@@ -13,7 +14,7 @@ function YoutubePlayerDialog({open, setOpen, videoDetails, videoURL, addShow}:{o
       <DialogContent className='max-w-[90vw] 2xl:w-[1350px] 2xl:h-[900px] w-[550px] h-[500px]'>
         <DialogHeader>
           <DialogTitle title={videoDetails? videoDetails.title : ''}>
-            {videoDetails ?videoDetails?.title?.length > 30 ? videoDetails?.title.slice(0, 30) + '...' : videoDetails?.title : "Youtube Video"}
+            {videoDetails ?videoDetails?.title?.length > 50 ? convertHtmlTextToPlainText(videoDetails?.title.slice(0, 50)) + '...' : convertHtmlTextToPlainText(videoDetails?.title) : "Youtube Video"}
           </DialogTitle>
         </DialogHeader>
         <YoutubePlayer videoURL={videoURL || `https://www.youtube.com/watch?v=${videoDetails?.youtubeId}`} />

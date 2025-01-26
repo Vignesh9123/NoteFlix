@@ -8,7 +8,7 @@ import { motion } from 'framer-motion'
 import { formatDistanceToNow } from 'date-fns'
 import Image from 'next/image'
 import { Button } from './ui/button'
-import { secondsToTime } from '@/lib/utils'
+import { convertHtmlTextToPlainText, secondsToTime } from '@/lib/utils'
 import { Plus } from 'lucide-react'
 import YoutubePlayerDialog from './dialogs/YoutubePlayerDialog'
 
@@ -80,7 +80,7 @@ function YouTubeExploreSection() {
                 }} size='icon'><Plus/></Button>
               </div>
               <div className='py-4 p-1'>
-                <p title={video.title} className='font-bold text-lg line-clamp-1'>{video.title}</p>
+                <p title={convertHtmlTextToPlainText(video.title)} className='font-bold text-lg line-clamp-1'>{convertHtmlTextToPlainText(video.title)}</p>
                 <p className='text-sm text-muted-foreground line-clamp-1'>{video.channelName}</p>
                 <p className='text-sm text-muted-foreground'>{formatDistanceToNow(new Date(video.publishedAt), { addSuffix: true })}</p>
               </div>
