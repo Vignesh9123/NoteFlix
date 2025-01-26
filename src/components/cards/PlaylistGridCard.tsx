@@ -17,7 +17,7 @@ function PlaylistGridCard({playlist, index, playlists, setPlaylists}: {playlist:
        <Card className='hover:scale-105 transition-all duration-300 hover:bg-gray-900 w-full h-full'>
             <CardContent className='p-0 cursor-pointer '>
                 <Link href={`/playlists/${playlist._id}`}>
-                <Image src={playlist.coverPicture || "https://images.unsplash.com/photo-1549210338-a03623c2bde3?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"} alt="Playlist" width={300} height={300} className='h-[300px] w-full object-fill' />
+                <Image src={playlist.coverPicture || "https://images.unsplash.com/photo-1577190651915-bf62d54d5b36?q=80&w=2069&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"} alt="Playlist" width={300} height={300} className='h-[300px] w-full object-fill' />
                 <div className='p-4'>
 
                 <p className="font-bold text-lg line-clamp-1">{playlist.name}</p>

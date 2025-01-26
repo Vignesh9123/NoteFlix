@@ -92,6 +92,7 @@ export default function Home() {
   const [statsRef, statsInView] = useInView({ triggerOnce: true, threshold: 0.1 });
   const [featuresRef, featuresInView] = useInView({ triggerOnce: true, threshold: 0.1 });
   const [pricingRef, pricingInView] = useInView({ triggerOnce: true, threshold: 0.1 });
+  const [demoRef, demoInView] = useInView({ triggerOnce: true, threshold: 0.1 });
   const { user, loading } = useAuth();
   return (
     <div className="min-h-screen bg-[#050A30]">
@@ -162,6 +163,7 @@ export default function Home() {
               <Button
                 size="lg"
                 variant="outline"
+                onClick={() => document.getElementById('demo')?.scrollIntoView({ behavior: 'smooth' })}
                 className="border-blue-400  text-blue-400 hover:bg-blue-400/10"
               >
                 Watch Demo
@@ -318,7 +320,38 @@ export default function Home() {
           </div>
         </div>
       </motion.section> */}
-
+      {/*Demo Section*/}
+      <motion.section
+        ref={demoRef}
+        initial="hidden"
+        animate={demoInView ? "visible" : "hidden"}
+        variants={fadeIn}
+        className="py-32 relative"
+        id="demo"
+      >
+        <div className="absolute inset-0 bg-gradient-to-b from-blue-600/5 to-transparent" />
+        <div className="container mx-auto px-4 relative z-10">
+          <div className="max-w-3xl mx-auto text-center mb-16">
+            <h2 className="text-3xl md:text-4xl font-bold mb-6 text-blue-300">
+              Watch the Demo
+            </h2>
+            <p className="text-lg text-blue-200/80">
+            Watch NoteFlix in action as it effortlessly summarizes a 28-minute video in just one minute.
+            </p>
+          </div>
+          <div className="relative w-full  bg-blue-600/10 rounded-2xl overflow-hidden">
+            <video
+              src="/videos/NoteFlix.mp4"
+              className="w-full h-full object-fit"
+              autoPlay={true}
+              muted
+              loop
+            />
+            
+          </div>
+        </div>
+      </motion.section>
+    
       {/* CTA Section */}
       <section className="py-32 relative">
         <div className="absolute inset-0 bg-gradient-to-b from-blue-600/10 to-transparent" />
