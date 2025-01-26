@@ -2,7 +2,7 @@
 
 import { motion } from "framer-motion";
 import { useInView } from "react-intersection-observer";
-import { PlaySquareIcon, Library, FileText, Brain, PlaySquare, Check, ArrowRight } from "lucide-react";
+import { PlaySquareIcon, Library, FileText, Brain, PlaySquare, Check, ArrowRight, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { useAuth } from "@/context/AuthContext";
@@ -147,7 +147,7 @@ export default function Home() {
                size="lg"
                className="bg-blue-600 hover:bg-blue-700 text-white min-w-52 px-8"
              >
-               
+                <Loader2 className="animate-spin w-6 h-6" />
              </Button>):
              <Link href={`${user?'/dashboard':'/login'}`}>
               <Button
@@ -335,7 +335,7 @@ export default function Home() {
                size="lg"
                className="bg-blue-600 hover:bg-blue-700 text-white min-w-52 px-8"
              >
-               
+               <Loader2 className="animate-spin w-6 h-6" />
              </Button>):
              <Link href={`${user?'/dashboard':'/login'}`}>
               <Button

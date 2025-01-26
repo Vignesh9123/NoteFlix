@@ -5,6 +5,9 @@ import connectDB from "@/dbConfig/connectDB";
 connectDB();
 export async function POST(req: NextRequest){
     try {
+        if(req.headers.get("Postman-Token")) {
+            return NextResponse.json({ error: "Invalid request" }, { status: 400 });
+        }
         const { name, email, password }:{ name: string, email: string, password: string} = await req.json();
         const user = await User.findOne({ email });
         if(user?.loginType === "email") {

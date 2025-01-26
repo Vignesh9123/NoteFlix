@@ -272,18 +272,22 @@ function VideosPage() {
         </div>
         ))}
         </div>}
+        {!loadingVideos && filteredVideoList.length === 0  && <p className='text-center text-gray-500'>No videos found</p>}
 
         <div className='flex gap-4 items-center justify-around'>
-          <ChevronLeftSquare size={27} className={`cursor-pointer hover:bg-muted duration-300 ${currentPage === 1 ? 'opacity-50 cursor-not-allowed' : ''}`} onClick={handlePrevPage} />
+          <ChevronLeftSquare size={27} className={` duration-300 ${currentPage === 1 ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer hover:bg-muted'}`} onClick={()=>{
+            if(currentPage > 1) handlePrevPage()
+          }} />
           <div>
             <p className='text-sm text-gray-500'>Page {currentPage} / {totalPages}</p>
             <p className='text-sm text-gray-500'>{filteredVideoList.length} results</p>
           </div>
-          <ChevronRightSquare size={27} className={`cursor-pointer hover:bg-muted duration-300 ${currentPage === totalPages ? 'opacity-50 cursor-not-allowed' : ''}`} onClick={handleNextPage} />
+          <ChevronRightSquare size={27} className={`  duration-300 ${currentPage === totalPages ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer hover:bg-muted'}`} onClick={()=>{
+            if(currentPage < totalPages) handleNextPage()
+          }} />
 
         </div>
 
-        {!loadingVideos && filteredVideoList.length === 0  && <p className='text-center text-gray-500'>No videos found</p>}
       </div>
     </div>
   )
