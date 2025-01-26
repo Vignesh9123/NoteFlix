@@ -15,6 +15,7 @@ import toast from 'react-hot-toast';
 import { api2Url } from '@/constants';
 import YoutubePlayerDialog from '@/components/dialogs/YoutubePlayerDialog';
 import { useAuth } from '@/context/AuthContext';
+import AIConfirmDialog from '@/components/dialogs/AIConfirmDialog';
 function VideoPage() {
   const flag: number = 0;
   const { id } = useParams();
@@ -32,6 +33,7 @@ function VideoPage() {
   const [loadingIndex, setLoadingIndex] = useState(0);
   const [youtubePlayerOpen, setYoutubePlayerOpen] = useState(false);
   const [youtubeURL, setYoutubeURL] = useState('');
+  const [AIDialogOpen, setAIDialogOpen] = useState(false);
   const handleYoutubePlayerOpen = (youtubeURL?: string) => {
     if(youtubeURL) setYoutubeURL(youtubeURL);
     setYoutubePlayerOpen(true);
@@ -60,6 +62,7 @@ function VideoPage() {
   const handleAISummaryClick = async () => {
     if (flag == 0) {
       setAILoading(true);
+      setAIDialogOpen(false);
       try {
         // await api.post('/youtube/getaudio', { videoId: video?.youtubeId });
         setLoadingIndex(1);
@@ -181,8 +184,12 @@ function VideoPage() {
             <p className='text-gray-500 text-xs text-center'>Add Note</p>
             </div>
               <div onClick={()=>{
+                if(user?.creditsUsed! >= 5){
+                  toast.error("You have already used your 5 credits for this month. Please try again next month.")
+                  return;
+                }
                 if(!loading)
-                  handleAISummaryClick();
+                  setAIDialogOpen(true)
               }} className={`flex flex-col md:flex-row lg:w-max items-center gap-2 hover:bg-muted duration-150 cursor-pointer p-1 ${loading && 'opacity-50'}`}>
             <Stars size={27}  className='text-gray-500  ' />
             <p className='text-gray-500 text-xs text-center'>Generate Summary using AI</p>
@@ -190,6 +197,7 @@ function VideoPage() {
             {(
               addNoteDialogOpen && <AddNoteDialog youtubeId={video?.youtubeId!} open={addNoteDialogOpen} setOpen={setAddNoteDialogOpen} fetchNotes={fetchNotes} libraryId={library?._id!} text={note} noteTitle={noteTitle} setText={setNote} setNoteTitle={setNoteTitle} />
             )}
+      {AIDialogOpen && <AIConfirmDialog open={AIDialogOpen} setOpen={setAIDialogOpen} onConfirm={handleAISummaryClick} />}
             <Input placeholder='Search' className='mt-2 md:mt-0 col-span-2 md:col-span-1' value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} />
 
         </div>

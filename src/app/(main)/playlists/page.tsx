@@ -13,7 +13,8 @@ function PlaylistsPage() {
   const [searchText, setSearchText] = useState('')
   const [filteredPlaylists, setFilteredPlaylists] = useState<IPlaylist[]>([])
   const [addPlaylistOpen, setAddPlaylistOpen] = useState(false)
-  useEffect(() => {
+
+  const fetchPlaylists = async () => {
     api.get('/library/playlists').then((res) => {
       console.log(res.data)
       setPlaylists(res.data.data)
@@ -23,6 +24,9 @@ function PlaylistsPage() {
     .finally(() => {
       setLoading(false)
     })
+  }
+  useEffect(() => {
+    fetchPlaylists()
   }, [])
   useEffect(() => {
     setFilteredPlaylists(playlists.filter((playlist) => playlist.name.toLowerCase().includes(searchText.toLowerCase())))
@@ -31,7 +35,7 @@ function PlaylistsPage() {
     <>
     <div className='flex items-center m-5 gap-4'>
       <Input placeholder='Search' className=' mx-auto' value={searchText} onChange={(e) => setSearchText(e.target.value)} />
-      <AddPlaylist open={addPlaylistOpen} setOpen={setAddPlaylistOpen}/>
+      <AddPlaylist open={addPlaylistOpen} setOpen={setAddPlaylistOpen} setPlaylists={setPlaylists}/>
     </div>
 <div className='grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-4 m-5 items-center justify-items-center'>     
     {loading ? [1,2,3,4,5,6].map((index) => <PlaylistGridCardSkeleton key={index} />) :

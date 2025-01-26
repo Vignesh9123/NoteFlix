@@ -72,7 +72,7 @@ function PlaylistIDPage() {
         const fetchVideos = async () => {
           setLoading(true)
           setLoadingVideos(true)
-        api.post(`/library/playlists/getbyid`, {id}).then((res) => {
+          api.post(`/library/playlists/getbyid`, {id}).then((res) => {
             console.log(res.data.data)
             setPlaylist(res.data.data.playlistDetails)
             setVideos(res.data.data.videoDetails)

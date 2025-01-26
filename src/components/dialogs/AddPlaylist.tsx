@@ -6,14 +6,19 @@ import { Label } from '../ui/label'
 import { Button } from '../ui/button'
 import { api } from '@/config/config'
 import toast from 'react-hot-toast'
-function AddPlaylist({ open, setOpen }: { open: boolean, setOpen: (open: boolean) => void }) {
+import { IPlaylist } from '@/types'
+function AddPlaylist({ open, setOpen, setPlaylists }: { open: boolean, setOpen: (open: boolean) => void, setPlaylists:React.Dispatch<React.SetStateAction<IPlaylist[]>> }) {
     const [playlistName, setPlaylistName] = useState('')
     const [playlistDescription, setPlaylistDescription] = useState('')
     const [loading, setLoading] = useState(false)
     const handleCreatePlaylist = async () => {
         setLoading(true)
         api.post('/playlist', { name: playlistName, description: playlistDescription })
-        .then((res) => console.log(res.data))
+        .then((res) =>{
+            setPlaylistName('')
+            setPlaylistDescription('') 
+            setPlaylists((prev) => [...prev, {...res.data.data, videoCount: 0}])
+        })
         .catch((err) => toast.error(err.response.data.message || "Something went wrong, please try again later."))
         .finally(() =>{
             setLoading(false)

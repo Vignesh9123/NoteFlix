@@ -60,7 +60,7 @@ export function AppSidebar() {
       {signOutDialogOpen && <SignOut open={signOutDialogOpen} setOpen={setSignOutDialogOpen} />}
       <SidebarHeader>
         <Link href="/" className="px-2">
-            <div className="text-lg font-bold">VidScribe</div>
+            <div className="text-lg font-bold">NoteFlix</div>
         </Link>
         </SidebarHeader>
       <SidebarContent>

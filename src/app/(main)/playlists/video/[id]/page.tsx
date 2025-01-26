@@ -13,6 +13,8 @@ import AddNoteDialog from '@/components/cards/AddNoteDialog';
 import { AxiosError } from 'axios';
 import toast from 'react-hot-toast';
 import YoutubePlayerDialog from '@/components/dialogs/YoutubePlayerDialog';
+import AIConfirmDialog from '@/components/dialogs/AIConfirmDialog';
+import { useAuth } from '@/context/AuthContext';
 function VideoPage() {
   const flag: number = 0;
   const { id } = useParams();
@@ -29,6 +31,8 @@ function VideoPage() {
   const [loadingIndex, setLoadingIndex] = useState(0);
   const [youtubePlayerOpen, setYoutubePlayerOpen] = useState(false);
   const [youtubeURL, setYoutubeURL] = useState('');
+  const [AIDialogOpen, setAIDialogOpen] = useState(false);
+  const { user} = useAuth();
   useEffect(() => {
     setSearchQuery("");
   }, [id])
@@ -57,7 +61,9 @@ function VideoPage() {
 
   const handleAISummaryClick = async () => {
     if (flag == 0) {
+      setAIDialogOpen(false);
       setAILoading(true);
+
       try {
         // await api.post('/youtube/getaudio', { videoId: video?.youtubeId });
         setLoadingIndex(1);
@@ -169,17 +175,28 @@ function VideoPage() {
             <Grid2X2 size={27} className='text-gray-500 cursor-pointer hover:bg-muted duration-150' />
           </div> */}
 
-            <div onClick={() => setAddNoteDialogOpen(true)} className='flex flex-col md:flex-row lg:w-max items-center gap-2 hover:bg-muted duration-150 cursor-pointer p-1'>
+            <div onClick={() => {
+              if(!loading)
+                setAddNoteDialogOpen(true)
+            }} className={`flex flex-col md:flex-row lg:w-max items-center gap-2 hover:bg-muted duration-150 cursor-pointer p-1 ${loading && 'opacity-50'}`}>
             <Plus  size={27} className='text-gray-500 cursor-pointer hover:bg-muted duration-150' />
             <p className='text-gray-500 text-xs text-center'>Add Note</p>
             </div>
-              <div onClick={handleAISummaryClick} className='flex flex-col md:flex-row lg:w-max items-center gap-2 hover:bg-muted duration-150 cursor-pointer p-1'>
+              <div onClick={()=>{
+                 if(user?.creditsUsed! >= 5){
+                  toast.error("You have already used your 5 credits for this month. Please try again next month.")
+                  return;
+                }
+                if(!loading)
+                  setAIDialogOpen(true)
+              }} className={`flex flex-col md:flex-row lg:w-max items-center gap-2 hover:bg-muted duration-150 cursor-pointer p-1 ${loading && 'opacity-50'}`}>
             <Stars size={27}  className='text-gray-500  ' />
             <p className='text-gray-500 text-xs text-center'>Generate Summary using AI</p>
             </div>
             {(
               addNoteDialogOpen && <AddNoteDialog youtubeId={video?.youtubeId!} open={addNoteDialogOpen} setOpen={setAddNoteDialogOpen} fetchNotes={fetchNotes} libraryId={library?._id!} text={note} noteTitle={noteTitle} setText={setNote} setNoteTitle={setNoteTitle} />
             )}
+            {AIDialogOpen && <AIConfirmDialog open={AIDialogOpen} setOpen={setAIDialogOpen} onConfirm={handleAISummaryClick} />}
             <Input placeholder='Search' className='mt-2 md:mt-0 col-span-2 md:col-span-1' value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} />
 
         </div>
@@ -187,9 +204,12 @@ function VideoPage() {
       <div className="usernotes m-5">
         <div className='flex flex-col gap-2'>
           {loading && [1, 2, 3, 4, 5, 6].map((index) => <div key={index} className='h-40 w-full bg-muted animate-pulse'></div>)}
+          <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4'>
+
           {filteredNotes.map((note, index) => (
             <NotesListCard setNoteList={setUserNotes} noteList={userNotes} key={note._id} note={note} videoDetails={video!} index={index} />
           ))}
+          </div>
           {!loading &&( filteredNotes.length === 0 )&& <div className='text-center text-muted-foreground'>No notes found</div>}
         </div>
       </div>

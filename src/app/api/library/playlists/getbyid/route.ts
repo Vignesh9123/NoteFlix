@@ -63,7 +63,8 @@ export async function POST(request: NextRequest) {
                     }
                 }
             ])
-        if (playlist.length == 0) return NextResponse.json({ error: "Playlist not found in library" }, { status: 404 });
+            console.log(playlist);
+        if (playlist.length == 0) return NextResponse.json({ data:{playlistDetails:{}, videoDetails:[]}}, { status: 200 });
         return NextResponse.json({ data: playlist[0] }, { status: 200 });
     } catch (error) {
         console.log("Error getting playlist from library", error);

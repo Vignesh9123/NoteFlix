@@ -123,7 +123,7 @@ export default function Home() {
               transition={{ duration: 0.6, delay: 0.2 }}
               className="text-4xl md:text-6xl font-bold mb-6 p-3 bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent"
             >
-              Transform Your YouTube Experience with AI-Powered Learning
+              NoteFlix - YouTube Videos + Notes = binge-worthy knowledge.
             </motion.h1>
 
             <motion.p
@@ -328,7 +328,7 @@ export default function Home() {
               Ready to Transform Your Learning Experience?
             </h2>
             <p className="text-lg text-blue-200/80 mb-8">
-              Join many users who are already learning smarter with VidScribe.
+              Join many users who are already learning smarter with NoteFlix.
             </p>
             {loading ? (
                <Button
@@ -359,7 +359,8 @@ function Footer() {
   return (
     <footer className="bg-[#030720] py-8 px-6">
       <div className="container mx-auto text-center">
-        <p className="text-blue-300">&copy; 2023 VidScribe. All rights reserved.</p>
+        <p className="text-blue-300">&copy; 2025 NoteFlix. All rights reserved.</p>
+        <p className="text-blue-300">Built with ❤️ by <Link className="underline" href={'https://www.linkedin.com/in/vignesh-d-mys'} target="_blank">Vignesh</Link> </p>
       </div>
     </footer>
   )

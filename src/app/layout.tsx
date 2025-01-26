@@ -16,8 +16,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "VidScribe",
-  description: "A personal library to scribe your notes and playlists for videos.",
+  title: "NoteFlix",
+  description: "NoteFlix is a note-taking app with AI summarization for youtube videos.",
 };
 
 export default function RootLayout({

@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 import config from "@/config/config";
 const connectDB = async () => {
  try {
-     await mongoose.connect(config.mongoURI+"/vidscribe");
+     await mongoose.connect(config.mongoURI, {dbName:"noteflix"});
      const connection = mongoose.connection;
      connection.on("connected", () => {
        console.log("Connected to MongoDB");

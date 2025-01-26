@@ -8,10 +8,10 @@ export default function RegisterPage() {
   return (
     <div className="grid min-h-svh lg:grid-cols-2">
       <Link href="/" className="hidden lg:flex absolute top-7 left-8 z-30 items-center gap-2 font-medium">
-      VidScribe
+      NoteFlix
       </Link>
       <Link href="/" className="flex lg:hidden justify-center mt-5 gap-2 font-medium">
-      VidScribe
+      NoteFlix
       </Link>
       <div className="relative hidden  lg:block">
         

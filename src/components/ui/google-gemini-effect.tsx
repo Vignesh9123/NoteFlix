@@ -24,7 +24,7 @@ export const GoogleGeminiEffect = ({
   return (
     <div className={cn("sticky top-40 2xl:top-52", className)}>
       <div className="text-lg md:text-7xl 2xl:text-9xl font-normal pb-4 text-center bg-clip-text text-transparent bg-gradient-to-b from-neutral-100 to-neutral-300">
-        {title || `Welcome to VidScribe`}
+        {title || `Welcome to NoteFlix`}
       </div>
       <p className="text-xs md:text-xl 2xl:text-3xl font-normal text-center text-neutral-400 mt-4 max-w-lg 2xl:max-w-2xl mx-auto">
         {description ||

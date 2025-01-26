@@ -95,10 +95,11 @@ librarySchema.post("findOneAndDelete", async function (doc) {
     }
 });
 
-librarySchema.post("deleteMany", async function (docs) {
-    if (docs) {
-        await Note.deleteMany({libraryId: {$in: docs.map((doc: any) => doc._id)}});
+librarySchema.post("deleteOne", async function (doc) {
+    if (doc) {
+        await Note.deleteMany({libraryId: doc._id});
     }
+   
 });
 
 
