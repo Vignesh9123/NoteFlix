@@ -173,11 +173,17 @@ function VideoPage() {
             <Grid2X2 size={27} className='text-gray-500 cursor-pointer hover:bg-muted duration-150' />
           </div> */}
 
-            <div onClick={() => setAddNoteDialogOpen(true)} className='flex flex-col md:flex-row lg:w-max items-center gap-2 hover:bg-muted duration-150 cursor-pointer p-1'>
+            <div onClick={() => {
+              if(!loading)
+                setAddNoteDialogOpen(true)
+              }} className={`flex flex-col md:flex-row lg:w-max items-center gap-2 hover:bg-muted duration-150 cursor-pointer p-1 ${loading && 'opacity-50'}`}>
             <Plus  size={27} className='text-gray-500 cursor-pointer hover:bg-muted duration-150' />
             <p className='text-gray-500 text-xs text-center'>Add Note</p>
             </div>
-              <div onClick={handleAISummaryClick} className='flex flex-col md:flex-row lg:w-max items-center gap-2 hover:bg-muted duration-150 cursor-pointer p-1'>
+              <div onClick={()=>{
+                if(!loading)
+                  handleAISummaryClick();
+              }} className={`flex flex-col md:flex-row lg:w-max items-center gap-2 hover:bg-muted duration-150 cursor-pointer p-1 ${loading && 'opacity-50'}`}>
             <Stars size={27}  className='text-gray-500  ' />
             <p className='text-gray-500 text-xs text-center'>Generate Summary using AI</p>
             </div>

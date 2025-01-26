@@ -95,6 +95,9 @@ function NotesListCard({note, videoDetails, index, noteList, setNoteList}: {note
     </TooltipContent>
     </Tooltip>
     </TooltipProvider>}
+    <div>
+      <div className='text-sm text-muted-foreground mt-auto'>Created on {new Date(note.createdAt).toLocaleDateString()}</div>
+    </div>
 </motion.div>
 
     </>

@@ -18,7 +18,6 @@ export async function POST(request: NextRequest) {
         const youtube = await Innertube.create(
            
         );
-        console.log({videoId})
         const info = await youtube.getInfo(videoId);
 
         try {

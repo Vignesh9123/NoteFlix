@@ -96,6 +96,7 @@ export async function GET(request: NextRequest){
                 $count: "total"
             }
         ]);
+        if(total.length == 0) return NextResponse.json({data: [], total: 0, totalPages: 0, message: "No videos found"}, {status: 200});
         const totalPages = Math.ceil(total[0].total / limit);
         return NextResponse.json({data: videos, total, totalPages,message: "Videos fetched successfully"}, {status: 200})
     } catch (error) {

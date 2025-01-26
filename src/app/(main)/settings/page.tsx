@@ -119,7 +119,7 @@ function page() {
                 <span className={`${user?.creditsUsed! > 3 ? "text-red-500" : user?.creditsUsed! > 1 ? "text-yellow-500" : "text-green-500"}`}>{user?.creditsUsed} </span><span> / 5</span> 
             </CardContent>
         </Card>
-        <Card>
+        {user?.loginType == "email" && <Card>
             <CardHeader>
             <CardTitle>Password</CardTitle>
             </CardHeader>
@@ -137,7 +137,7 @@ function page() {
             <CardFooter className='justify-end'>
                 <Button disabled={disabled.password || loading.password} onClick={passwordUpdateClick}>Update</Button>
             </CardFooter>
-        </Card>
+        </Card>}
       
     </div>
   )

@@ -29,7 +29,7 @@ const handleGoogleSignIn = async()=>{
   const auth = getAuth();
   try{
     const result = await signInWithPopup(auth, provider)
-    console.log(result.user)
+    if(result.user) setLoggedIn(true)
     const userData = {
       name: result.user.displayName,
       email: result.user.email,
@@ -37,7 +37,6 @@ const handleGoogleSignIn = async()=>{
     }
     api.post('/user/auth/googleauth', userData ).then((res) => {
       setUser(res.data.user);
-      if(res.data.token) setLoggedIn(true)
       localStorage.setItem('token', res.data.token)
       toast.success("Logged in successfully");
       router.push('/dashboard');
@@ -49,6 +48,7 @@ const handleGoogleSignIn = async()=>{
     else{
       toast.error("Something went wrong, please try again later.");
     }
+    setLoggedIn(false)
   }
   finally{
     setLoading(false)
