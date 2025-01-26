@@ -146,10 +146,11 @@ function page() {
             <CardTitle>Contact</CardTitle>
             </CardHeader>
             <CardContent>
-                <p>For any queries or feedback, please contact <a href="mailto:vignesh.d9123@gmail.com">
+                <p>For any queries or feedback, please contact <a className='text-blue-400 underline' href="mailto:vignesh.d9123@gmail.com" target='_blank'>
                     vignesh.d9123@gmail.com
-                </a>
+                </a> 
                 </p>
+                <p>Connect with me on <a className='text-blue-400 underline' href='https://www.linkedin.com/in/vignesh-d-mys' target='_blank'>Linkedin</a></p>
             </CardContent>
         </Card>
       

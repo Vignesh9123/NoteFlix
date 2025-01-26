@@ -101,7 +101,7 @@ export default function Home() {
         initial="hidden"
         animate={heroInView ? "visible" : "hidden"}
         variants={fadeIn}
-        className="relative min-h-screen flex items-center justify-center overflow-hidden py-20 lg:py-32"
+        className="relative min-h-screen flex items-center justify-center overflow-hidden py-20 lg:py-28"
       >
         <div className="absolute inset-0 bg-gradient-to-b from-blue-600/10 via-transparent to-transparent" />
         <div className="container mx-auto px-4 relative z-10">
@@ -152,7 +152,7 @@ export default function Home() {
              <Link href={`${user?'/dashboard':'/login'}`}>
               <Button
               size="lg"
-              className="bg-blue-600 hover:bg-blue-700 text-white min-w-32 px-8"
+              className="bg-blue-600 hover:bg-blue-700 text-white min-w-52 w-full px-8"
               >
               {user ? 'Go to Dashboard' : 'Get Started'}
               <ArrowRight className="ml-2 w-4 h-4" />
@@ -162,7 +162,7 @@ export default function Home() {
               <Button
                 size="lg"
                 variant="outline"
-                className="border-blue-400 text-blue-400 hover:bg-blue-400/10"
+                className="border-blue-400  text-blue-400 hover:bg-blue-400/10"
               >
                 Watch Demo
                 <PlaySquareIcon className="ml-2 w-4 h-4" />
