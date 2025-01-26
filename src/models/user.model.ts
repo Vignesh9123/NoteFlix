@@ -3,6 +3,7 @@ import bcrypt from "bcrypt";
 import { IUser } from "@/types";
 import jwt from "jsonwebtoken";
 import config from "@/config/config";
+import Library from "./library.model";
 const userSchema = new mongoose.Schema({
     name: {
         type: String,
@@ -33,6 +34,18 @@ userSchema.pre("save", async function (next) {
         next();
     }
     this.password = await bcrypt.hash(this.password, 10);
+});
+
+userSchema.post("findOneAndDelete", async function (doc) {
+    if (doc) {
+        await Library.deleteMany({ userId: doc._id });
+    }
+});
+
+userSchema.post("deleteMany", async function (docs) {
+    if (docs) {
+        await Library.deleteMany({ userId: { $in: docs.map((doc:any) => doc._id) } });
+    }
 });
 
 userSchema.methods.matchPassword = async function (password: string) {

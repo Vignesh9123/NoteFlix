@@ -32,6 +32,7 @@
 */
 
 import { ILibrary } from "@/types";
+import Note from "./note.model";
 import mongoose from "mongoose";
 
 const librarySchema = new mongoose.Schema({
@@ -87,6 +88,19 @@ const librarySchema = new mongoose.Schema({
         default: false
     }
 }, { timestamps: true });
+
+librarySchema.post("findOneAndDelete", async function (doc) {
+    if (doc) {
+        await Note.deleteMany({libraryId: doc._id});
+    }
+});
+
+librarySchema.post("deleteMany", async function (docs) {
+    if (docs) {
+        await Note.deleteMany({libraryId: {$in: docs.map((doc: any) => doc._id)}});
+    }
+});
+
 
 const Library = mongoose.models.Library as mongoose.Model<ILibrary> || mongoose.model<ILibrary>("Library", librarySchema);
 
