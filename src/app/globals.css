@@ -260,3 +260,7 @@
 .animate-fade-out {
   animation: fadeOut 1s forwards;
 }
+
+.z-max{
+  z-index: 1000000000 !important;
+}

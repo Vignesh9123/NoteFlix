@@ -39,11 +39,10 @@ export default function RootLayout({
          <ThemeProvider
             attribute="class"
             defaultTheme="dark"
-            enableSystem
             disableTransitionOnChange
           >
           <NextTopLoader showSpinner={false} zIndex={1000000000}/>
-          <Toaster toastOptions={{style:{zIndex:100000000000}}}/>
+          <Toaster containerClassName="z-max"/>
 
             {children}
             <Analytics/>
