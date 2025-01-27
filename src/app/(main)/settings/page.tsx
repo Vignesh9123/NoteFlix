@@ -146,7 +146,7 @@ function page() {
             <CardTitle>Contact</CardTitle>
             </CardHeader>
             <CardContent>
-                <p>For any queries or feedback, please contact <a className='text-blue-400 underline' href="mailto:vignesh.d9123@gmail.com" target='_blank'>
+                <p>For any queries or feedback, please contact <a className='text-blue-400 underline' href="https://mail.google.com/mail/?view=cm&fs=1&to=vignesh.d9123@gmail.com&su=NoteFlix" target='_blank'>
                     vignesh.d9123@gmail.com
                 </a> 
                 </p>
