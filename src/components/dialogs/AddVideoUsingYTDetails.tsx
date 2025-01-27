@@ -20,7 +20,6 @@ function AddVideo({open, setOpen, videoDetails, setVideoDetails, setVideoList, v
     useEffect(() => {
         setPlaylistLoading(true);
         api.get('/library/playlists').then((res) => {
-            console.log("res", res)
             setPlaylists(res.data.data)
         })
         .catch((err) => {
@@ -69,7 +68,6 @@ function AddVideo({open, setOpen, videoDetails, setVideoDetails, setVideoList, v
          setOtherDialogOpen && setOtherDialogOpen(false)
          setOpen(false);
         } catch (error) {
-            console.log("Error adding video", error);
             if(error instanceof AxiosError) {
                 toast.error(error.response?.data.error || "Something went wrong, please try again later");
             }

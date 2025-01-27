@@ -15,7 +15,6 @@ function MoveToPlaylist({open, setOpen, videoDetails,videoList, setVideoList, se
     useEffect(() => {
         setPlaylistLoading(true);
         api.get('/library/playlists').then((res) => {
-            console.log("res", res)
             const playlists = res.data.data;
             if(currentPlaylist){
                 setPlaylists(playlists.filter((playlist: IPlaylist) => playlist._id !== currentPlaylist).sort((a: IPlaylist, b: IPlaylist) => a.name.localeCompare(b.name)));

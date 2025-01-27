@@ -39,7 +39,6 @@ function Page() {
             return;
         }
         api.get(`/youtube/search?q=${searchQuery}`).then((res) => {
-            console.log(res.data.data);
             setSearchedQuery(searchQuery);
             setSearchResults(res.data.data);
         }).catch((err) => {

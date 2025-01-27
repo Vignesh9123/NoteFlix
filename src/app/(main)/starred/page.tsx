@@ -46,7 +46,6 @@ function Starred() {
         try{
             const response = await api.get('/library/videos/starred?type=all')
             const libraries = response.data.data
-            console.log(libraries)
             const videos = libraries.map((library: ILibrary) => library.videoDetails)
             const playlist = libraries.map((library: ILibrary) => library.playlistDetails != null ? library.playlistDetails : null)
             setPlaylists(playlist)          

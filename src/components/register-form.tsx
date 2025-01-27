@@ -37,7 +37,6 @@ export default function RegisterForm({
         password: result.user.refreshToken,
       }
       const signupPromise = api.post('/user/auth/googleauth', userData ).then((res) => {
-        console.log(res.data);
         setUser(res.data.user);
         localStorage.setItem('token', res.data.token)
         router.push('/dashboard');

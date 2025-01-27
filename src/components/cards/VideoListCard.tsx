@@ -14,7 +14,6 @@ import { useRouter } from 'nextjs-toploader/app';
 function VideoListCard({videoDetails, type, index, videoList, setVideoList, playlistId, isSelected, selectMode, playlistDetails}: {videoDetails: IVideoDetails, type: string, index: number, videoList: IVideoDetails[], setVideoList: (videoList: IVideoDetails[]) => void, playlistId?: string, isSelected?: boolean, selectMode?: boolean, playlistDetails?:IPlaylist}) {
     const [updateDialogOpen, setUpdateDialogOpen] = useState(false)
     const [animationClass, setAnimationClass] = useState('');
-    console.log(playlistDetails);
     const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
     const [isDeleting, setIsDeleting] = useState(false);
     const [moveDialogOpen, setMoveDialogOpen] = useState(false);

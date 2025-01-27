@@ -55,7 +55,6 @@ function VideosPage() {
 
       const response = await api.post(`/youtube/getvideodetails`, { videoId })
       setVideoDetails(response.data.data)
-      console.log(response.data.data)
       setYtLinkDialogOpen(false)
       setYoutubeUrl('')
       setOpenAddVideoDialog(true)
@@ -66,7 +65,6 @@ function VideosPage() {
       }else{
         toast.error("Something went wrong, please try again later")
       }
-      console.log(error)
     }
     finally {
       setLoading(false)

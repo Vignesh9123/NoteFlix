@@ -103,7 +103,6 @@ function VideoPage() {
         setNoteTitle("Summary of the video");
         setAddNoteDialogOpen(true);
       } catch (error) {
-        console.log(error);
         if(error instanceof AxiosError){
           toast.error(error.response?.data.error || "Something went wrong, please try again later.");
         }else{
@@ -124,7 +123,6 @@ function VideoPage() {
   useEffect(() => {
     setLoading(true);
     api.post(`/library/videos/getbyid`, { id, type: "standalone" }).then((res) => {
-      console.log("res", res.data.data)
       setVideo(res.data.data.videoDetails);
       setLibrary(res.data.data);
       setUserNotes(res.data.data.userNotes);

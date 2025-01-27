@@ -47,7 +47,6 @@ function YouTubeExploreSection() {
                     localStorage.setItem('cachedDate', JSON.stringify(new Date()));
                 })
                 .catch(err => {
-                    console.log(err)
                     toast.error(err.response?.data.error || "Something went wrong, please try again later.");
                 })
                 .finally(() => {

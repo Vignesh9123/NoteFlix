@@ -18,10 +18,8 @@ function AddNoteDialog({ open, setOpen, libraryId, fetchNotes, youtubeId, text, 
     const handleAddNote = async () => {
         setLoading(true);
         const timestampInSeconds = timestamp ? timeToSeconds(timestamp) : 0;
-        console.log(timestampInSeconds);
-        console.log(note);
+       
         if(!note || !libraryId || !title){
-            console.log("Missing fields",{note, libraryId, title});
             return setLoading(false);
         } 
         api.post("/video/notes", {
@@ -33,7 +31,6 @@ function AddNoteDialog({ open, setOpen, libraryId, fetchNotes, youtubeId, text, 
             }
         })
             .then((res) => {
-                console.log(res);
                 fetchNotes();
             })
             .catch((err) => {
@@ -77,7 +74,6 @@ function AddNoteDialog({ open, setOpen, libraryId, fetchNotes, youtubeId, text, 
     return (
         <Dialog open={open} onOpenChange={(val)=>{
             if(!val){
-                console.log("clearing")
                 setNote(null);
                 setTimestamp(null);
                 setTitle(null);

@@ -16,7 +16,6 @@ function PlaylistsPage() {
 
   const fetchPlaylists = async () => {
     api.get('/library/playlists').then((res) => {
-      console.log(res.data)
       setPlaylists(res.data.data)
       setFilteredPlaylists(res.data.data)
     })
