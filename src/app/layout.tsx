@@ -5,6 +5,7 @@ import { ThemeProvider } from "@/components/theme-provider";
 import { AuthProvider } from "@/context/AuthContext";
 import NextTopLoader from 'nextjs-toploader';
 import {Toaster} from 'react-hot-toast';
+import { Analytics } from "@vercel/analytics/react"
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -45,6 +46,7 @@ export default function RootLayout({
           <Toaster toastOptions={{style:{zIndex:100000000000}}}/>
 
             {children}
+            <Analytics/>
           </ThemeProvider>
           </AuthProvider>
       </body>
