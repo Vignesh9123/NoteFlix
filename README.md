@@ -16,7 +16,7 @@ NoteFlix is a YouTube library platform that allows users to organize and enhance
 
 ## Tech Stack
 
-- **Frontend:** Next.js
+- **Frontend + Backend:** Next.js
 - **API Integration:** YouTube Data API V3
 - **Authentication:** Firebase
 
