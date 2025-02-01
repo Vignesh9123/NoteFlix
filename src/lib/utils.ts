@@ -38,6 +38,9 @@ export function extractVideoId(youtubeUrl: string): string | null {
   } else if (!videoId && url.pathname.startsWith("/v/")) {
     videoId = url.pathname.split("/")[2];
   }
+  else if(!videoId && url.pathname.startsWith("/shorts/")){
+    videoId = url.pathname.split("/")[2];
+  }
 
   return videoId || null;
 }
