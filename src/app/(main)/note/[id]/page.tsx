@@ -53,7 +53,8 @@ function NotePage() {
 
   const updateClick = async () => {
     try {
-        await api.put('/video/notes', {noteId: note?._id, notes: {text, title, timestamp: timeToSeconds(timestamp)}});
+        await api.put('/video/notes', {noteId: note?._id, notes: {text, title, timestamp: timestamp == '0:00:00' ? null :timeToSeconds(timestamp)}});
+        toast.success("Note updated successfully");
         getNote();
     } catch (error) {
       if(error instanceof AxiosError){

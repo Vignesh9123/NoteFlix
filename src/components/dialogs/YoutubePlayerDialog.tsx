@@ -18,12 +18,13 @@ function YoutubePlayerDialog({open, setOpen, videoDetails, videoURL, addShow}:{o
           </DialogTitle>
         </DialogHeader>
         <YoutubePlayer videoURL={videoURL || `https://www.youtube.com/watch?v=${videoDetails?.youtubeId}`} />
-        {addShow && <div className='flex items-center justify-start gap-3 mt-3'>
+       
+        <div className='flex items-center justify-end gap-3 mt-3'>
+        {addShow && <div className='flex items-center justify-start gap-3'>
             <Button onClick={() => {
               setAddVideoDialogOpen(true)
             }}>Add to Library</Button>
         </div>}
-        <div className='flex items-center justify-end gap-3 mt-3'>
             <Button onClick={() => setOpen(false)}>Close</Button>
         </div>
       </DialogContent>

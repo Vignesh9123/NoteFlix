@@ -31,6 +31,7 @@ function AddNoteDialog({ open, setOpen, libraryId, fetchNotes, youtubeId, text, 
             }
         })
             .then((res) => {
+                toast.success("Note added successfully");
                 fetchNotes();
             })
             .catch((err) => {
