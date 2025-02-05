@@ -35,13 +35,13 @@ const features = [
   },
   {
     icon: <PlaySquare className="w-6 h-6" />,
-    title: "Smart Playlists",
-    description: "Create dynamic playlists that automatically update based on your preferences."
+    title: "Custom Playlists",
+    description: "Create playlists to organize your favorite videos based on your interests."
   },
   {
     icon: <FileText className="w-6 h-6" />,
     title: "Rich Text Notes",
-    description: "Take timestamped notes with formatting, links, and multimedia support."
+    description: "Take timestamped notes with formatting options, including bold, italics, and code blocks."
   },
   {
     icon: <Brain className="w-6 h-6" />,
