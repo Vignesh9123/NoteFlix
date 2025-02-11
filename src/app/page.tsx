@@ -1,13 +1,14 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { motion, useScroll, useTransform } from "framer-motion";
 import { useInView } from "react-intersection-observer";
 import { PlaySquareIcon, Library, FileText, Brain, PlaySquare, Check, ArrowRight, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { useAuth } from "@/context/AuthContext";
 import Link from "next/link";
-
+import Lenis from 'lenis';
+import { useEffect, useRef } from "react";
 const fadeIn = {
   hidden: { opacity: 0, y: 20 },
   visible: { 
@@ -88,21 +89,39 @@ const pricingPlans = [
 ];
 
 export default function Home() {
+  useEffect(() => {
+    const lenis = new Lenis();
+    function raf(time:any) {
+      lenis.raf(time);
+      requestAnimationFrame(raf);
+    }
+    requestAnimationFrame(raf);
+  })
+  const container = useRef(null);
   const [heroRef, heroInView] = useInView({ triggerOnce: true, threshold: 0.1 });
   const [statsRef, statsInView] = useInView({ triggerOnce: true, threshold: 0.1 });
-  const [featuresRef, featuresInView] = useInView({ triggerOnce: true, threshold: 0.1 });
+  const [featuresRef, featuresInView] = useInView({  threshold: 0.1 });
   const [pricingRef, pricingInView] = useInView({ triggerOnce: true, threshold: 0.1 });
   const [demoRef, demoInView] = useInView({ triggerOnce: true, threshold: 0.1 });
   const { user, loading } = useAuth();
+  const {scrollYProgress} = useScroll({target: container, offset: ["start start", "end end"]});
+  const scale1 = useTransform(scrollYProgress, [0, 0.25], [1,0.8]);
+  const rotate1 = useTransform(scrollYProgress, [0, 0.25], [0, 5]);
+  const scale2 = useTransform(scrollYProgress, [0, 0.25, 0.5, 0.75], [0.8,1, 1, 0.8]);
+  const rotate2 = useTransform(scrollYProgress, [0, 0.25, 0.5, 0.75], [5, 0, 0, 5]);
+  const opacity2 = useTransform(scrollYProgress, [0, 0.25, 0.5, 0.75], [0, 1, 1, 0]);
+  const scale3 = useTransform(scrollYProgress, [0.5, 0.65], [0.8,1]);
+  const rotate3 = useTransform(scrollYProgress, [0.5, 0.65], [5 , 0]);
   return (
-    <div className="min-h-screen bg-[#050A30]">
+    <div ref={container} className="h-[400vh] bg-[#050A30]">
       {/* Hero Section */}
       <motion.section
         ref={heroRef}
         initial="hidden"
         animate={heroInView ? "visible" : "hidden"}
         variants={fadeIn}
-        className="relative min-h-screen flex items-center justify-center overflow-hidden py-20 lg:py-28"
+        style={{ scale: scale1, rotate: rotate1 }}
+        className="sticky top-0 h-screen flex items-center justify-center overflow-hidden py-20 lg:py-28"
       >
         <div className="absolute inset-0 bg-gradient-to-b from-blue-600/10 via-transparent to-transparent" />
         <div className="container mx-auto px-4 relative z-10">
@@ -203,11 +222,12 @@ export default function Home() {
       <motion.section
         ref={featuresRef}
         initial="hidden"
-        animate={featuresInView ? "visible" : "hidden"}
+        animate={featuresInView ? "visible" : "visible"}
         variants={fadeIn}
-        className="py-32 relative"
+        style={{ scale: scale2, rotate: rotate2,opacity: opacity2 }}
+        className="py-10 xl:py-5 2xl:py-32 h-screen sticky top-0 overflow-y-auto bg-black"
       >
-        <div className="absolute inset-0 bg-gradient-to-b from-blue-600/5 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-b from-blue-800 to-transparent" />
         <div className="container mx-auto px-4 relative z-10">
           <div className="max-w-3xl mx-auto text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-bold mb-6 text-blue-300">
@@ -326,10 +346,11 @@ export default function Home() {
         initial="hidden"
         animate={demoInView ? "visible" : "hidden"}
         variants={fadeIn}
-        className="py-32 relative"
+        style={{ scale: scale3, rotate: rotate3 }}
+        className="py-32 xl:py-8 h-screen xl:h-auto 2xl:h-screen bg-black relative"
         id="demo"
       >
-        <div className="absolute inset-0 bg-gradient-to-b from-blue-600/5 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-b from-blue-900 to-transparent" />
         <div className="container mx-auto px-4 relative z-10">
           <div className="max-w-3xl mx-auto text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-bold mb-6 text-blue-300">
@@ -353,9 +374,9 @@ export default function Home() {
       </motion.section>
     
       {/* CTA Section */}
-      <section className="py-32 relative">
-        <div className="absolute inset-0 bg-gradient-to-b from-blue-600/10 to-transparent" />
-        <div className="container mx-auto px-4 relative z-10">
+      <section className="py-32 flex justify-center items-center h-screen bg-blue-900 relative">
+        <div className="absolute  inset-0 bg-gradient-to-b from-blue-600/10 to-transparent" />
+        <div className="container  mx-auto px-4 relative z-10">
           <div className="max-w-4xl mx-auto text-center">
             <h2 className="text-3xl md:text-4xl font-bold mb-6 text-blue-300">
               Ready to Transform Your Learning Experience?
