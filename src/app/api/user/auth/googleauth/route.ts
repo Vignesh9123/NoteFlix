@@ -2,13 +2,18 @@ import User from "@/models/user.model";
 import { NextRequest, NextResponse } from "next/server";
 import { cookies } from "next/headers";
 import connectDB from "@/dbConfig/connectDB";
+import {getAdminApp} from "@/config/firebase-admin";    
 connectDB();
 export async function POST(req: NextRequest){
     try {
         if(req.headers.get("Postman-Token")) {
             return NextResponse.json({ error: "Invalid request" }, { status: 400 });
         }
-        const { name, email, password }:{ name: string, email: string, password: string} = await req.json();
+        const adminApp = await getAdminApp();
+       const { idToken }: { idToken: string } = await req.json();
+        const decodedToken = await adminApp.auth().verifyIdToken(idToken);
+        const { name, email , uid  } = decodedToken;
+        const password = uid;
         const user = await User.findOne({ email });
         if(user?.loginType === "email") {
             return NextResponse.json({ error: "Please login with email and password" }, { status: 400 });

@@ -31,11 +31,9 @@ export default function RegisterForm({
     try{
       const result = await signInWithPopup(auth, provider)
       if(result.user) setLoggedIn(true)
-      const userData = {
-        name: result.user.displayName,
-        email: result.user.email,
-        password: result.user.refreshToken,
-      }
+        const userData = {
+          idToken: await result.user.getIdToken()
+        }
       const signupPromise = api.post('/user/auth/googleauth', userData ).then((res) => {
         setUser(res.data.user);
         localStorage.setItem('token', res.data.token)

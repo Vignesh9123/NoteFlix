@@ -4,10 +4,13 @@ const config = {
     youtubeApiKey: String(process.env.NEXT_PUBLIC_YOUTUBE_API_KEY),
     geminiApiKey: String(process.env.NEXT_PUBLIC_GEMINI_API_KEY),
     deepgramApiKey: String(process.env.NEXT_PUBLIC_DEEPGRAM_API_KEY),
+    firebaseProjectId: String(process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID),
+    firebaseAuthDomain: String(process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN),
     firebaseApiKey: String(process.env.NEXT_PUBLIC_FIREBASE_API_KEY),
     firebaseMessagingSenderId: String(process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID),
     firebaseAppId: String(process.env.NEXT_PUBLIC_FIREBASE_APP_ID),
     firebaseMeasurementId: String(process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID),
+    firebaseStorageBucket: String(process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET),
 }
 
 import axios from 'axios'

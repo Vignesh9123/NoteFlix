@@ -31,9 +31,7 @@ const handleGoogleSignIn = async()=>{
     const result = await signInWithPopup(auth, provider)
     if(result.user) setLoggedIn(true)
     const userData = {
-      name: result.user.displayName,
-      email: result.user.email,
-      password: result.user.refreshToken,
+      idToken: await result.user.getIdToken()
     }
     const signinPromise = api.post('/user/auth/googleauth', userData ).then((res) => {
       setUser(res.data.user);
