@@ -5,7 +5,7 @@ import { Ratelimit } from "@upstash/ratelimit";
 
 const ratelimit = new Ratelimit({
     redis: kv,
-    limiter: Ratelimit.slidingWindow(10, "10s"),
+    limiter: Ratelimit.slidingWindow(10, "60s"),
 });
 interface NextRequestWithIp extends NextRequest {
     ip: string | undefined;
