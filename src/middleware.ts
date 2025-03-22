@@ -7,8 +7,10 @@ const ratelimit = new Ratelimit({
     redis: kv,
     limiter: Ratelimit.slidingWindow(10, "10s"),
 });
-
-export async function apiRateLimitMiddleware(req: NextRequest) {
+interface NextRequestWithIp extends NextRequest {
+    ip: string | undefined;
+}
+export async function apiRateLimitMiddleware(req: NextRequestWithIp) {
     const ip = req.ip ?? '127.0.0.1'
     const { success, limit, reset, remaining } = await ratelimit.limit(ip)
     console.log("Remaining", remaining, ip);
@@ -30,7 +32,7 @@ export async function apiRateLimitMiddleware(req: NextRequest) {
     return NextResponse.next();
   }
   
-export function middleware(req: NextRequest) {
+export function middleware(req: NextRequestWithIp) {
     const pathname = req.nextUrl.pathname;
     const isPublicPath = pathname === "/login" || pathname === "/register" ;
     const token = req.cookies.get("token")?.value;
