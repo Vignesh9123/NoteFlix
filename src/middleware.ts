@@ -11,7 +11,9 @@ interface NextRequestWithIp extends NextRequest {
     ip: string | undefined;
 }
 export async function apiRateLimitMiddleware(req: NextRequestWithIp) {
-    const ip = req.ip ?? '127.0.0.1'
+    const forwarded = req.headers.get("x-forwarded-for")
+    console.log("Forwarded", forwarded);
+  const ip = forwarded ? forwarded.split(/, /)[0] : '127.0.0.1'
     const { success, limit, reset, remaining } = await ratelimit.limit(ip)
     console.log("Remaining", remaining, ip);
     if (remaining === 0) {
