@@ -5,17 +5,15 @@ import { Ratelimit } from "@upstash/ratelimit";
 
 const ratelimit = new Ratelimit({
     redis: kv,
-    limiter: Ratelimit.slidingWindow(10, "60s"),
+    limiter: Ratelimit.slidingWindow(10, "20s"),
 });
 interface NextRequestWithIp extends NextRequest {
     ip: string | undefined;
 }
 export async function apiRateLimitMiddleware(req: NextRequestWithIp) {
     const forwarded = req.headers.get("x-forwarded-for")
-    console.log("Forwarded", forwarded);
   const ip = forwarded ? forwarded.split(/, /)[0] : '127.0.0.1'
     const { success, limit, reset, remaining } = await ratelimit.limit(ip)
-    console.log("Remaining", remaining, ip);
     if (remaining === 0) {
       return new Response(
         JSON.stringify({
