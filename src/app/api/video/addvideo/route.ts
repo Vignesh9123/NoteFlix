@@ -11,7 +11,6 @@ export async function POST(request: NextRequest){
          return NextResponse.json({error: "Unauthorized"}, {status: 401})
      }
      const {youtubeId, title, channelName, thumbnailUrl, duration, publishedAt, playlistId, isStandalone} = await request.json();
-     console.log(youtubeId, title, channelName, thumbnailUrl, duration, publishedAt, playlistId, isStandalone)
      if(!youtubeId || !title || !channelName || !thumbnailUrl || !duration || !publishedAt || isStandalone === undefined || isStandalone === null){
          return NextResponse.json({error: "Invalid request"}, {status: 400})
      }

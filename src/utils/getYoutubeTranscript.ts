@@ -1,5 +1,4 @@
 import { Innertube } from "youtubei.js";
-import { YT } from "youtubei.js"
 
 interface GetYoutubeTranscriptResponse {
     success: boolean;

@@ -23,7 +23,8 @@ import mongoose from 'mongoose';
 const videoSchema = new mongoose.Schema({
   youtubeId: {
     type: String,
-    required: true
+    required: true,
+    unique: true
   },
   title: { 
     type: String, 
@@ -48,9 +49,22 @@ const videoSchema = new mongoose.Schema({
   summary: {
     type: String,
     required: false
+  },
+  transcript:{ // TODO: Decide if it is required to store this in DB as it is too large but may be useful for faster retrieval of transcript
+    type: [
+      {
+        start_ms: Number,
+        end_ms: Number,
+        text: String
+      }
+    ],
+    required: false
+  },
+  formattedTranscript: {
+    type: String,
+    required: false
   }
 }, {timestamps: true});
-
 
 videoSchema.post('findOneAndDelete', async function(doc) {
   if (doc) {
