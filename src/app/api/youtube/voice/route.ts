@@ -3,6 +3,10 @@ import { NextRequest, NextResponse } from "next/server"
 import Video from "@/models/video.model";
 import youtube from "@/config/ytapiconfig";
 import { getYoutubeTranscript } from "@/utils/getYoutubeTranscript";
+import { getVoiceSystemPrompt } from "@/config/voiceSystemPrompt";
+import {GoogleGenerativeAI} from '@google/generative-ai'
+
+
 export const GET = async (request: NextRequest) => {
     try {
         const auth = await authMiddleware(request);
@@ -55,4 +59,34 @@ export const GET = async (request: NextRequest) => {
         console.log("Error fetching transcript", error);
         return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
     }
-}   
+}
+
+export const POST = async (request: NextRequest)=>{
+    try {
+        const auth = await authMiddleware(request);
+        if(auth.status === 401) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+        const {videoId, question} = await request.json()
+        if(!videoId || !question) return NextResponse.json({ error: "Invalid request" }, { status: 400 });
+        const video = await Video.findOne({ youtubeId: videoId });
+        if(!video) return NextResponse.json({ error: "Video not found" }, { status: 404 });
+        const systemPrompt = getVoiceSystemPrompt(JSON.stringify(video.transcript) || video.formattedTranscript || "");
+        const client = new GoogleGenerativeAI(process.env.NEXT_PUBLIC_GEMINI_API_KEY!);
+        const model = client.getGenerativeModel({
+            model: "gemini-2.0-flash"
+        })
+        const generationConfig = {
+            temperature: 1,
+            topP: 0.95,
+            topK: 40,
+            maxOutputTokens: 8192,
+            responseMimeType: "text/plain",
+        }
+        const chatSession = model.startChat({generationConfig, systemInstruction: systemPrompt})
+        const response = await chatSession.sendMessage(question)
+        return NextResponse.json({ message: response.response.candidates?.[0].content.parts?.[0].text }, { status: 200 });
+    } catch (error) {
+        console.log("Error fetching transcript", error);
+        return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
+    }
+}
+
