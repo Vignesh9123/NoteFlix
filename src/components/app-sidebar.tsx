@@ -1,4 +1,4 @@
-import {  ChevronUp, Home, Library, ListVideo, Search, Settings, User2, Star } from "lucide-react"
+import {  ChevronUp, Home, Library, ListVideo, Search, Settings, User2, Star, Mic } from "lucide-react"
 import { useAuth } from "@/context/AuthContext"
 import {
   Sidebar,
@@ -49,6 +49,11 @@ const items = [
     url: "/settings",
     icon: Settings,
   },
+  {
+    title: "Voice",
+    url: "/voice",
+    icon: Mic
+  }
 ]
 
 export function AppSidebar() {

@@ -58,33 +58,18 @@ function Page() {
   const [messages, setMessages] = useState<{
     role: "user" | "assistant";
     message: string;
-  }[]>([ // TODO: Clear this
-    {
-      role: "user",
-      message: "what does the speaker have to say mainly in this video",
-    },
-    {
-      role: "assistant",
-      message:
-        "The speaker discusses various aspects of getting into the web3 industry, including the importance of contributing to open-source projects, learning niche skills, and networking. They also share their personal experiences of working at Backpack and building a crypto exchange. Additionally, the speaker emphasizes the value of continuous learning, adapting to industry changes, and focusing on being exceptionally good at one specific skill. They also provide insights on finding companies to contribute to, the importance of grants, and platforms for job searching. (00:00)\n",
-    },
-    {
-      role: "user",
-      message: "what does the speaker have to say mainly in this video",
-    },
-    {
-      role: "assistant",
-      message:
-        "The speaker discusses various aspects of getting into the web3 industry, including the importance of contributing to open-source projects, learning niche skills, and networking. They also share their personal experiences of working at Backpack and building a crypto exchange. Additionally, the speaker emphasizes the value of continuous learning, adapting to industry changes, and focusing on being exceptionally good at one specific skill. They also provide insights on finding companies to contribute to, the importance of grants, and platforms for job searching. (00:00)\n",
-    },
-  ]);
+  }[]>([]);
 
   const messagesContainerRef = useRef<HTMLDivElement>(null);
   const lastMessageRef = useRef<HTMLDivElement>(null);
 
   const onSubmit = async () => {
     if (!finalTexts) return;
-
+    if(messages.length >= 10){
+      toast.error("You can only have 10 messages")
+      setFinalTexts("")
+      return
+    }
     setMessages((prev) => [
       ...prev,
       {
@@ -138,6 +123,11 @@ function Page() {
           router.push("/voice");
           return;
         }
+        console.log("Response", response.data);
+        setMessages(response.data.chats.map((chat: { role: string; content: string }) => ({
+          role: chat.role,
+          message: chat.content
+        })));
       } catch (error) {
         console.log("Error checking transcript", error);
         router.push("/voice");
@@ -171,7 +161,7 @@ function Page() {
         setInterimTexts={setInterimTexts}
       />
 
-      <div className="p-2 m-2 border border-muted min-h-4">
+      <div className="p-2 m-2 border border-muted min-h-9">
         {finalTexts}
         <span className="text-muted-foreground">{interimTexts}</span>
       </div>
@@ -180,7 +170,9 @@ function Page() {
         ref={messagesContainerRef}
         className="p-2 m-2 border border-muted flex flex-col gap-2 overflow-y-auto flex-grow"
       >
-        
+        {messages.length === 0 &&<div className="flex justify-center h-full items-center">
+          <p className="text-muted-foreground">No messages yet. Start a conversation by asking a question by pressing the mic button below</p>
+        </div>}
 
         {messages.map((message, index) => (
           <div
@@ -583,15 +575,16 @@ export const AudioRecorderWithVisualizer = ({
       )}
     >
       {isRecording ? (
-        <Timer
-          hourLeft={hourLeft}
-          hourRight={hourRight}
-          minuteLeft={minuteLeft}
-          minuteRight={minuteRight}
-          secondLeft={secondLeft}
-          secondRight={secondRight}
-          timerClassName={timerClassName}
-        />
+        <></>
+        // <Timer
+        //   hourLeft={hourLeft}
+        //   hourRight={hourRight}
+        //   minuteLeft={minuteLeft}
+        //   minuteRight={minuteRight}
+        //   secondLeft={secondLeft}
+        //   secondRight={secondRight}
+        //   timerClassName={timerClassName}
+        // />
       ) : null}
       
       <canvas

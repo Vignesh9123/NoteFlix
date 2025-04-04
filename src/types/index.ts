@@ -28,8 +28,8 @@ export interface IVideoDetails {
     isStandalone: boolean;
     isStarred: boolean;
     playlistId: string;
-    formattedTranscript: string;
-    transcript: {
+    formattedTranscript?: string;
+    transcript?: {
         start_ms: number;
         end_ms: number;
         text?: string 

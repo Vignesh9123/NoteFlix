@@ -13,7 +13,7 @@ export const GET = async (request: NextRequest) => {
             if(voice.chats.length > 10) {
                 return NextResponse.json({ error: "Chat limit exceeded" }, { status: 400 });
             }
-            return NextResponse.json({ message: "Transcript fetched successfully" }, { status: 200 });
+            return NextResponse.json({ message: "Transcript fetched successfully", chats: voice.chats }, { status: 200 });
         }
         return NextResponse.json({ message: "Transcript not available" }, { status: 500 });
     } catch (error) {

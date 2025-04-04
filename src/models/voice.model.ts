@@ -4,8 +4,8 @@ import mongoose from "mongoose"
 const voiceSchema = new mongoose.Schema({
     videoId: {
         type: mongoose.Schema.Types.ObjectId,
+        ref: "Video",
         required: true,
-        ref: "Video"
     },
     chatTitle: {
         type: String
@@ -24,4 +24,6 @@ const voiceSchema = new mongoose.Schema({
     
 }, {timestamps: true})
 
-export default mongoose.models.Voice as mongoose.Model<IVoice> || mongoose.model<IVoice>("Voice", voiceSchema)
+const Voice = mongoose.models.Voice as mongoose.Model<IVoice> || mongoose.model<IVoice>("Voice", voiceSchema)
+
+export default Voice

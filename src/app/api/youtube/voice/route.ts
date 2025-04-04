@@ -14,6 +14,11 @@ export const GET = async (request: NextRequest) => {
         if(auth.status === 401) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
         const youtubeId = request.nextUrl.searchParams.get("v");
         if(!youtubeId) return NextResponse.json({ error: "Invalid request" }, { status: 400 });
+        const user = await User.findById(request.user?._id);
+        if(!user) return NextResponse.json({ error: "User not found" }, { status: 404 });
+        if(user.creditsUsed >= 5) {
+            return NextResponse.json({ error: "Credits limit exceeded" }, { status: 400 });
+        }
         let video = await Video.findOne({ youtubeId });
         if(!video){
          const response = await youtube.videos.list({
@@ -44,7 +49,6 @@ export const GET = async (request: NextRequest) => {
             console.log("Transcript", video.transcript)
             const voice = await Voice.create({
                 videoId: video._id,
-                chatTitle: video.title,
                 userId: request.user?._id
             })
             return NextResponse.json({ message: "Transcript fetched successfully", voiceId: voice._id }, {status: 200})
@@ -71,7 +75,6 @@ export const GET = async (request: NextRequest) => {
         await video.save();
         const voice = await Voice.create({
             videoId: video._id,
-            chatTitle: video.title,
             userId: request.user?._id
         })
         return NextResponse.json({ message: "Transcript fetched successfully", voiceId: voice._id }, { status: 200 });
@@ -103,7 +106,7 @@ export const POST = async (request: NextRequest)=>{
             role: "user",
             content: question,
         })
-        const systemPrompt = getVoiceSystemPrompt(JSON.stringify(video.transcript) || video.formattedTranscript || "");
+        const systemPrompt = getVoiceSystemPrompt(JSON.stringify(video.transcript) || video.formattedTranscript || "", video.title);
         const client = new GoogleGenerativeAI(process.env.NEXT_PUBLIC_GEMINI_API_KEY!);
         const model = client.getGenerativeModel({
             model: "gemini-2.0-flash",
@@ -116,7 +119,14 @@ export const POST = async (request: NextRequest)=>{
             maxOutputTokens: 8192,
             responseMimeType: "text/plain",
         }
-        const chatSession = model.startChat({generationConfig})
+        const chatSession = model.startChat({generationConfig,
+            history:voice.chats.map(chat=>({
+                role: chat.role == "user" ? "user" : "model",
+                parts: [{
+                    text: chat.content
+                }]
+            }))
+        })
         const response = await chatSession.sendMessage(question)
         const responseText = response.response.candidates?.[0].content.parts?.[0].text
         if(!responseText) return NextResponse.json({ error: "No response" }, { status: 500 });
@@ -127,6 +137,7 @@ export const POST = async (request: NextRequest)=>{
         if(voice.chats.length == 2){
             if(!user) return NextResponse.json({ error: "User not found" }, { status: 404 });
             user.creditsUsed += 1;
+            voice.chatTitle = question;
             await user.save();
         }
         await voice.save();

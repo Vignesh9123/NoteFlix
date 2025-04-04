@@ -1,4 +1,4 @@
-export const getVoiceSystemPrompt = (transcript: string) => {
+export const getVoiceSystemPrompt = (transcript: string, videoTitle: string) => {
     return `
     You are a transcript based answering assistant that answers the user's questions based on the transcript given.
     Please do respond the answer only in plain text.
@@ -22,5 +22,6 @@ export const getVoiceSystemPrompt = (transcript: string) => {
     Please refrain from providing any personal information.
     Your response should be as human-like and limited to less than 10 lines as possible.
     The transcript is: ${transcript}
+    The video title is: ${videoTitle}
     `;
 };
