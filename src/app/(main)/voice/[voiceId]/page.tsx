@@ -47,7 +47,7 @@ const downloadBlob = (blob: Blob) => {
 
 
 function Page() {
-  const { videoId } = useParams();
+  const { voiceId } = useParams();
   const router = useRouter();
 
   const [loading, setLoading] = useState(true);
@@ -58,7 +58,7 @@ function Page() {
   const [messages, setMessages] = useState<{
     role: "user" | "assistant";
     message: string;
-  }[]>([
+  }[]>([ // TODO: Clear this
     {
       role: "user",
       message: "what does the speaker have to say mainly in this video",
@@ -97,7 +97,7 @@ function Page() {
     try {
       setReplyLoading(true);
       const response = await api.post(`/youtube/voice`, {
-        videoId,
+        voiceId,
         question: finalTexts,
       });
 
@@ -124,16 +124,16 @@ function Page() {
     }
   };
 
-  // Redirect if no videoId
+  // Redirect if no voiceId
   useEffect(() => {
-    if (!videoId) {
+    if (!voiceId) {
       router.push("/voice");
       return;
     }
     setLoading(true);
     const checkTranscript = async () => {
       try {
-        const response = await api.get(`/video/check-transcript?v=${videoId}`);
+        const response = await api.get(`/video/check-transcript?v=${voiceId}`);
         if (response.status !== 200) {
           router.push("/voice");
           return;
@@ -146,7 +146,7 @@ function Page() {
       }
     };
     checkTranscript();
-  }, [videoId]);
+  }, [voiceId]);
 
   // Scroll to bottom on messages change
   useEffect(() => {

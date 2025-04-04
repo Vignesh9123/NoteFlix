@@ -6,7 +6,7 @@ import { useState } from 'react'
 import { api } from '@/config/config'
 import { extractVideoId } from '@/lib/utils'
 import toast from 'react-hot-toast'
-import { Loader2 } from 'lucide-react'
+import { LibrarySquare, Loader2 } from 'lucide-react'
 import { useRouter } from 'nextjs-toploader/app'
 function page() {
     const [urlInput, setUrlInput] = useState("")
@@ -18,6 +18,7 @@ function page() {
         const videoId = extractVideoId(urlInput)
         if(!videoId) {
             toast.error("Looks like the url is not valid, please enter a valid url")
+            setAvailabilityChecking(false)
             return
         }
         try {
@@ -26,7 +27,7 @@ function page() {
                 toast.error("Sorry you cannot chat with this video currently")
                 return
             }
-            router.push(`/voice/${videoId}`)
+            router.push(`/voice/${response.data.voiceId}`)
             
         } catch (error) {
             toast.error("Sorry you cannot chat with this video currently")
@@ -35,7 +36,7 @@ function page() {
         }
     }
   return (
-    <div className="container p-5">
+    <div className="p-5 flex items-center flex-col justify-center w-full h-screen">
         <motion.div initial={{
             opacity: 0,
             filter: 'blur(5px)'
@@ -45,7 +46,7 @@ function page() {
             filter: 'blur(0px)'
         }}
         transition={{duration: 0.3}}
-        className='text-center text-3xl font-semibold flex justify-center items-center gap-[10px] my-2'
+        className='text-center text-xl lg:text-3xl font-semibold flex justify-center items-center gap-[5px] lg:gap-[10px] my-2'
         >
             {"Voice Chat with your favourite YouTube video".split(" ")
             .map((word, index) => 
@@ -59,13 +60,20 @@ function page() {
                 filter: 'blur(0px)'
             }}
             transition={{duration: 0.3, delay: index*0.1}}
-            key={index}>{word + "   "}</motion.p>)} 
+            key={index}>{word + " "}</motion.p>)} 
         </motion.div>
-        <div className='flex justify-center items-center gap-[10px]'>
+        <div className='flex justify-center items-center gap-[10px] w-[500px]'>
         <Input value={urlInput} onChange={(e)=>{
             setUrlInput(e.target.value)
         }} type="text" placeholder="Enter youtube video url" />
         <Button onClick={getAudioAvailability} disabled={availabilityChecking || urlInput === ""}>Chat</Button>
+        </div>
+        <div className='text-muted-foreground my-4 border border-muted-foreground px-5 py-2 rounded-md' >
+            <p className='text-lg font-semibold text-center'>Note</p>
+            <ul className='list-disc'>
+                <li>Each conversation can have atmost 5 queries and 5 responses </li>
+                <li>A conversation would cost 1 credit</li>
+            </ul>
         </div>
         {availabilityChecking && <div className='flex justify-center items-center w-full h-full gap-[10px]'>
             <Loader2 className='animate-spin' />
