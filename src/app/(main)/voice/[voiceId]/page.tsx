@@ -1,7 +1,7 @@
 'use client'
 import { useParams, useRouter } from 'next/navigation'
 import { api } from '@/config/config';
-import { Loader2,  Mic, X, Send } from 'lucide-react';
+import { Loader2, Download, Mic, Trash, X, Send } from 'lucide-react';
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import {
   Tooltip,
@@ -13,7 +13,6 @@ import { useTheme } from "next-themes";
 import { cn } from "@/lib/utils";
 import toast from 'react-hot-toast';
 import {motion} from 'framer-motion'
-import { AxiosError } from 'axios';
 type Props = {
   className?: string;
   timerClassName?: string;
@@ -32,19 +31,19 @@ let recorder: MediaRecorder;
 let recordingChunks: BlobPart[] = [];
 let timerTimeout: NodeJS.Timeout;
 
-// const padWithLeadingZeros = (num: number, length: number): string => {
-//   return String(num).padStart(length, "0");
-// };
+const padWithLeadingZeros = (num: number, length: number): string => {
+  return String(num).padStart(length, "0");
+};
 
 // Utility function to download a blob
-// const downloadBlob = (blob: Blob) => {
-//   const downloadLink = document.createElement("a");
-//   downloadLink.href = URL.createObjectURL(blob);
-//   downloadLink.download = `Audio_${new Date().getMilliseconds()}.mp3`;
-//   document.body.appendChild(downloadLink);
-//   downloadLink.click();
-//   document.body.removeChild(downloadLink);
-// };
+const downloadBlob = (blob: Blob) => {
+  const downloadLink = document.createElement("a");
+  downloadLink.href = URL.createObjectURL(blob);
+  downloadLink.download = `Audio_${new Date().getMilliseconds()}.mp3`;
+  document.body.appendChild(downloadLink);
+  downloadLink.click();
+  document.body.removeChild(downloadLink);
+};
 
 
 function Page() {
@@ -89,7 +88,7 @@ function Page() {
 
       const utterThis = new SpeechSynthesisUtterance(response.data.message);
       utterThis.lang = "en-US";
-      utterThis.voice = window.speechSynthesis.getVoices().find((voice) => voice.name === "Google US English") ||window.speechSynthesis.getVoices()[0] ;
+      utterThis.voice = window.speechSynthesis.getVoices()[0];
       utterThis.rate = 0.9;
       window.speechSynthesis.cancel();
       window.speechSynthesis.speak(utterThis);
@@ -104,11 +103,8 @@ function Page() {
 
       setReplyLoading(false);
     } catch (error) {
-      if(error instanceof AxiosError){
-        toast.error(error.response?.data.error || "Failed to get response, please try again later")
-      }else{
-        toast.error("Failed to get response, please try again later")
-      }
+      console.log("Error getting response", error);
+      toast.error("Failed to get response, please try again later");
       setReplyLoading(false);
     }
   };
@@ -127,16 +123,13 @@ function Page() {
           router.push("/voice");
           return;
         }
+        console.log("Response", response.data);
         setMessages(response.data.chats.map((chat: { role: string; content: string }) => ({
           role: chat.role,
           message: chat.content
         })));
       } catch (error) {
-        if(error instanceof AxiosError){
-          toast.error(error.response?.data.error || "Failed to get response, please try again later")
-        }else{
-          toast.error("Failed to get response, please try again later")
-        }
+        console.log("Error checking transcript", error);
         router.push("/voice");
       } finally {
         setLoading(false);
@@ -244,8 +237,9 @@ function Page() {
 export default Page
 
 
-const AudioRecorderWithVisualizer = ({
+export const AudioRecorderWithVisualizer = ({
   className,
+  timerClassName,
   setFinalTexts,
   setInterimTexts,
   onSubmit
@@ -253,32 +247,32 @@ const AudioRecorderWithVisualizer = ({
   const { theme } = useTheme();
   // States
   const [isRecording, setIsRecording] = useState<boolean>(false);
-  // const [isRecordingFinished, setIsRecordingFinished] =
-  //   useState<boolean>(false);
+  const [isRecordingFinished, setIsRecordingFinished] =
+    useState<boolean>(false);
   const [timer, setTimer] = useState<number>(0);
-  // const [currentRecord, setCurrentRecord] = useState<Record>({
-  //   id: -1,
-  //   name: "",
-  //   file: null,
-  // });
+  const [currentRecord, setCurrentRecord] = useState<Record>({
+    id: -1,
+    name: "",
+    file: null,
+  });
   // Calculate the hours, minutes, and seconds from the timer
   const hours = Math.floor(timer / 3600);
   const minutes = Math.floor((timer % 3600) / 60);
   const seconds = timer % 60;
 
   // Split the hours, minutes, and seconds into individual digits
-  // const [hourLeft, hourRight] = useMemo(
-  //   () => padWithLeadingZeros(hours, 2).split(""),
-  //   [hours]
-  // );
-  // const [minuteLeft, minuteRight] = useMemo(
-  //   () => padWithLeadingZeros(minutes, 2).split(""),
-  //   [minutes]
-  // );
-  // const [secondLeft, secondRight] = useMemo(
-  //   () => padWithLeadingZeros(seconds, 2).split(""),
-  //   [seconds]
-  // );
+  const [hourLeft, hourRight] = useMemo(
+    () => padWithLeadingZeros(hours, 2).split(""),
+    [hours]
+  );
+  const [minuteLeft, minuteRight] = useMemo(
+    () => padWithLeadingZeros(minutes, 2).split(""),
+    [minutes]
+  );
+  const [secondLeft, secondRight] = useMemo(
+    () => padWithLeadingZeros(seconds, 2).split(""),
+    [seconds]
+  );
   // Refs
   const mediaRecorderRef = useRef<{
     stream: MediaStream | null;
@@ -337,27 +331,23 @@ const AudioRecorderWithVisualizer = ({
           };
         })
         .catch((error) => {
-          // alert(error);
-          if(error instanceof DOMException){
-            toast.error("Failed to start recording, please try again later")
-          }else{
-            toast.error("Failed to start recording, please try again later")
-          }
+          alert(error);
+          console.log(error);
         });
     }
     const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
     speechRecognitionRef.current = new SpeechRecognition()
-    const recognition = speechRecognitionRef.current
+    let recognition = speechRecognitionRef.current
     recognition.interimResults = true
     recognition.continuous = true
-    // recognition.onspeechend = (e)=>{
-    //   console.log("Speech ended", e)
-    // }
-    // recognition.onend = (e)=>{
-    //   console.log("Recognition ended", e)
-    // }
+    recognition.onspeechend = (e)=>{
+      console.log("Speech ended", e)
+    }
+    recognition.onend = (e)=>{
+      console.log("Recognition ended", e)
+    }
     recognition.onresult = (e)=>{
-      // console.log('Transcript', e.results[e.results.length-1][0].transcript)
+      console.log('Transcript', e.results[e.results.length-1][0].transcript)
       if(e.results[e.results.length-1].isFinal){
         setFinalTexts((prev)=>prev+e.results[e.results.length-1][0].transcript)
         setInterimTexts("")
@@ -396,16 +386,16 @@ const AudioRecorderWithVisualizer = ({
         
       }
     }
-    // recognition.onstart = ()=>{
-    //   console.log("Starting recognition")
-    // }
+    recognition.onstart = ()=>{
+      console.log("Starting recognition")
+    }
     recognition.start();
   }
   function stopRecording() {
     recorder.onstop = () => {
-      // const recordBlob = new Blob(recordingChunks, {
-      //   type: "audio/wav",
-      // });
+      const recordBlob = new Blob(recordingChunks, {
+        type: "audio/wav",
+      });
       // downloadBlob(recordBlob);
       // setCurrentRecord({
       //   ...currentRecord,
@@ -419,7 +409,7 @@ const AudioRecorderWithVisualizer = ({
 
 
     setIsRecording(false);
-    // setIsRecordingFinished(true);
+    setIsRecordingFinished(true);
     setTimer(0);
     clearTimeout(timerTimeout);
   }
@@ -432,7 +422,7 @@ const AudioRecorderWithVisualizer = ({
         recordingChunks = [];
       };
       mediaRecorder.stop();
-      const recognition = speechRecognitionRef.current
+      let recognition = speechRecognitionRef.current
       recognition?.stop()
       setFinalTexts("")
     } else {
@@ -450,7 +440,7 @@ const AudioRecorderWithVisualizer = ({
       audioContext.close();
     }
     setIsRecording(false);
-    // setIsRecordingFinished(true);
+    setIsRecordingFinished(true);
     setTimer(0);
     clearTimeout(timerTimeout);
 
@@ -475,7 +465,7 @@ const AudioRecorderWithVisualizer = ({
         recordingChunks = [];
       };
       mediaRecorder.stop();
-      const recognition = speechRecognitionRef.current
+      let recognition = speechRecognitionRef.current
       if(recognition) recognition?.stop()
     } else {
       alert("recorder instance is null!");
@@ -502,6 +492,11 @@ const AudioRecorderWithVisualizer = ({
     return () => clearTimeout(timerTimeout);
   }, [isRecording, timer]);
 
+  useEffect(()=>{
+    let recognition = speechRecognitionRef.current
+    if(!recognition) return
+    
+  }, [speechRecognitionRef.current])
 
   // Visualizer
   useEffect(() => {

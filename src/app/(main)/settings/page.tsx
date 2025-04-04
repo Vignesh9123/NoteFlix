@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/button'
 import { api } from '@/config/config'
 import toast from 'react-hot-toast'
 import { AxiosError } from 'axios'
-function Page() {
+function page() {
     const {user} = useAuth()
     const [name, setName] = useState(user?.name)
     const [disabled, setDisabled] = useState({
@@ -26,17 +26,17 @@ function Page() {
 
     useEffect(()=>{
         if(name === user?.name || name?.length == 0 || loading.name){
-            setDisabled((d)=>({...d, name:true}))
+            setDisabled({...disabled, name:true})
         }else{
-            setDisabled((d)=>({...d, name:false}))
+            setDisabled({...disabled, name:false})
         }
-    },[name, loading.name, user?.name])
+    },[name, loading.name])
 
     useEffect(()=>{
         if(password.old.length == 0 || password.new.length == 0 || password.confirm.length == 0 || password.new != password.confirm || loading.password){
-            setDisabled((d)=>({...d, password:true}))
+            setDisabled({...disabled, password:true})
         }else{
-            setDisabled((d)=>({...d, password:false}))
+            setDisabled({...disabled, password:false})
         }
     },[password, loading.password])
 
@@ -159,4 +159,4 @@ function Page() {
   )
 }
 
-export default Page
+export default page

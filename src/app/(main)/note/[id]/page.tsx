@@ -15,7 +15,7 @@ import { AxiosError } from "axios";
 function NotePage() {
   const [text, setText] = useState('')
   const [note, setNote] = useState<IUserNote | null>(null)
-  // const [library, setLibrary] = useState<ILibrary | null>(null)
+  const [library, setLibrary] = useState<ILibrary | null>(null)
   const [video, setVideo] = useState<IVideoDetails | null>(null)
   const [loading, setLoading] = useState(false)
   const [title, setTitle] = useState('')
@@ -32,7 +32,7 @@ function NotePage() {
         setText(response.data.data.note.text);
         setTitle(response.data.data.note.title);
         setTimestamp(secondsToTime(response.data.data.note.timestamp));
-        // setLibrary(response.data.data.library);
+        setLibrary(response.data.data.library);
         setVideo(response.data.data.library.videoDetails);
     } catch (error) {
       if(error instanceof AxiosError){
@@ -49,7 +49,7 @@ function NotePage() {
 
   useEffect(() => {
     getNote()
-  }, [getNote])
+  }, [])
 
   const updateClick = async () => {
     try {
@@ -75,7 +75,7 @@ function NotePage() {
     else{
       setUpdateDisabled(true)
     }
-  }, [text, title, timestamp, note])
+  }, [text, title, timestamp])
 
 
   return (

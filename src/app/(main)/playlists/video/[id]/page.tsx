@@ -4,6 +4,7 @@ import { useParams } from 'next/navigation';
 import { api } from '@/config/config';
 import { ILibrary, IUserNote, IVideoDetails } from '@/types';
 import Image from 'next/image';
+import Link from 'next/link';
 import { Plus, Stars } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import NotesListCard from '@/components/cards/NotesListCard';
@@ -41,10 +42,10 @@ function VideoPage() {
     setYoutubePlayerOpen(true);
   }
 
-  // const handleYoutubePlayerClose = () => {
-  //   setYoutubePlayerOpen(false);
-  //   setYoutubeURL('');
-  // }
+  const handleYoutubePlayerClose = () => {
+    setYoutubePlayerOpen(false);
+    setYoutubeURL('');
+  }
 
   useEffect(() => {
     if(!youtubePlayerOpen) setYoutubeURL('');

@@ -1,5 +1,5 @@
 'use client'
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, use } from 'react'
 import VideoListCard from '@/components/cards/VideoListCard'
 import { Input } from '@/components/ui/input'
 import { CheckSquare2, ChevronLeftSquare, ChevronRightSquare, Filter, Grid2X2, ListVideo, Loader2, Plus, Square, Star } from 'lucide-react'
@@ -77,7 +77,7 @@ function VideosPage() {
     try {
       setLoading(true)
       const ids = selectedVideos.map((video) => video.libraryId)
-      await api.delete(`/library/videos/bulk`,  { data:{libraryIds:ids} })
+      const response = await api.delete(`/library/videos/bulk`,  { data:{libraryIds:ids} })
       fetchVideos()
       setSelectedVideos([])
     } catch (error) {
@@ -178,7 +178,7 @@ function VideosPage() {
     if(currentPage < 1) setCurrentPage(1)
     if(currentPage > totalPages) setCurrentPage(totalPages)
     fetchVideos()
-  }, [currentPage, fetchVideos, totalPages])
+  }, [currentPage])
 
   return (
     <div className='m-5'>
