@@ -39,13 +39,17 @@ export const GET = async (request: NextRequest) => {
                 publishedAt: new Date(data.publishedAt!)
             });
         }
-        if(video.transcript) {
+        if(video.transcript && video.transcript.length > 0) {
+            console.log("Transcript", video.transcript)
             return NextResponse.json({ message: "Transcript fetched successfully"}, {status: 200})
         }
         if(video.formattedTranscript) {
+            console.log("Formatted transcript", video.formattedTranscript)
             return NextResponse.json({ message: "Formatted transcript fetched successfully"}, {status: 200})
         }
         const { success,transcript, formattedTranscript, error } = await getYoutubeTranscript(youtubeId);
+        console.log("Transcript", transcript)
+        console.log("Formatted transcript", formattedTranscript)
         if (!success) return NextResponse.json({ error: error || "Sorry, the transcript is not available" }, { status: 500 });
         if(transcript) {
             video.transcript = transcript;
@@ -72,7 +76,8 @@ export const POST = async (request: NextRequest)=>{
         const systemPrompt = getVoiceSystemPrompt(JSON.stringify(video.transcript) || video.formattedTranscript || "");
         const client = new GoogleGenerativeAI(process.env.NEXT_PUBLIC_GEMINI_API_KEY!);
         const model = client.getGenerativeModel({
-            model: "gemini-2.0-flash"
+            model: "gemini-2.0-flash",
+            systemInstruction: systemPrompt
         })
         const generationConfig = {
             temperature: 1,
@@ -81,7 +86,7 @@ export const POST = async (request: NextRequest)=>{
             maxOutputTokens: 8192,
             responseMimeType: "text/plain",
         }
-        const chatSession = model.startChat({generationConfig, systemInstruction: systemPrompt})
+        const chatSession = model.startChat({generationConfig})
         const response = await chatSession.sendMessage(question)
         return NextResponse.json({ message: response.response.candidates?.[0].content.parts?.[0].text }, { status: 200 });
     } catch (error) {
