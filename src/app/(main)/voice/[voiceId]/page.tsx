@@ -237,7 +237,7 @@ function Page() {
 export default Page
 
 
-export const AudioRecorderWithVisualizer = ({
+const AudioRecorderWithVisualizer = ({
   className,
   timerClassName,
   setFinalTexts,
