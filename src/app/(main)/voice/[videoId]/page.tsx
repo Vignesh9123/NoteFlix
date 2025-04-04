@@ -1,7 +1,7 @@
 'use client'
 import { useParams, useRouter } from 'next/navigation'
 import { api } from '@/config/config';
-import { Loader2, Download, Mic, Trash } from 'lucide-react';
+import { Loader2, Download, Mic, Trash, X, Send } from 'lucide-react';
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import {
   Tooltip,
@@ -12,6 +12,7 @@ import { Button } from "@/components/ui/button";
 import { useTheme } from "next-themes";
 import { cn } from "@/lib/utils";
 import toast from 'react-hot-toast';
+import {motion} from 'framer-motion'
 type Props = {
   className?: string;
   timerClassName?: string;
@@ -43,106 +44,205 @@ const downloadBlob = (blob: Blob) => {
   downloadLink.click();
   document.body.removeChild(downloadLink);
 };
-function page() {
-  const { videoId } = useParams();
-  const router = useRouter()
-  const [loading, setLoading] = useState(true)
-  const [interimTexts, setInterimTexts]  = useState("")
-  const [finalTexts, setFinalTexts]  = useState("")
-  const [replyLoading, setReplyLoading] = useState(false)
-  const [messages, setMessages] = useState<{
-    role: "user"|"assistant",
-    message: string
-  }[]>([])
 
-  const onSubmit = async()=>{
-    if(!finalTexts) return
-    setMessages((prev)=>[
+
+function Page() {
+  const { videoId } = useParams();
+  const router = useRouter();
+
+  const [loading, setLoading] = useState(true);
+  const [interimTexts, setInterimTexts] = useState("");
+  const [finalTexts, setFinalTexts] = useState("");
+  const [replyLoading, setReplyLoading] = useState(false);
+
+  const [messages, setMessages] = useState<{
+    role: "user" | "assistant";
+    message: string;
+  }[]>([
+    {
+      role: "user",
+      message: "what does the speaker have to say mainly in this video",
+    },
+    {
+      role: "assistant",
+      message:
+        "The speaker discusses various aspects of getting into the web3 industry, including the importance of contributing to open-source projects, learning niche skills, and networking. They also share their personal experiences of working at Backpack and building a crypto exchange. Additionally, the speaker emphasizes the value of continuous learning, adapting to industry changes, and focusing on being exceptionally good at one specific skill. They also provide insights on finding companies to contribute to, the importance of grants, and platforms for job searching. (00:00)\n",
+    },
+    {
+      role: "user",
+      message: "what does the speaker have to say mainly in this video",
+    },
+    {
+      role: "assistant",
+      message:
+        "The speaker discusses various aspects of getting into the web3 industry, including the importance of contributing to open-source projects, learning niche skills, and networking. They also share their personal experiences of working at Backpack and building a crypto exchange. Additionally, the speaker emphasizes the value of continuous learning, adapting to industry changes, and focusing on being exceptionally good at one specific skill. They also provide insights on finding companies to contribute to, the importance of grants, and platforms for job searching. (00:00)\n",
+    },
+  ]);
+
+  const messagesContainerRef = useRef<HTMLDivElement>(null);
+  const lastMessageRef = useRef<HTMLDivElement>(null);
+
+  const onSubmit = async () => {
+    if (!finalTexts) return;
+
+    setMessages((prev) => [
       ...prev,
       {
         role: "user",
-        message: finalTexts
-      }
-    ])
-    setFinalTexts("")
+        message: finalTexts,
+      },
+    ]);
+    setFinalTexts("");
+
     try {
-      setReplyLoading(true)
+      setReplyLoading(true);
       const response = await api.post(`/youtube/voice`, {
         videoId,
-        question: finalTexts
-      })
-      console.log("Response", response)
-      const utterThis = new SpeechSynthesisUtterance(response.data.message)
-      const voice = window.speechSynthesis.getVoices().find((v)=>v.name === "Google US English")
-      if(voice) utterThis.voice = voice;
+        question: finalTexts,
+      });
+
+      const utterThis = new SpeechSynthesisUtterance(response.data.message);
+      utterThis.lang = "en-US";
+      utterThis.voice = window.speechSynthesis.getVoices()[0];
       utterThis.rate = 0.9;
-      speechSynthesis.speak(utterThis);
-      setMessages((prev)=>[
+      window.speechSynthesis.cancel();
+      window.speechSynthesis.speak(utterThis);
+
+      setMessages((prev) => [
         ...prev,
         {
           role: "assistant",
-          message: response.data.message
-        }
-      ])
-      setReplyLoading(false)
+          message: response.data.message,
+        },
+      ]);
 
+      setReplyLoading(false);
     } catch (error) {
-      console.log("Error getting response", error)
-      toast.error("Failed to get response, please try again later")
-      setReplyLoading(false)
+      console.log("Error getting response", error);
+      toast.error("Failed to get response, please try again later");
+      setReplyLoading(false);
     }
-  }
+  };
 
-
+  // Redirect if no videoId
   useEffect(() => {
     if (!videoId) {
-      router.push('/voice')
-      return
+      router.push("/voice");
+      return;
     }
-    setLoading(true)
-    setLoading(false)
+    setLoading(true);
     const checkTranscript = async () => {
       try {
         const response = await api.get(`/video/check-transcript?v=${videoId}`);
         if (response.status !== 200) {
-          router.push('/voice')
-          return
+          router.push("/voice");
+          return;
         }
       } catch (error) {
         console.log("Error checking transcript", error);
-        router.push('/voice')
+        router.push("/voice");
+      } finally {
+        setLoading(false);
       }
-      finally {
-        setLoading(false)
-      }
-    }
+    };
     checkTranscript();
-  }, [videoId])
+  }, [videoId]);
 
-  if (loading) return <div className='flex justify-center items-center w-full h-full'>
-    <Loader2 className='animate-spin' />
-    <p className='text-lg font-semibold'>Loading...</p>
-  </div>
-  return (
-    <div>
-      <AudioRecorderWithVisualizer onSubmit={onSubmit} setFinalTexts={setFinalTexts} setInterimTexts={setInterimTexts} />
-      <div className="p-2 m-2 border border-muted">
-        {finalTexts}
-        <span className='text-muted-foreground'>{interimTexts}</span>
+  // Scroll to bottom on messages change
+  useEffect(() => {
+    if (!loading && lastMessageRef.current) {
+      lastMessageRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [messages, loading]);
+
+  if (loading)
+    return (
+      <div className="flex justify-center items-center w-full h-full">
+        <Loader2 className="animate-spin" />
+        <p className="text-lg font-semibold">Loading...</p>
       </div>
-      <div className="p-2 m-2 border border-muted">
+    );
+
+  return (
+    <div className="flex flex-col-reverse h-[90vh]">
+      <AudioRecorderWithVisualizer
+        onSubmit={onSubmit}
+        setFinalTexts={setFinalTexts}
+        setInterimTexts={setInterimTexts}
+      />
+
+      <div className="p-2 m-2 border border-muted min-h-4">
+        {finalTexts}
+        <span className="text-muted-foreground">{interimTexts}</span>
+      </div>
+
+      <div
+        ref={messagesContainerRef}
+        className="p-2 m-2 border border-muted flex flex-col gap-2 overflow-y-auto flex-grow"
+      >
+        
+
         {messages.map((message, index) => (
-          <div key={index} className={`mb-2 ${message.role === "assistant" ? "bg-primary" : ""}`}>
-            <p className="font-bold">{message.role}</p>
-            <p>{message.message}</p>
+          <div
+            key={index}
+            ref={index === messages.length - 1 ? lastMessageRef : null}
+            className={`mb-2 p-2 max-w-[80%] break-words rounded-md ${
+              message.role === "assistant" ? "bg-muted" : "self-end"
+            }`}
+          >
+            <p
+              className={`font-bold ${
+                message.role === "assistant"
+                  ? "text-muted-foreground"
+                  : "text-primary text-right"
+              }`}
+            >
+              {message.role.charAt(0).toUpperCase() + message.role.slice(1)}
+            </p>
+
+            {message.role === "assistant" &&
+            index === messages.length - 1 ? (
+              <motion.p
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.2 }}
+              >
+                {message.message.split(" ").map((word, index) => (
+                  <motion.span
+                    key={index}
+                    initial={{ opacity: 0, filter: "blur(10px)" }}
+                    animate={{ opacity: 1, filter: "blur(0)" }}
+                    transition={{ duration: 0.2, delay: index * 0.05 }}
+                  >
+                    {word + " "}
+                  </motion.span>
+                ))}
+              </motion.p>
+            ) : (
+              <p className={message.role === "assistant" ? "" : " text-"}>
+                {message.message}
+              </p>
+            )}
           </div>
         ))}
+        {replyLoading && (
+      <div className="mb-2 p-2 max-w-[80%] break-words rounded-md bg-muted">
+        <p className="font-bold text-muted-foreground">Assistant</p>
+        <motion.p
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.2 }}
+        >
+          <Loader2 className="animate-spin" />
+        </motion.p>
+      </div>
+    )}
       </div>
     </div>
-  )
+  );
 }
 
-export default page
+export default Page
 
 
 export const AudioRecorderWithVisualizer = ({
@@ -509,7 +609,7 @@ export const AudioRecorderWithVisualizer = ({
                 size={"icon"}
                 variant={"destructive"}
               >
-                <Trash size={15} />
+                <X size={15} />
               </Button>
             </TooltipTrigger>
             <TooltipContent className="m-2">
@@ -527,14 +627,14 @@ export const AudioRecorderWithVisualizer = ({
               </Button>
             ) : (
               <Button onClick={handleSubmit} size={"icon"}>
-                <Download size={15} />
+                <Send  size={15} />
               </Button>
             )}
           </TooltipTrigger>
           <TooltipContent className="m-2">
             <span>
               {" "}
-              {!isRecording ? "Start recording" : "Download recording"}{" "}
+              {!isRecording ? "Start Chatting" : "Send recording"}{" "}
             </span>
           </TooltipContent>
         </Tooltip>
@@ -594,3 +694,16 @@ const Timer = React.memo(
   }
 );
 Timer.displayName = "Timer";
+
+/*
+[
+    {
+        "role": "user",
+        "message": "what does the speaker have to say mainly in this video"
+    },
+    {
+        "role": "assistant",
+        "message": "The speaker discusses various aspects of getting into the web3 industry, including the importance of contributing to open-source projects, learning niche skills, and networking. They also share their personal experiences of working at Backpack and building a crypto exchange. Additionally, the speaker emphasizes the value of continuous learning, adapting to industry changes, and focusing on being exceptionally good at one specific skill. They also provide insights on finding companies to contribute to, the importance of grants, and platforms for job searching. (00:00)\n"
+    }
+]
+*/
