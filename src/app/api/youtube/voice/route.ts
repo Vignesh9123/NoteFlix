@@ -6,6 +6,7 @@ import { getYoutubeTranscript } from "@/utils/getYoutubeTranscript";
 import { getVoiceSystemPrompt } from "@/config/voiceSystemPrompt";
 import {GoogleGenerativeAI} from '@google/generative-ai'
 import Voice from "@/models/voice.model";
+import User from "@/models/user.model";
 
 export const GET = async (request: NextRequest) => {
     try {
@@ -90,6 +91,18 @@ export const POST = async (request: NextRequest)=>{
         if(!voice) return NextResponse.json({ error: "Voice not found" }, { status: 404 });
         const video = await Video.findOne({ _id: voice.videoId });
         if(!video) return NextResponse.json({ error: "Video not found" }, { status: 404 });
+        const user = await User.findById(request.user?._id);
+        if(!user) return NextResponse.json({ error: "User not found" }, { status: 404 });
+        if(user.creditsUsed >= 5) {
+            return NextResponse.json({ error: "Credits limit exceeded" }, { status: 400 });
+        }
+        if(voice?.chats?.length >= 10) {
+            return NextResponse.json({ error: "Chat limit exceeded" }, { status: 400 });
+        }
+        voice.chats.push({
+            role: "user",
+            content: question,
+        })
         const systemPrompt = getVoiceSystemPrompt(JSON.stringify(video.transcript) || video.formattedTranscript || "");
         const client = new GoogleGenerativeAI(process.env.NEXT_PUBLIC_GEMINI_API_KEY!);
         const model = client.getGenerativeModel({
@@ -105,7 +118,19 @@ export const POST = async (request: NextRequest)=>{
         }
         const chatSession = model.startChat({generationConfig})
         const response = await chatSession.sendMessage(question)
-        return NextResponse.json({ message: response.response.candidates?.[0].content.parts?.[0].text }, { status: 200 });
+        const responseText = response.response.candidates?.[0].content.parts?.[0].text
+        if(!responseText) return NextResponse.json({ error: "No response" }, { status: 500 });
+        voice.chats.push({
+            role: "assistant",
+            content: responseText
+        })
+        if(voice.chats.length == 2){
+            if(!user) return NextResponse.json({ error: "User not found" }, { status: 404 });
+            user.creditsUsed += 1;
+            await user.save();
+        }
+        await voice.save();
+        return NextResponse.json({ message: responseText }, { status: 200 });
     } catch (error) {
         console.log("Error fetching transcript", error);
         return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });

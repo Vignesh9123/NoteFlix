@@ -10,6 +10,9 @@ export const GET = async (request: NextRequest) => {
         const video = await Video.findOne({ _id: voice.videoId });
         if(!video) return NextResponse.json({ error: "Video not found" }, { status: 404 });
         if(video.transcript || video.formattedTranscript) {
+            if(voice.chats.length > 10) {
+                return NextResponse.json({ error: "Chat limit exceeded" }, { status: 400 });
+            }
             return NextResponse.json({ message: "Transcript fetched successfully" }, { status: 200 });
         }
         return NextResponse.json({ message: "Transcript not available" }, { status: 500 });
