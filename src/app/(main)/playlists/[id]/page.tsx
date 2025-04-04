@@ -56,7 +56,7 @@ function PlaylistIDPage() {
         try {
           setLoading(true)
           const ids = selectedVideos.map((video) => video.libraryId)
-          const response = await api.delete(`/library/videos/bulk`,  { data:{libraryIds:ids} })
+           await api.delete(`/library/videos/bulk`,  { data:{libraryIds:ids} })
           toast.success("Video(s) deleted successfully")
           fetchVideos()
           setSelectedVideos([])
@@ -100,7 +100,7 @@ function PlaylistIDPage() {
         }, 500)
     useEffect(() => {
         fetchVideos()
-    }, [])
+    }, [fetchVideos])
     return <div>{loading ? <div>Loading...</div> :
     <div className='m-5'>
         <div className='flex w-full justify-between items-center mb-5'>

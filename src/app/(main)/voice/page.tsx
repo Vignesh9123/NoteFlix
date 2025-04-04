@@ -11,7 +11,7 @@ import { useRouter } from 'nextjs-toploader/app'
 import { IVideoDetails } from '@/types'
 import { AxiosError } from 'axios'
 import { useAuth } from '@/context/AuthContext'
-function page() {
+function VoicePage() {
     const [urlInput, setUrlInput] = useState("")
     const [availabilityChecking, setAvailabilityChecking] = useState(false)
     const [loading, setLoading] = useState(true)
@@ -74,7 +74,11 @@ function page() {
             setLoading(false)
         })
        } catch (error) {
-        toast.error("Failed to fetch conversations")
+        if(error instanceof AxiosError){
+            toast.error(error.response?.data.error || "Failed to fetch conversations")
+        }else{
+            toast.error("Failed to fetch conversations")
+        }
         setConversations([])
         setLoading(false)
        }
@@ -151,4 +155,4 @@ function page() {
   )
 }
 
-export default page
+export default VoicePage

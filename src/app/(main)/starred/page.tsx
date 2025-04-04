@@ -74,6 +74,7 @@ function Starred() {
           )
         } catch (error) {
           video.isStarred = !video.isStarred
+          toast.error(error instanceof AxiosError ? error.response?.data?.message || "Something went wrong, please try again later." : "Something went wrong, please try again later.")
         }
       },500)
 
@@ -88,7 +89,7 @@ function Starred() {
         try {
           setLoading(true)
           const ids = selectedVideos.map((video) => video.libraryId)
-          const response = await api.delete(`/library/videos/bulk`,  { data:{libraryIds:ids} })
+          await api.delete(`/library/videos/bulk`,  { data:{libraryIds:ids} })
           fetchAllStarredVideos()
           setSelectedVideos([])
         } catch (error) {

@@ -38,10 +38,10 @@ function VideoPage() {
     setYoutubePlayerOpen(true);
   }
 
-  const handleYoutubePlayerClose = () => {
-    setYoutubePlayerOpen(false);
-    setYoutubeURL('');
-  }
+  // const handleYoutubePlayerClose = () => {
+  //   setYoutubePlayerOpen(false);
+  //   setYoutubeURL('');
+  // }
 
   useEffect(() => {
     if(!youtubePlayerOpen) setYoutubeURL('');
