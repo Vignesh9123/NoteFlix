@@ -28,21 +28,25 @@ export function secondsToTime(seconds: number): string {
   return `${hours}:${minutes.toString().padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`;
 }
 export function extractVideoId(youtubeUrl: string): string | null {
-  const url = new URL(youtubeUrl);
-  let videoId = url.searchParams.get("v");
-
-  if (!videoId && url.hostname === "youtu.be") {
-    videoId = url.pathname.slice(1);
-  } else if (!videoId && url.pathname.startsWith("/embed/")) {
-    videoId = url.pathname.split("/")[2];
-  } else if (!videoId && url.pathname.startsWith("/v/")) {
-    videoId = url.pathname.split("/")[2];
+  try {
+    const url = new URL(youtubeUrl);
+    let videoId = url.searchParams.get("v");
+  
+    if (!videoId && url.hostname === "youtu.be") {
+      videoId = url.pathname.slice(1);
+    } else if (!videoId && url.pathname.startsWith("/embed/")) {
+      videoId = url.pathname.split("/")[2];
+    } else if (!videoId && url.pathname.startsWith("/v/")) {
+      videoId = url.pathname.split("/")[2];
+    }
+    else if(!videoId && url.pathname.startsWith("/shorts/")){
+      videoId = url.pathname.split("/")[2];
+    }
+  
+    return videoId || null;
+  } catch (error) {
+    return null;
   }
-  else if(!videoId && url.pathname.startsWith("/shorts/")){
-    videoId = url.pathname.split("/")[2];
-  }
-
-  return videoId || null;
 }
 
 export function convertHtmlTextToPlainText(htmlText: string): string {

@@ -81,3 +81,15 @@ export interface IPlaylist extends Document {
     updatedAt: Date;
 }
 
+export interface IVoice extends Document {
+    _id: string;
+    videoId: string;
+    chatTitle: string;
+    userId: string;
+    chats: {
+        role: string;
+        content: string;
+    }[];
+    createdAt: Date;
+    updatedAt: Date;
+}

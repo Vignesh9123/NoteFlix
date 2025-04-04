@@ -3,7 +3,7 @@ import mongoose from "mongoose"
 
 const voiceSchema = new mongoose.Schema({
     videoId: {
-        type: String,
+        type: mongoose.Schema.Types.ObjectId,
         required: true,
         ref: "Video"
     },
@@ -11,7 +11,7 @@ const voiceSchema = new mongoose.Schema({
         type: String
     },
     userId: {
-        type: String,
+        type: mongoose.Schema.Types.ObjectId,
         required: true,
         ref: "Users"
     },

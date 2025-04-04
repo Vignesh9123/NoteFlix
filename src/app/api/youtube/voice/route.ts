@@ -5,7 +5,7 @@ import youtube from "@/config/ytapiconfig";
 import { getYoutubeTranscript } from "@/utils/getYoutubeTranscript";
 import { getVoiceSystemPrompt } from "@/config/voiceSystemPrompt";
 import {GoogleGenerativeAI} from '@google/generative-ai'
-
+import Voice from "@/models/voice.model";
 
 export const GET = async (request: NextRequest) => {
     try {
@@ -41,11 +41,21 @@ export const GET = async (request: NextRequest) => {
         }
         if(video.transcript && video.transcript.length > 0) {
             console.log("Transcript", video.transcript)
-            return NextResponse.json({ message: "Transcript fetched successfully"}, {status: 200})
+            const voice = await Voice.create({
+                videoId: video._id,
+                chatTitle: video.title,
+                userId: request.user?._id
+            })
+            return NextResponse.json({ message: "Transcript fetched successfully", voiceId: voice._id }, {status: 200})
         }
         if(video.formattedTranscript) {
             console.log("Formatted transcript", video.formattedTranscript)
-            return NextResponse.json({ message: "Formatted transcript fetched successfully"}, {status: 200})
+            const voice = await Voice.create({
+                videoId: video._id,
+                chatTitle: video.title,
+                userId: request.user?._id
+            })
+            return NextResponse.json({ message: "Formatted transcript fetched successfully", voiceId: voice._id }, {status: 200})
         }
         const { success,transcript, formattedTranscript, error } = await getYoutubeTranscript(youtubeId);
         console.log("Transcript", transcript)
@@ -58,7 +68,12 @@ export const GET = async (request: NextRequest) => {
             video.formattedTranscript = formattedTranscript;
         }
         await video.save();
-        return NextResponse.json({ message: "Transcript fetched successfully" }, { status: 200 });
+        const voice = await Voice.create({
+            videoId: video._id,
+            chatTitle: video.title,
+            userId: request.user?._id
+        })
+        return NextResponse.json({ message: "Transcript fetched successfully", voiceId: voice._id }, { status: 200 });
     } catch (error) {
         console.log("Error fetching transcript", error);
         return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
@@ -69,9 +84,11 @@ export const POST = async (request: NextRequest)=>{
     try {
         const auth = await authMiddleware(request);
         if(auth.status === 401) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-        const {videoId, question} = await request.json()
-        if(!videoId || !question) return NextResponse.json({ error: "Invalid request" }, { status: 400 });
-        const video = await Video.findOne({ youtubeId: videoId });
+        const {voiceId, question} = await request.json()
+        if(!voiceId || !question) return NextResponse.json({ error: "Invalid request" }, { status: 400 });
+        const voice = await Voice.findOne({ _id: voiceId });
+        if(!voice) return NextResponse.json({ error: "Voice not found" }, { status: 404 });
+        const video = await Video.findOne({ _id: voice.videoId });
         if(!video) return NextResponse.json({ error: "Video not found" }, { status: 404 });
         const systemPrompt = getVoiceSystemPrompt(JSON.stringify(video.transcript) || video.formattedTranscript || "");
         const client = new GoogleGenerativeAI(process.env.NEXT_PUBLIC_GEMINI_API_KEY!);
