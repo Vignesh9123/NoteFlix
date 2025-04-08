@@ -109,7 +109,6 @@ function Page() {
     }
   };
 
-  // Redirect if no voiceId
   useEffect(() => {
     if (!voiceId) {
       router.push("/voice");
@@ -137,6 +136,13 @@ function Page() {
     };
     checkTranscript();
   }, [voiceId]);
+
+  useEffect(()=>{
+    return ()=>{
+      if(window.speechSynthesis.speaking)
+        window.speechSynthesis.cancel()
+    }
+  }, [])
 
   // Scroll to bottom on messages change
   useEffect(() => {
@@ -566,7 +572,7 @@ const AudioRecorderWithVisualizer = ({
   return (
     <div
       className={cn(
-        "flex h-16 rounded-md relative w-full items-center justify-center gap-2 max-w-5xl",
+        "flex h-16 rounded-md relative w-full items-center justify-center gap-2 ",
         {
           "border p-1": isRecording,
           "border-none p-0": !isRecording,
