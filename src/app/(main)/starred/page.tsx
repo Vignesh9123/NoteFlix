@@ -106,7 +106,7 @@ function Starred() {
   return (
     <div className='m-5'>
       <div className="flex my-5">
-      <div className='flex m-1 items-center gap-2'>
+      <div className='hidden md:flex m-1 items-center gap-2'>
           <ListVideo size={27} className={`text-gray-500 cursor-pointer ${displayMode === 'list' ? 'bg-muted' : ''} duration-150`} onClick={() => setDisplayMode('list')} />
           <Grid2X2 size={27} className={`text-gray-500 cursor-pointer ${displayMode === 'grid' ? 'bg-muted' : ''} duration-150`} onClick={() => setDisplayMode('grid')} />
         </div>
