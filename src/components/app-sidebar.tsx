@@ -45,15 +45,16 @@ const items = [
     icon: Star
   },
   {
+    title: "Voice",
+    url: "/voice",
+    icon: Mic
+  },
+  {
     title: "Settings",
     url: "/settings",
     icon: Settings,
   },
-  {
-    title: "Voice",
-    url: "/voice",
-    icon: Mic
-  }
+  
 ]
 
 export function AppSidebar() {

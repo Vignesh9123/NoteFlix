@@ -336,7 +336,7 @@ export default function Home() {
               Watch the Demo
             </h2>
             <p className="text-lg text-blue-200/80">
-            Watch NoteFlix in action as it effortlessly summarizes a 6 hour video in just a couple of minute.
+            Watch NoteFlix in action as it effortlessly summarizes a 6 hour video in just a couple of minutes.
             </p>
           </div>
           <div className="relative w-full  bg-blue-600/10 rounded-2xl overflow-hidden">
