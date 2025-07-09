@@ -26,7 +26,7 @@ export async function GET(req: NextRequest) {
                     part: ["snippet"],
                     maxResults: 5,
                     q: channelName,
-                    type:"video"
+                    type:["video"]
                 }, {params: {type:'video'}});
             })
         )
