@@ -26,6 +26,7 @@ export async function GET(req: NextRequest) {
                     part: ["snippet"],
                     maxResults: 5,
                     q: channelName,
+                    type:"video"
                 }, {params: {type:'video'}});
             })
         )
@@ -35,6 +36,7 @@ export async function GET(req: NextRequest) {
             res.flatMap((res: any) => res?.data.items?.map(async(video: any) => {
                 if(video.id.playlistId) return null;
                 try {
+                    if(video.id.videoId === undefined) return null;
                     const durationRes = await youtube.videos.list({
                         part: ["contentDetails"],
                         id: video.id.videoId,
