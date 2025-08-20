@@ -67,13 +67,14 @@ function NotePage() {
   }
 
   
-
+  useEffect(() => {
     if(text !== note?.text || title !== note?.title || timestamp !== secondsToTime(note?.timestamp)){
       setUpdateDisabled(false)
     }
     else{
       setUpdateDisabled(true)
     }
+  }, [text, title, timestamp])
 
 
   return (
