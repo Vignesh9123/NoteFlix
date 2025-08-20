@@ -29,7 +29,7 @@ export async function POST(req: NextRequest) {
         })
         await Promise.all(updatedUsers);
         return NextResponse.json({ message: `Credits reset successfully for ${updatedUsers.length} users` }, { status: 200 });
-    } catch (error) {
+    } catch {
         return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
     }
 }

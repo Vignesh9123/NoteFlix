@@ -1,14 +1,10 @@
-import User from "@/models/user.model";
 import { NextRequest, NextResponse } from "next/server";
-import { cookies } from "next/headers";
-import connectDB from "@/dbConfig/connectDB";
-connectDB();
-export const GET = async (req: NextRequest) => {
+export const GET = async (_req: NextRequest) => {
     return NextResponse.json({
         message: "Hello World"
     }, { status: 200 });
 }
-export const POST = async (req: NextRequest) => {
+export const POST = async (_req: NextRequest) => {
     return
     // const { email, password } = await req.json();
     // const user = await User.findOne({ email });

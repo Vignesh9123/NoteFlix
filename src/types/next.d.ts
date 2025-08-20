@@ -1,4 +1,3 @@
-import { NextRequest } from "next/server";
 import { IUser } from "@/types";
 
 declare module "next/server" {

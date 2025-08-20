@@ -26,7 +26,7 @@ export const getYoutubeTranscript = async (videoId: string): Promise<GetYoutubeT
                 ?.map((segment) => segment.snippet.text)
                 .join(' ');
             return { success: true, transcript: timeStampedTranscript, formattedTranscript };
-        } catch (error) {
+        } catch {
             const captionURL = info.captions?.caption_tracks?.[0]?.base_url;
             if (!captionURL) {
                 return { success: false, error: "Failed to fetch transcript" };
@@ -39,11 +39,11 @@ export const getYoutubeTranscript = async (videoId: string): Promise<GetYoutubeT
                     ?.map(tag => tag.replace(/<\/?text[^>]*>/g, '').trim())
                     .join(' ');
                 return { success: true, formattedTranscript: transcriptText };
-            } catch (fetchError) {
+            } catch {
                 return { success: false, error: "Failed to fetch transcript" };
             }
         }
-    } catch (error) {
+    } catch {
         return { success: false, error: "Failed to fetch transcript" };
     }
 }

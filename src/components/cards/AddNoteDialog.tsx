@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { api } from '@/config/config';
 import { Button } from '../ui/button';
 import { Input } from '../ui/input';
@@ -9,12 +9,11 @@ import Editor from '../TipTap';
 import { Loader2 } from 'lucide-react';
 import { AxiosError } from 'axios';
 import toast from 'react-hot-toast';
-function AddNoteDialog({ open, setOpen, libraryId, fetchNotes, youtubeId, text, noteTitle, setText , setNoteTitle}: { open: boolean, setOpen: (open: boolean) => void, libraryId: string, fetchNotes: () => void, youtubeId: string, text?: string, noteTitle?: string, setText?: (text: string) => void, setNoteTitle?: (text: string) => void }) {
+function AddNoteDialog({ open, setOpen, libraryId, fetchNotes, text, noteTitle, setText , setNoteTitle}: { open: boolean, setOpen: (open: boolean) => void, libraryId: string, fetchNotes: () => void, text?: string, noteTitle?: string, setText?: (text: string) => void, setNoteTitle?: (text: string) => void }) {
     const [note, setNote] = useState<string | null>(null);
     const [timestamp, setTimestamp] = useState<string | null>(null);
     const [title, setTitle] = useState<string | null>(null);
     const [loading, setLoading] = useState(false);
-    const [AILoading, setAILoading] = useState(false);
     const handleAddNote = async () => {
         setLoading(true);
         const timestampInSeconds = timestamp ? timeToSeconds(timestamp) : 0;
@@ -30,7 +29,7 @@ function AddNoteDialog({ open, setOpen, libraryId, fetchNotes, youtubeId, text, 
                 timestamp: timestampInSeconds != 0 ? timestampInSeconds : null
             }
         })
-            .then((res) => {
+            .then(() => {
                 toast.success("Note added successfully");
                 fetchNotes();
             })
@@ -57,8 +56,8 @@ function AddNoteDialog({ open, setOpen, libraryId, fetchNotes, youtubeId, text, 
         setNote(null);
         setTimestamp(null);
         setTitle(null);
-        setText && setText("");
-        setNoteTitle && setNoteTitle("");
+        setText?.("");
+        setNoteTitle?.("");
        } 
     },[])
     
@@ -71,15 +70,15 @@ function AddNoteDialog({ open, setOpen, libraryId, fetchNotes, youtubeId, text, 
         if(noteTitle){
             setTitle(noteTitle);
         }
-    }, [text])
+    }, [text, noteTitle])
     return (
         <Dialog open={open} onOpenChange={(val)=>{
             if(!val){
                 setNote(null);
                 setTimestamp(null);
                 setTitle(null);
-                setText && setText("");
-                setNoteTitle && setNoteTitle("");
+                setText?.("");
+                setNoteTitle?.("");
             }
             setOpen(val);
         }}>
@@ -104,7 +103,7 @@ function AddNoteDialog({ open, setOpen, libraryId, fetchNotes, youtubeId, text, 
                 <div className='w-full'>
                 <Editor text={note!} setText={setNote} isEditable/>
                 </div>
-                <Button onClick={handleAddNote} disabled={loading || AILoading}>{loading?<div className='flex justify-center items-center'><Loader2 className='animate-spin' /></div> :"Add"}</Button>
+                <Button onClick={handleAddNote} disabled={loading}>{loading?<div className='flex justify-center items-center'><Loader2 className='animate-spin' /></div> :"Add"}</Button>
             </DialogContent>
         </Dialog>
     )

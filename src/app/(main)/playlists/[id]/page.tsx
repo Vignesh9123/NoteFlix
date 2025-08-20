@@ -1,6 +1,6 @@
 'use client'
 import { useParams } from 'next/navigation'
-import React, {useEffect, useState} from 'react'
+import React, {useCallback, useEffect, useState} from 'react'
 import { api } from '@/config/config'
 import { IPlaylist, IVideoDetails } from '@/types'
 import VideoListCard from '@/components/cards/VideoListCard'
@@ -56,7 +56,7 @@ function PlaylistIDPage() {
         try {
           setLoading(true)
           const ids = selectedVideos.map((video) => video.libraryId)
-          const response = await api.delete(`/library/videos/bulk`,  { data:{libraryIds:ids} })
+          await api.delete(`/library/videos/bulk`,  { data:{libraryIds:ids} })
           toast.success("Video(s) deleted successfully")
           fetchVideos()
           setSelectedVideos([])
@@ -69,7 +69,7 @@ function PlaylistIDPage() {
           }
         }
         }
-        const fetchVideos = async () => {
+        const fetchVideos = useCallback(async () => {
           setLoading(true)
           setLoadingVideos(true)
           api.post(`/library/playlists/getbyid`, {id}).then((res) => {
@@ -84,7 +84,7 @@ function PlaylistIDPage() {
             setLoading(false)
             setLoadingVideos(false)
         })
-        }
+        }, [id])
         const handleFavoriteClick = useDebouncedCallback(async(video: IVideoDetails) => {
           try {
             video.isStarred = !video.isStarred
@@ -100,7 +100,7 @@ function PlaylistIDPage() {
         }, 500)
     useEffect(() => {
         fetchVideos()
-    }, [])
+    }, [fetchVideos])
     return <div>{loading ? <div>Loading...</div> :
     <div className='m-5'>
         <div className='flex w-full justify-between items-center mb-5'>

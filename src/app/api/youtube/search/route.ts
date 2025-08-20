@@ -15,6 +15,7 @@ export async function GET(req: NextRequest) {
             q:query!        
         }, {params: {type:'video'}});
         const videosWithDuration = await Promise.all(
+            // eslint-disable-next-line
             response.data.items?.map(async (video: any) => {
                 try {
                     const durationRes = await youtube.videos.list({
@@ -31,6 +32,7 @@ export async function GET(req: NextRequest) {
                 }
             }) || []
         );
+        // eslint-disable-next-line
         const videos = videosWithDuration.map((video: any) => ({
             youtubeId: video.id.videoId,
             title: video.snippet.title,

@@ -27,7 +27,7 @@ export async function POST(req: NextRequest) {
         await user.save();
         user.password = undefined;
         return NextResponse.json({ data: user, message: "Password updated successfully" }, { status: 200 });
-    } catch (error: any) {
-        return NextResponse.json({ error: error.message }, { status: 500 });
+    } catch {
+        return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
     }
 }

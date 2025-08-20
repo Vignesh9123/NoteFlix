@@ -1,5 +1,3 @@
-import { GalleryVerticalEnd } from "lucide-react"
-
 import RegisterForm from "@/components/register-form"
 import Link from "next/link"
 import Spline from "@splinetool/react-spline"

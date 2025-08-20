@@ -1,10 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import Note from "@/models/note.model";
-import Library from "@/models/library.model";
 import { authMiddleware } from "@/middleware/auth.middleware";
 import connectDB from "@/dbConfig/connectDB";
 import mongoose from "mongoose";
-import { SunMedium } from "lucide-react";
 connectDB();
 
 export async function GET(request: NextRequest) {
@@ -77,7 +75,7 @@ export async function GET(request: NextRequest) {
         ])
         if(note.length == 0) return NextResponse.json({error: "Note not found"}, {status: 404})
         return NextResponse.json({data: note[0], message: "Note fetched successfully"}, {status: 200})
-    } catch (error) {
+    } catch {
         return NextResponse.json({ error: "Error fetching note" }, { status: 500 });
     }
 }

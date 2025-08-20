@@ -22,7 +22,15 @@ export async function GET(request: NextRequest){
         const duration = request.nextUrl.searchParams.get("duration");
         const playlistId = request.nextUrl.searchParams.get("playlistId");
 
-        const filter: any = { userId: request.user?._id, type: "standalone" };
+        const filter:{
+            userId?: string, 
+            type: string,
+            ["videoDetails.title"]?: { $regex: string, $options: string },
+            ["videoDetails.duration"]?: { $lt?: number, $gte?: number },
+            status?: string,
+            isStarred?: boolean
+            playlistId?: string
+        } = { userId: request.user?._id, type: "standalone" };
 
         if (title) filter["videoDetails.title"] = { $regex: title, $options: "i" };
         if (status) filter.status = status;

@@ -2,7 +2,7 @@
 
 import { motion } from "framer-motion";
 import { useInView } from "react-intersection-observer";
-import { PlaySquareIcon, Library, FileText, Brain, PlaySquare, Check, ArrowRight, Loader2 } from "lucide-react";
+import { PlaySquareIcon, Library, FileText, Brain, PlaySquare, ArrowRight, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { useAuth } from "@/context/AuthContext";
@@ -17,15 +17,15 @@ const fadeIn = {
   }
 };
 
-const staggerContainer = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: {
-      staggerChildren: 0.2
-    }
-  }
-};
+// const staggerContainer = {
+//   hidden: { opacity: 0 },
+//   visible: {
+//     opacity: 1,
+//     transition: {
+//       staggerChildren: 0.2
+//     }
+//   }
+// };
 
 const features = [
   {
@@ -50,48 +50,48 @@ const features = [
   }
 ];
 
-const pricingPlans = [
-  {
-    name: "Free",
-    price: "0",
-    features: [
-      "Basic video library",
-      "5 playlists",
-      "Simple notes",
-      "3 AI summaries/month"
-    ]
-  },
-  {
-    name: "Pro",
-    price: "12",
-    popular: true,
-    features: [
-      "Unlimited video library",
-      "Unlimited playlists",
-      "Rich text notes",
-      "50 AI summaries/month",
-      "Priority support"
-    ]
-  },
-  {
-    name: "Enterprise",
-    price: "49",
-    features: [
-      "Everything in Pro",
-      "Team collaboration",
-      "Custom integrations",
-      "Unlimited AI summaries",
-      "24/7 support",
-      "API access"
-    ]
-  }
-];
+// const pricingPlans = [
+//   {
+//     name: "Free",
+//     price: "0",
+//     features: [
+//       "Basic video library",
+//       "5 playlists",
+//       "Simple notes",
+//       "3 AI summaries/month"
+//     ]
+//   },
+//   {
+//     name: "Pro",
+//     price: "12",
+//     popular: true,
+//     features: [
+//       "Unlimited video library",
+//       "Unlimited playlists",
+//       "Rich text notes",
+//       "50 AI summaries/month",
+//       "Priority support"
+//     ]
+//   },
+//   {
+//     name: "Enterprise",
+//     price: "49",
+//     features: [
+//       "Everything in Pro",
+//       "Team collaboration",
+//       "Custom integrations",
+//       "Unlimited AI summaries",
+//       "24/7 support",
+//       "API access"
+//     ]
+//   }
+// ];
 
 export default function Home() {
   const [heroRef, heroInView] = useInView({ triggerOnce: true, threshold: 0.1 });
-  const [statsRef, statsInView] = useInView({ triggerOnce: true, threshold: 0.1 });
+  // const [statsRef, statsInView] = useInView({ triggerOnce: true, threshold: 0.1 });
   const [featuresRef, featuresInView] = useInView({ triggerOnce: true, threshold: 0.1 });
-  const [pricingRef, pricingInView] = useInView({ triggerOnce: true, threshold: 0.1 });
+  // const [pricingRef, pricingInView] = useInView({ triggerOnce: true, threshold: 0.1 });
   const [demoRef, demoInView] = useInView({ triggerOnce: true, threshold: 0.1 });
   const { user, loading } = useAuth();
   return (
@@ -215,7 +215,7 @@ export default function Home() {
             </h2>
             <p className="text-lg text-blue-200/80">
               Powerful features designed to transform how you learn from YouTube videos.
-              From organization to AI-powered insights, we've got you covered.
+              From organization to AI-powered insights, we&apos;ve got you covered.
             </p>
           </div>
 

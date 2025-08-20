@@ -1,5 +1,5 @@
 import React, {useState} from 'react'
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog'
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { Button } from '../ui/button'
 import YoutubePlayer from '../YoutubePlayer'
 import { IVideoDetails } from '@/types'

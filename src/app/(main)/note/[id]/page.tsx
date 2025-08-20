@@ -1,6 +1,6 @@
 'use client'
 import Editor from "@/components/TipTap";
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { useParams } from 'next/navigation'
 import { api } from '@/config/config'
 import { ILibrary, IUserNote, IVideoDetails } from "@/types";
@@ -15,7 +15,7 @@ import { AxiosError } from "axios";
 function NotePage() {
   const [text, setText] = useState('')
   const [note, setNote] = useState<IUserNote | null>(null)
-  const [library, setLibrary] = useState<ILibrary | null>(null)
+  const [_, setLibrary] = useState<ILibrary | null>(null)
   const [video, setVideo] = useState<IVideoDetails | null>(null)
   const [loading, setLoading] = useState(false)
   const [title, setTitle] = useState('')
@@ -24,7 +24,7 @@ function NotePage() {
   const { id } = useParams()
 
 
-  const getNote = async () => {
+  const getNote = useCallback( async () => {
     setLoading(true)
     try {
         const response = await api.get(`/library/notes/getbyid?id=${id}`);
@@ -45,11 +45,11 @@ function NotePage() {
     finally{
       setLoading(false)
     }    
-  }
+  }, [id])
 
   useEffect(() => {
     getNote()
-  }, [])
+  }, [getNote])
 
   const updateClick = async () => {
     try {
@@ -68,14 +68,12 @@ function NotePage() {
 
   
 
-  useEffect(() => {
     if(text !== note?.text || title !== note?.title || timestamp !== secondsToTime(note?.timestamp)){
       setUpdateDisabled(false)
     }
     else{
       setUpdateDisabled(true)
     }
-  }, [text, title, timestamp])
 
 
   return (

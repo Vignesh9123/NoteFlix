@@ -8,7 +8,7 @@ export const GET = async (req: NextRequest) => {
         (await cookies()).delete("token");
         return NextResponse.json({ message: "Logged out" }, { status: 200 });
     }
-    catch (error) {
+    catch {
         return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
     }
 }

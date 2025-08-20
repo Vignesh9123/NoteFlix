@@ -1,8 +1,8 @@
-import { NextRequest, NextResponse } from "next/server";
-import fs from "fs";
-import {GoogleGenerativeAI} from '@google/generative-ai'
-import { authMiddleware } from "@/middleware/auth.middleware";
-export async function POST(request: NextRequest) {
+import { NextRequest } from "next/server";
+// import fs from "fs";
+// import {GoogleGenerativeAI} from '@google/generative-ai'
+// import { authMiddleware } from "@/middleware/auth.middleware";
+export async function POST(_request: NextRequest) {
     return;
     // try {
     //     const auth = await authMiddleware(request);

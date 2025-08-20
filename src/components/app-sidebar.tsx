@@ -97,7 +97,7 @@ export function AppSidebar() {
                       <div className="flex items-center gap-2">
                         <User2 /> {user?.name}
                       </div>
-                    <p className="pl-8 text-xs text-muted-foreground"><span className={`${user?.creditsUsed! > 3 ? "text-red-500" : user?.creditsUsed! > 1 ? "text-yellow-500" : "text-green-500"}`}>{user?.creditsUsed}</span> Credits used out of 5</p>
+                    <p className="pl-8 text-xs text-muted-foreground"><span className={`${(user?.creditsUsed ?? 4) > 3 ? "text-red-500" : (user?.creditsUsed ?? 2) > 1 ? "text-yellow-500" : "text-green-500"}`}>{user?.creditsUsed}</span> Credits used out of 5</p>
                     </div>
                     <ChevronUp className="ml-auto" />
                   </SidebarMenuButton>

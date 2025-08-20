@@ -72,7 +72,7 @@ function Starred() {
           setVideos(
             videos.filter((v) => (v._id !== video._id))
           )
-        } catch (error) {
+        } catch {
           video.isStarred = !video.isStarred
         }
       },500)
@@ -88,7 +88,7 @@ function Starred() {
         try {
           setLoading(true)
           const ids = selectedVideos.map((video) => video.libraryId)
-          const response = await api.delete(`/library/videos/bulk`,  { data:{libraryIds:ids} })
+          await api.delete(`/library/videos/bulk`,  { data:{libraryIds:ids} })
           fetchAllStarredVideos()
           setSelectedVideos([])
         } catch (error) {

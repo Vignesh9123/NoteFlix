@@ -29,7 +29,7 @@ function MoveToPlaylist({open, setOpen, videoDetails,videoList, setVideoList, se
         return () => {
             setPlaylists([]);
         }
-    }, [])
+    }, [currentPlaylist])
     const handleMoveClick = async () => {
         setIsDeleting?.(true);
         setTimeout(async () => {

@@ -1,12 +1,11 @@
-import { authMiddleware } from "@/middleware/auth.middleware";
-import { NextRequest, NextResponse } from "next/server";
-import fs from 'fs';
-import ytdlp from 'ytdlp-nodejs';
-import Video from "@/models/video.model";
-import connectDB from "@/dbConfig/connectDB";
-connectDB();
-export async function POST(request: NextRequest) {
-    let videoId: string;
+// import { authMiddleware } from "@/middleware/auth.middleware";
+import { NextRequest } from "next/server";
+// import fs from 'fs';
+// import ytdlp from 'ytdlp-nodejs';
+// import Video from "@/models/video.model";
+// import connectDB from "@/dbConfig/connectDB";
+export async function POST(_request: NextRequest) {
+    // let videoId: string;
     return;
     // try {
     //     const auth = await authMiddleware(request);

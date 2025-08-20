@@ -1,13 +1,13 @@
-import { NextRequest, NextResponse } from "next/server";
-import fs from "fs";
-import {GoogleGenerativeAI} from '@google/generative-ai'
-import Video from "@/models/video.model";
-import connectDB from '@/dbConfig/connectDB'
-import { authMiddleware } from "@/middleware/auth.middleware";
-import User from "@/models/user.model";
-connectDB();
-export async function POST(request: NextRequest) {
-    let videoId: string;
+import { NextRequest } from "next/server";
+// import fs from "fs";
+// import {GoogleGenerativeAI} from '@google/generative-ai'
+// import Video from "@/models/video.model";
+// import connectDB from '@/dbConfig/connectDB'
+// import { authMiddleware } from "@/middleware/auth.middleware";
+// import User from "@/models/user.model";
+// connectDB();
+export async function POST(_request: NextRequest) {
+    // let videoId: string;
     return;
     // try {
     //     const auth = await authMiddleware(request);

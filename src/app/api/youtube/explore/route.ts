@@ -13,6 +13,7 @@ export async function GET(req: NextRequest) {
         const response = await Library
         .find({userId: req.user?._id, isStarred: true})
         .populate({path: "videoId",model: Video, populate: {path: "channelName"}});
+        // eslint-disable-next-line
         const starredVideosChannels = response.map((library:any) => library.videoId.channelName);
         // const query = starredVideos.sort(() => Math.random() - 0.5).join(" ").split("|").sort(() => Math.random() - 0.5).join(" ");
         // starredVideos.sort(() => Math.random() - 0.5) ;
@@ -30,10 +31,11 @@ export async function GET(req: NextRequest) {
                 }, {params: {type:'video'}});
             })
         )
-        res.filter((res: any) => res !== null);
+        res.filter((res) => res !== null);
         // console.log(res.data.items);
         const videosWithDuration = await Promise.all(
-            res.flatMap((res: any) => res?.data.items?.map(async(video: any) => {
+            // eslint-disable-next-line
+            res.flatMap((res) => res?.data.items?.map(async(video: any) => {
                 if(video.id.playlistId) return null;
                 try {
                     if(video.id.videoId === undefined) return null;
@@ -51,6 +53,7 @@ export async function GET(req: NextRequest) {
                 }
             }) || [])
         );
+        // eslint-disable-next-line
         const videos = videosWithDuration.map((video: any) => {
             if(!video) return null;
             return (

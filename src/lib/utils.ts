@@ -44,7 +44,7 @@ export function extractVideoId(youtubeUrl: string): string | null {
     }
   
     return videoId || null;
-  } catch (error) {
+  } catch {
     return null;
   }
 }

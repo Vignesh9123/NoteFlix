@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'next/navigation';
 import { api } from '@/config/config';
-import { ILibrary, IUserNote, IVideoDetails } from '@/types';
+import { ILibrary, IUser, IUserNote, IVideoDetails } from '@/types';
 import Image from 'next/image';
 import { Plus, Stars } from 'lucide-react';
 import { Input } from '@/components/ui/input';
@@ -38,11 +38,6 @@ function VideoPage() {
     setYoutubePlayerOpen(true);
   }
 
-  const handleYoutubePlayerClose = () => {
-    setYoutubePlayerOpen(false);
-    setYoutubeURL('');
-  }
-
   useEffect(() => {
     if(!youtubePlayerOpen) setYoutubeURL('');
   },[youtubePlayerOpen])
@@ -74,8 +69,8 @@ function VideoPage() {
         setUser(
           {
             ...user,
-            creditsUsed: user?.creditsUsed!+1
-          }
+            creditsUsed: (user?.creditsUsed ?? 4)+1
+          } as IUser
         )
         setNoteTitle("Summary of the video");
         setAddNoteDialogOpen(true);
@@ -168,10 +163,7 @@ function VideoPage() {
       </div>
       <div className="filterheader m-5">
         <div className='grid md:grid-cols-3 grid-cols-2'>
-          {/* <div className="flex gap-2">
-            <List size={27} className='text-gray-500 cursor-pointer bg-muted duration-150' />
-            <Grid2X2 size={27} className='text-gray-500 cursor-pointer hover:bg-muted duration-150' />
-          </div> */}
+        
 
             <div onClick={() => {
               if(!loading)
@@ -181,7 +173,7 @@ function VideoPage() {
             <p className='text-gray-500 text-xs text-center'>Add Note</p>
             </div>
               <div onClick={()=>{
-                if(user?.creditsUsed! >= 5){
+                if((user?.creditsUsed ?? 5) >= 5){
                   toast.error("You have already used your 5 credits for this month. Please try again next month.")
                   return;
                 }
@@ -192,7 +184,7 @@ function VideoPage() {
             <p className='text-gray-500 text-xs text-center'>Generate Summary using AI</p>
             </div>
             {(
-              addNoteDialogOpen && <AddNoteDialog youtubeId={video?.youtubeId!} open={addNoteDialogOpen} setOpen={setAddNoteDialogOpen} fetchNotes={fetchNotes} libraryId={library?._id!} text={note} noteTitle={noteTitle} setText={setNote} setNoteTitle={setNoteTitle} />
+              addNoteDialogOpen && <AddNoteDialog open={addNoteDialogOpen} setOpen={setAddNoteDialogOpen} fetchNotes={fetchNotes} libraryId={library?._id ?? ""} text={note} noteTitle={noteTitle} setText={setNote} setNoteTitle={setNoteTitle} />
             )}
       {AIDialogOpen && <AIConfirmDialog open={AIDialogOpen} setOpen={setAIDialogOpen} onConfirm={handleAISummaryClick} />}
             <Input placeholder='Search' className='mt-2 md:mt-0 col-span-2 md:col-span-1' value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} />

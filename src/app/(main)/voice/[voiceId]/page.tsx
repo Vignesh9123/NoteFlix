@@ -1,8 +1,8 @@
 'use client'
 import { useParams, useRouter } from 'next/navigation'
 import { api } from '@/config/config';
-import { Loader2, Download, Mic, Trash, X, Send } from 'lucide-react';
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import { Loader2, Mic, X, Send } from 'lucide-react';
+import React, { useEffect, useRef, useState } from "react";
 import {
   Tooltip,
   TooltipContent,
@@ -21,29 +21,10 @@ type Props = {
   onSubmit: () => void;
 };
 
-type Record = {
-  id: number;
-  name: string;
-  file: any;
-};
-
 let recorder: MediaRecorder;
 let recordingChunks: BlobPart[] = [];
 let timerTimeout: NodeJS.Timeout;
 
-const padWithLeadingZeros = (num: number, length: number): string => {
-  return String(num).padStart(length, "0");
-};
-
-// Utility function to download a blob
-const downloadBlob = (blob: Blob) => {
-  const downloadLink = document.createElement("a");
-  downloadLink.href = URL.createObjectURL(blob);
-  downloadLink.download = `Audio_${new Date().getMilliseconds()}.mp3`;
-  document.body.appendChild(downloadLink);
-  downloadLink.click();
-  document.body.removeChild(downloadLink);
-};
 
 
 function Page() {
@@ -144,7 +125,6 @@ function Page() {
     }
   }, [])
 
-  // Scroll to bottom on messages change
   useEffect(() => {
     if (!loading && lastMessageRef.current) {
       lastMessageRef.current.scrollIntoView({ behavior: "smooth" });
@@ -245,7 +225,6 @@ export default Page
 
 const AudioRecorderWithVisualizer = ({
   className,
-  timerClassName,
   setFinalTexts,
   setInterimTexts,
   onSubmit
@@ -253,32 +232,9 @@ const AudioRecorderWithVisualizer = ({
   const { theme } = useTheme();
   // States
   const [isRecording, setIsRecording] = useState<boolean>(false);
-  const [isRecordingFinished, setIsRecordingFinished] =
+  const [_, setIsRecordingFinished] =
     useState<boolean>(false);
   const [timer, setTimer] = useState<number>(0);
-  const [currentRecord, setCurrentRecord] = useState<Record>({
-    id: -1,
-    name: "",
-    file: null,
-  });
-  // Calculate the hours, minutes, and seconds from the timer
-  const hours = Math.floor(timer / 3600);
-  const minutes = Math.floor((timer % 3600) / 60);
-  const seconds = timer % 60;
-
-  // Split the hours, minutes, and seconds into individual digits
-  const [hourLeft, hourRight] = useMemo(
-    () => padWithLeadingZeros(hours, 2).split(""),
-    [hours]
-  );
-  const [minuteLeft, minuteRight] = useMemo(
-    () => padWithLeadingZeros(minutes, 2).split(""),
-    [minutes]
-  );
-  const [secondLeft, secondRight] = useMemo(
-    () => padWithLeadingZeros(seconds, 2).split(""),
-    [seconds]
-  );
   // Refs
   const mediaRecorderRef = useRef<{
     stream: MediaStream | null;
@@ -292,7 +248,7 @@ const AudioRecorderWithVisualizer = ({
     audioContext: null,
   });
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const animationRef = useRef<any>(null);
+  const animationRef = useRef<number>(null);
   const speechRecognitionRef = useRef<SpeechRecognition>(null)
  
   function startRecording() {
@@ -343,7 +299,7 @@ const AudioRecorderWithVisualizer = ({
     }
     const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
     speechRecognitionRef.current = new SpeechRecognition()
-    let recognition = speechRecognitionRef.current
+    const recognition = speechRecognitionRef.current
     recognition.interimResults = true
     recognition.continuous = true
     recognition.onspeechend = (e)=>{
@@ -399,14 +355,6 @@ const AudioRecorderWithVisualizer = ({
   }
   function stopRecording() {
     recorder.onstop = () => {
-      const recordBlob = new Blob(recordingChunks, {
-        type: "audio/wav",
-      });
-      // downloadBlob(recordBlob);
-      // setCurrentRecord({
-      //   ...currentRecord,
-      //   file: window.URL.createObjectURL(recordBlob),
-      // });
       recordingChunks = [];
     };
     
@@ -428,7 +376,7 @@ const AudioRecorderWithVisualizer = ({
         recordingChunks = [];
       };
       mediaRecorder.stop();
-      let recognition = speechRecognitionRef.current
+      const recognition = speechRecognitionRef.current
       recognition?.stop()
       setFinalTexts("")
     } else {
@@ -471,7 +419,7 @@ const AudioRecorderWithVisualizer = ({
         recordingChunks = [];
       };
       mediaRecorder.stop();
-      let recognition = speechRecognitionRef.current
+      const recognition = speechRecognitionRef.current
       if(recognition) recognition?.stop()
     } else {
       alert("recorder instance is null!");
@@ -499,10 +447,10 @@ const AudioRecorderWithVisualizer = ({
   }, [isRecording, timer]);
 
   useEffect(()=>{
-    let recognition = speechRecognitionRef.current
+    const recognition = speechRecognitionRef.current
     if(!recognition) return
     
-  }, [speechRecognitionRef.current])
+  }, [speechRecognitionRef])
 
   // Visualizer
   useEffect(() => {
@@ -580,19 +528,7 @@ const AudioRecorderWithVisualizer = ({
         className
       )}
     >
-      {isRecording ? (
-        <></>
-        // <Timer
-        //   hourLeft={hourLeft}
-        //   hourRight={hourRight}
-        //   minuteLeft={minuteLeft}
-        //   minuteRight={minuteRight}
-        //   secondLeft={secondLeft}
-        //   secondRight={secondRight}
-        //   timerClassName={timerClassName}
-        // />
-      ) : null}
-      
+   
       <canvas
         ref={canvasRef}
         className={`h-full w-full bg-background ${!isRecording ? "hidden" : "flex"

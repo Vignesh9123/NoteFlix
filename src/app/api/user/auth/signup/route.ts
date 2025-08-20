@@ -1,8 +1,8 @@
-import User from "@/models/user.model";
-import { NextRequest, NextResponse } from "next/server";
+// import User from "@/models/user.model";
+import { NextRequest } from "next/server";
 import connectDB from "@/dbConfig/connectDB";
 connectDB();
-export const POST = async (req: NextRequest) => {
+export const POST = async (_req: NextRequest) => {
     return;
     // const { name, email, password } = await req.json();
     // if(!name || !email || !password) {

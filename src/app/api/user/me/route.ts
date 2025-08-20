@@ -11,7 +11,7 @@ export const GET = async (req: NextRequest) => {
         return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
     return NextResponse.json({ user: req.user }, { status: 200 });
-   } catch (error) {
+   } catch {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
    }
 }
@@ -25,7 +25,7 @@ export const PATCH = async (req: NextRequest) => {
         const { name } = await req.json();
         const user = await User.findByIdAndUpdate(req.user?._id, { name}, { new: true });
         return NextResponse.json({ data:user,  message: "User updated successfully" }, { status: 200 });
-    } catch (error) {
+    } catch {
         return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 }

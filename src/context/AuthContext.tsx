@@ -6,12 +6,12 @@ import { initializeApp } from "firebase/app";
 import { firebaseConfig } from "@/config/firebase";
 import { getAnalytics } from "firebase/analytics";
 import { usePathname } from "next/navigation";
-const AuthContext = createContext<{ user: IUser|null; setUser: any, loading: boolean|null}>({ user: null, setUser: null, loading: null });
+const AuthContext = createContext<{ user: IUser|null; setUser: (user: IUser|null)=> void, loading: boolean|null}>({ user: null, setUser: ()=>{}, loading: null });
 
 export const useAuth = () => useContext(AuthContext);
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
-    const [user, setUser] = useState(null);
+    const [user, setUser] = useState<IUser|null>(null);
     const [loading, setLoading] = useState(true);
     const pathname = usePathname();
     useEffect(() => {
@@ -37,5 +37,5 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         const app = initializeApp(firebaseConfig);
         getAnalytics(app);
     }, []);
-    return <AuthContext.Provider value={{ user, setUser, loading }}>{(loading && pathname !== "/") ? <Loader /> : children}</AuthContext.Provider>;
+    return <AuthContext.Provider value={{ user, setUser , loading }}>{(loading && pathname !== "/") ? <Loader /> : children}</AuthContext.Provider>;
 }

@@ -1,6 +1,6 @@
 "use client"
 
-import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar"
+import { SidebarProvider } from "@/components/ui/sidebar"
 import { AppSidebar } from "@/components/app-sidebar"
 import { useIsMobile } from "@/hooks/use-mobile"
 import { useState, useEffect } from "react"
@@ -27,12 +27,11 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         return () => {
             window.removeEventListener("resize", handleResize)
         }
-    }, [])
+    }, [isMobile])
   return (
     <SidebarProvider defaultOpen={isOpen} onOpenChange={handleToggle}>
       <AppSidebar />
       <main className="w-full">
-        {/* <SidebarTrigger className={isMobile ? "block" : "hidden"}/> */}
         <MobileNavbar />
         <div className="mt-14 md:mt-0">
 

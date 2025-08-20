@@ -4,7 +4,6 @@ import { useParams } from 'next/navigation';
 import { api } from '@/config/config';
 import { ILibrary, IUserNote, IVideoDetails } from '@/types';
 import Image from 'next/image';
-import Link from 'next/link';
 import { Plus, Stars } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import NotesListCard from '@/components/cards/NotesListCard';
@@ -42,10 +41,6 @@ function VideoPage() {
     setYoutubePlayerOpen(true);
   }
 
-  const handleYoutubePlayerClose = () => {
-    setYoutubePlayerOpen(false);
-    setYoutubeURL('');
-  }
 
   useEffect(() => {
     if(!youtubePlayerOpen) setYoutubeURL('');
@@ -158,9 +153,7 @@ function VideoPage() {
         {!loading && video?.thumbnailUrl && <Image src={!loading && video?.thumbnailUrl } alt='thumbnail' width={1920} height={1080} quality={100} className='w-full h-full object-cover rounded-lg' style={{ filter: "brightness(0.2) contrast(1.1) blur(2px)" }} />}
         <div className='absolute top-0 left-0 w-full h-full flex flex-col gap-4 justify-center items-center'>
           <div onClick={() => handleYoutubePlayerOpen(`https://www.youtube.com/watch?v=${video?.youtubeId}`)} className='text-2xl font-bold hover:underline line-clamp-1 text-center cursor-pointer'>
-            {/* <Link href={`https://www.youtube.com/watch?v=${video?.youtubeId}`} target='_blank'> */}
               {video?.title}
-            {/* </Link> */}
           </div>
           <div className='text-sm text-muted-foreground'>
             {video?.channelName}
@@ -182,18 +175,18 @@ function VideoPage() {
             <p className='text-gray-500 text-xs text-center'>Add Note</p>
             </div>
               <div onClick={()=>{
-                 if(user?.creditsUsed! >= 5){
+                 if((user?.creditsUsed ?? 5) >= 5){
                   toast.error("You have already used your 5 credits for this month. Please try again next month.")
                   return;
                 }
                 if(!loading)
                   setAIDialogOpen(true)
               }} className={`flex flex-col md:flex-row lg:w-max items-center gap-2 hover:bg-muted duration-150 cursor-pointer p-1 ${loading && 'opacity-50'}`}>
-            <Stars size={27}  className='text-gray-500  ' />
+            <Stars size={27} className='text-gray-500' />
             <p className='text-gray-500 text-xs text-center'>Generate Summary using AI</p>
             </div>
             {(
-              addNoteDialogOpen && <AddNoteDialog youtubeId={video?.youtubeId!} open={addNoteDialogOpen} setOpen={setAddNoteDialogOpen} fetchNotes={fetchNotes} libraryId={library?._id!} text={note} noteTitle={noteTitle} setText={setNote} setNoteTitle={setNoteTitle} />
+              addNoteDialogOpen && <AddNoteDialog open={addNoteDialogOpen} setOpen={setAddNoteDialogOpen} fetchNotes={fetchNotes} libraryId={library?._id ?? ""} text={note} noteTitle={noteTitle} setText={setNote} setNoteTitle={setNoteTitle} />
             )}
             {AIDialogOpen && <AIConfirmDialog open={AIDialogOpen} setOpen={setAIDialogOpen} onConfirm={handleAISummaryClick} />}
             <Input placeholder='Search' className='mt-2 md:mt-0 col-span-2 md:col-span-1' value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} />

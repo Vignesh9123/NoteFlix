@@ -70,8 +70,8 @@ export async function GET(request: NextRequest) {
         if(!libraries || libraries.length == 0) return NextResponse.json({ message: "No starred videos found" }, { status: 404 });
         return NextResponse.json({ data: libraries, message: "starred videos fetched successfully" }, { status: 200 });
     }
-    catch (error) {
-        
+    catch {
+        return NextResponse.json({ message: "Internal server error" }, { status: 500 }); 
     }
 }
 export async function POST(request: NextRequest) {

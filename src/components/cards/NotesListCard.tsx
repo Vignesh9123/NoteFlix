@@ -36,10 +36,6 @@ function NotesListCard({note, videoDetails, index, noteList, setNoteList}: {note
     setYoutubePlayerOpen(true);
   }
 
-  const handlePlayerClose = () => {
-    setYoutubePlayerOpen(false);
-    setYoutubeURL('');
-  }
 
   useEffect(() => {
     if(!youtubePlayerOpen) setYoutubeURL('');

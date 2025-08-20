@@ -1,6 +1,4 @@
 'use client'
-import { Color } from '@tiptap/extension-color'
-import ListItem from '@tiptap/extension-list-item'
 import TextStyle from '@tiptap/extension-text-style'
 import { EditorProvider, useCurrentEditor } from '@tiptap/react'
 import {Placeholder} from '@tiptap/extension-placeholder'
@@ -170,7 +168,6 @@ const MenuBar = () => {
 }
 
 const extensions = [
-  // Color.configure({ types: [TextStyle.name, ListItem.name] }),
   TextStyle.configure({}),
   StarterKit.configure({
     bulletList: {
@@ -195,14 +192,12 @@ const extensions = [
   })
 ]
 
-
-const content = "<h2>Facing a Hiring Freeze? Learn from My Mistakes!</h2>\n\n<p>The current job market is incredibly competitive.  I landed a 30 LPA job in 2020 (while my batchmates struggled), but only after three interviews. This video shares my mistakes to help you avoid similar pitfalls.</p>\n\n<ul>\n<li><p><strong>Mistake 1: Incorrect DSA Practice.</strong> I focused too much on competitive programming (CP) without a structured approach.  Instead, learn DSA systematically (e.g., using Striver's A to Z), mastering various algorithms before tackling CP. Don't get stuck on repetitive questions; focus on challenging problems to expand your knowledge.</p></li>\n<li><p><strong>Mistake 2: Lack of Projects & Development Experience.</strong> My resume was CP-heavy, hindering internship prospects.  Balance CP with projects (web, app, etc.) and deploy them.  A diverse skillset increases interview opportunities.</p></li>\n<li><p><strong>Mistake 3: Introversion.</strong>  Network! Engage with tech communities (Twitter, LinkedIn).  Publicly share your work and achievements to increase visibility and build connections. A strong network can be a lifeline during layoffs.</p></li>\n</ul>\n\n<p>Don't be one-dimensional.  A balanced skillset is crucial for success.  Consider resources like Great Learning Career Academy for structured learning and guaranteed placement opportunities.</p>\n\n<ul data-type=\"taskList\">\n<li data-checked=\"false\" data-type=\"taskItem\"><label><input type=\"checkbox\"><span></span></label><div><p>Follow a structured DSA path</p></div></li>\n<li data-checked=\"false\" data-type=\"taskItem\"><label><input type=\"checkbox\"><span></span></label><div><p>Build and deploy multiple projects</p></div></li>\n<li data-checked=\"false\" data-type=\"taskItem\"><label><input type=\"checkbox\"><span></span></label><div><p>Actively participate in tech communities</p></div></li>\n</ul>\n"
-
-
-export default ({text, setText, isEditable, className}:{text: string, setText?: (text: string) => void, isEditable?: boolean, className?: string}) => {
+export default function TipTap ({text, setText, isEditable, className}:{text: string, setText?: (text: string) => void, isEditable?: boolean, className?: string}) {
   const [editorText, setEditorText] = useState(text)
+  // eslint-disable-next-line
+  const handleChange = (text: any) => {setText?.(String(text.editor.getHTML()))}
   useEffect(() => {setEditorText(text)}, [text])
-  const handleUpdate = useDebouncedCallback((text) => {setText && setText(String(text.editor.getHTML()))}, 500)
+  const handleUpdate = useDebouncedCallback(handleChange, 500)
   return (
     <EditorProvider slotBefore={isEditable?<MenuBar />:null} shouldRerenderOnTransaction  editable={(isEditable != null)?isEditable:true} editorContainerProps={{className:`${isEditable?'m-1 p-1 editableEditor':''} ${className || ''}`}} onUpdate={handleUpdate} extensions={extensions} content={editorText}></EditorProvider>
   )

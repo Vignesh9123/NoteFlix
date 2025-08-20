@@ -65,7 +65,7 @@ function AddVideo({open, setOpen, videoDetails, setVideoDetails, setVideoList, v
             setVideoList([...videoList, newVideo]);
             toast.success("Video added successfully");
          }
-         setOtherDialogOpen && setOtherDialogOpen(false)
+         setOtherDialogOpen?.(false)
          setOpen(false);
         } catch (error) {
             if(error instanceof AxiosError) {

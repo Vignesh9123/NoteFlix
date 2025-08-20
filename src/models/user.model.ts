@@ -44,7 +44,8 @@ userSchema.post("findOneAndDelete", async function (doc) {
 
 userSchema.post("deleteMany", async function (docs) {
     if (docs) {
-        await Library.deleteMany({ userId: { $in: docs.map((doc:any) => doc._id) } });
+        // eslint-disable-next-line
+        await Library.deleteMany({ userId: { $in: docs.map((doc: any) => doc._id) } });
     }
 });
 
