@@ -1,6 +1,6 @@
 'use client'
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useAuth } from '@/context/AuthContext'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
@@ -23,18 +23,22 @@ function Settings() {
         new: '',
         confirm: ''
     })
-
-    if (name === user?.name || name?.length == 0 || loading.name) {
-        setDisabled({ ...disabled, name: true })
-    } else {
-        setDisabled({ ...disabled, name: false })
-    }
-
-    if (password.old.length == 0 || password.new.length == 0 || password.confirm.length == 0 || password.new != password.confirm || loading.password) {
-        setDisabled({ ...disabled, password: true })
-    } else {
-        setDisabled({ ...disabled, password: false })
-    }
+    useEffect(() => {
+        
+        if (name === user?.name || name?.length == 0 || loading.name) {
+            setDisabled({ ...disabled, name: true })
+        } else {
+            setDisabled({ ...disabled, name: false })
+        }
+    }, [name])
+    useEffect(() => {
+        if (password.old.length == 0 || password.new.length == 0 || password.confirm.length == 0 || password.new != password.confirm || loading.password) {
+            setDisabled({ ...disabled, password: true })
+        } else {
+            setDisabled({ ...disabled, password: false })
+        }
+        
+    }, [password])
 
     const nameUpdateClick = async () => {
         setLoading({ ...loading, name: true })
