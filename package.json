@@ -31,7 +31,7 @@
     "@upstash/ratelimit": "^2.0.5",
     "@vercel/analytics": "^1.4.1",
     "@vercel/kv": "^3.0.0",
-    "axios": "^1.7.9",
+    "axios": "^1.8.2",
     "bcrypt": "^5.1.1",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
