@@ -24,6 +24,7 @@ import { useDebouncedCallback } from 'use-debounce'
 import { toast } from 'react-hot-toast'
 import { AxiosError } from 'axios'
 import { extractVideoId } from '@/lib/utils'
+import PlaylistGridCardSkeleton from '@/components/skeletons/PlaylistGridCardSkeleton'
 function VideosPage() {
   const [ytLinkDialogOpen, setYtLinkDialogOpen] = useState(false)
   const [youtubeUrl, setYoutubeUrl] = useState('')
@@ -258,7 +259,7 @@ function VideosPage() {
         </div>
       ))) }
         {displayMode === 'grid' && <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-4'>
-        {loadingVideos ? [1,2,3,4,5].map((num)=> <VideoListCardSkeleton key={num} />): 
+        {loadingVideos ? [1,2,3,4,5].map((num)=> <PlaylistGridCardSkeleton key={num} />): 
         filteredVideoList.map((video, index) => (
           <div onClick={()=>{
             if(selectMode) handleSelectVideo(video)

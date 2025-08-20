@@ -393,7 +393,7 @@ function Footer() {
     <footer className="bg-[#030720] py-8 px-6">
       <div className="container mx-auto text-center">
         <p className="text-blue-300">&copy; 2025 NoteFlix. All rights reserved.</p>
-        <p className="text-blue-300">Built with ❤️ by <Link className="underline" href={'https://www.linkedin.com/in/vignesh-d-mys'} target="_blank">Vignesh</Link> </p>
+        <p className="text-blue-300">Built by <Link className="underline" href={'https://dub.sh/vignesh-portfolio'} target="_blank">Vignesh</Link> </p>
       </div>
     </footer>
   )
