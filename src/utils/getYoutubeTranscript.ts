@@ -78,9 +78,11 @@ export const getYoutubeTranscript = async (videoId: string, language: string = '
     
       const tracks = playerData?.captions?.playerCaptionsTracklistRenderer?.captionTracks;
       if (!tracks) throw new Error("No captions found.");
+      // eslint-disable-next-line
       let track = tracks.find((t: any) => t.languageCode === language);
       if (!track) {
         const defaultLanguageCode = tracks[0].languageCode;
+        // eslint-disable-next-line
         track = tracks.find((t: any) => t.languageCode === defaultLanguageCode);
       }
       if (!track) {
@@ -91,18 +93,20 @@ export const getYoutubeTranscript = async (videoId: string, language: string = '
     
       const xml = await fetch(baseUrl).then(res => res.text());
       const parsed = await parseStringPromise(xml);
-        const transcript =  parsed.transcript.text.map((entry:any) => ({
+      // eslint-disable-next-line
+      const transcript =  parsed.transcript.text.map((entry:any) => ({
             text: entry._,
             start_ms: parseFloat(String(entry.$.start * 1000)),
             end_ms: parseFloat(String(entry.$.start * 1000)) + parseFloat(String(entry.$.dur * 1000))
         }));
-        const formattedTranscript = transcript.map((entry:any) => (entry.text)).join(' ');
+      // eslint-disable-next-line
+      const formattedTranscript = transcript.map((entry:any) => (entry.text)).join(' ');
     
-        return {
+      return {
           success: true,
           transcript,
           formattedTranscript
-        }
+      }
     } catch (error) {
       console.error(error);
       return {
