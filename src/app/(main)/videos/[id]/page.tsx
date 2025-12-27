@@ -57,13 +57,13 @@ function VideoPage() {
     if (flag == 0) {
       setAILoading(true);
       setAIDialogOpen(false);
+      if(!video) return;
       try {
         // await api.post('/youtube/getaudio', { videoId: video?.youtubeId });
         setLoadingIndex(1);
-        const res = await api.post('/youtube/gettranscript', { videoId: video?.youtubeId });
+        await api.post('/youtube/gettranscript', { videoId: video.youtubeId });
         setLoadingIndex(2);
-        const transcript = res.data.data
-        const summary = await api.post('/gemini/generatesummary', { transcript, videoId: video?.youtubeId });
+        const summary = await api.post('/gemini/generatesummary', { videoId: video.youtubeId });
         // setLoadingIndex(2);
         setNote(summary.data.data.toString());
         setUser(

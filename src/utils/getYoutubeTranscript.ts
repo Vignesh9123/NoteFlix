@@ -78,8 +78,14 @@ export const getYoutubeTranscript = async (videoId: string, language: string = '
     
       const tracks = playerData?.captions?.playerCaptionsTracklistRenderer?.captionTracks;
       if (!tracks) throw new Error("No captions found.");
-      const track = tracks.find((t: any) => t.languageCode === language);
-      if (!track) throw new Error(`No captions for language: ${language}`);
+      let track = tracks.find((t: any) => t.languageCode === language);
+      if (!track) {
+        const defaultLanguageCode = tracks[0].languageCode;
+        track = tracks.find((t: any) => t.languageCode === defaultLanguageCode);
+      }
+      if (!track) {
+        throw new Error("No captions found.");
+      }
     
       const baseUrl = track.baseUrl.replace(/&fmt=\w+$/, "");
     
