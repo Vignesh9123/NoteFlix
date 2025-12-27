@@ -109,7 +109,7 @@ export const POST = async (request: NextRequest)=>{
         const systemPrompt = getVoiceSystemPrompt(JSON.stringify(video.transcript) || video.formattedTranscript || "", video.title);
         const client = new GoogleGenerativeAI(process.env.NEXT_PUBLIC_GEMINI_API_KEY!);
         const model = client.getGenerativeModel({
-            model: "gemini-2.0-flash",
+            model: "gemini-2.5-flash",
             systemInstruction: systemPrompt
         })
         const generationConfig = {

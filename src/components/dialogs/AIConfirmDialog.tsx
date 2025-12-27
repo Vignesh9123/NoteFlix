@@ -12,7 +12,7 @@ function AIConfirmDialog({open, setOpen, onConfirm}: {open: boolean, setOpen: (o
             <DialogDescription>Are you sure you want to proceed?</DialogDescription>
         </DialogHeader>
             You will lose 1 credit if you proceed.You currently have {5 - (user?.creditsUsed ?? 0)} credits left.
-            <p className='text-sm text-muted'>*AI-generated summaries may contain inaccuracies—review for best results.</p>
+            <p className='text-sm text-muted-foreground'>*AI-generated summaries may contain inaccuracies—review for best results.</p>
         <DialogFooter className='flex md:flex-row flex-col gap-3'>
             <Button onClick={onConfirm}>Confirm</Button>
             <Button onClick={() => setOpen(false)}>Cancel</Button>

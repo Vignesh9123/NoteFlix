@@ -56,7 +56,8 @@
     "tailwind-merge": "^2.5.5",
     "tailwindcss-animate": "^1.0.7",
     "use-debounce": "^10.0.4",
-    "youtubei.js": "^12.2.0",
+    "xml2js": "^0.6.2",
+    "youtubei.js": "^16.0.1",
     "ytdlp-nodejs": "^0.1.5"
   },
   "devDependencies": {
@@ -67,6 +68,7 @@
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "@types/three": "^0.171.0",
+    "@types/xml2js": "^0.4.14",
     "eslint": "9.33.0",
     "eslint-config-next": "15.5.0",
     "postcss": "^8",
