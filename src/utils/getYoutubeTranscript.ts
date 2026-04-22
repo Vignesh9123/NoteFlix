@@ -150,11 +150,13 @@ export const getYoutubeTranscript = async(videoId: string): Promise<GetYoutubeTr
         let formatedTranscript = null;
         if(transcript_content?.success){
           if(transcript_content?.result?.content && transcript_content?.result?.content instanceof Array){
+            // eslint-disable-next-line
             transcript = transcript_content?.result?.content.map((segment: any) => ({
               text: segment.text,
               start_ms: parseFloat((segment.offset)),
               end_ms: parseFloat((segment.offset + segment.duration))
             }))
+            // eslint-disable-next-line
             formatedTranscript = transcript.map((segment: any) => (segment.text)).join(' ')
           }
           else if(transcript_content?.result?.content && (transcript_content?.result?.content instanceof String || typeof transcript_content?.result?.content === 'string')){
