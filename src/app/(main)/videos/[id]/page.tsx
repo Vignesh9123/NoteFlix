@@ -63,17 +63,25 @@ function VideoPage() {
         setLoadingIndex(1);
         await api.post('/youtube/gettranscript', { videoId: video.youtubeId });
         setLoadingIndex(2);
-        const summary = await api.post('/gemini/generatesummary', { videoId: video.youtubeId });
-        // setLoadingIndex(2);
-        setNote(summary.data.data.toString());
-        setUser(
-          {
-            ...user,
-            creditsUsed: (user?.creditsUsed ?? 4)+1
-          } as IUser
-        )
-        setNoteTitle("Summary of the video");
-        setAddNoteDialogOpen(true);
+        try{
+          const summary = await api.post('/gemini/generatesummary', {  videoId: video?.youtubeId });
+          setNote(summary.data.data.toString());
+          setNoteTitle("Summary of the video");
+          setAddNoteDialogOpen(true);
+        }
+        catch(error){
+          if(error instanceof AxiosError){
+            if(error.response?.status === 500){
+              toast.error("Looks like the AI model service is experiencing high demand, please try again later.");
+            }
+            else{
+              toast.error(error.response?.data.error || "Something went wrong, please try again later.");
+            }
+          }
+          else{
+            toast.error("Something went wrong, please try again later.");
+          }
+        }
       }
       catch (error) {
         if(error instanceof AxiosError){
