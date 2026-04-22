@@ -160,15 +160,6 @@ function VideoPage() {
         </div>
       </div>
       <div className="filterheader m-5">
-      {/* Notice Banner */}
-      <div className="bg-yellow-500/10 border border-yellow-500/20 rounded-lg py-3 px-4 mb-4">
-        <div className="flex items-center gap-3 text-yellow-400">
-          <AlertTriangle className="w-5 h-5 flex-shrink-0" />
-          <p className="text-sm">
-            <span className="font-semibold">Notice:</span> Fetching YouTube transcripts is currently not working, so AI features are temporarily unavailable. You can still organize videos, create playlists, and take notes as usual.
-          </p>
-        </div>
-      </div>
       <div className='grid md:grid-cols-3 grid-cols-2'>
           {/* <div className="flex gap-2">
             <List size={27} className='text-gray-500 cursor-pointer bg-muted duration-150' />
@@ -183,8 +174,13 @@ function VideoPage() {
             <p className='text-gray-500 text-xs text-center'>Add Note</p>
             </div>
               <div onClick={()=>{
-                 toast.error("AI features are temporarily unavailable due to YouTube transcript issues.")
-              }} className={`flex flex-col md:flex-row lg:w-max items-center gap-2 opacity-50 cursor-not-allowed p-1`}>
+                if((user?.creditsUsed ?? 5) >= 5){
+                  toast.error("You have already used your 5 credits for this month. Please try again next month.")
+                  return;
+                }
+                if(!loading)
+                  setAIDialogOpen(true)
+              }} className={`flex flex-col md:flex-row lg:w-max items-center gap-2 p-1`}>
             <Stars size={27} className='text-gray-500' />
             <p className='text-gray-500 text-xs text-center'>Generate Summary using AI</p>
             </div>

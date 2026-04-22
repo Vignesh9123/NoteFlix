@@ -96,17 +96,6 @@ export default function Home() {
   const { user, loading } = useAuth();
   return (
     <div className="min-h-screen bg-[#050A30]">
-      {/* Notice Banner */}
-      <div className="bg-yellow-500/10 border-b border-yellow-500/20 py-4 px-4">
-        <div className="container mx-auto max-w-6xl">
-          <div className="flex items-center gap-3 text-yellow-400">
-            <AlertTriangle className="w-5 h-5 flex-shrink-0" />
-            <p className="text-sm md:text-base">
-              <span className="font-semibold">Notice:</span> Fetching YouTube transcripts is currently not working, so AI features are temporarily unavailable. You can still organize videos, create playlists, and take notes as usual.
-            </p>
-          </div>
-        </div>
-      </div>
       {/* Hero Section */}
       <motion.section
         ref={heroRef}
