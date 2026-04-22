@@ -179,7 +179,7 @@ function VideoPage() {
                 }
                 if(!loading)
                   setAIDialogOpen(true)
-              }} className={`flex flex-col md:flex-row lg:w-max items-center gap-2 p-1`}>
+              }} className={`flex flex-col md:flex-row lg:w-max items-center cursor-pointer gap-2 p-1`}>
             <Stars size={27}  className='text-gray-500  ' />
             <p className='text-gray-500 text-xs text-center'>Generate Summary using AI</p>
             </div>
