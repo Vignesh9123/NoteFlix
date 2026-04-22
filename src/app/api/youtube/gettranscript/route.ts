@@ -19,6 +19,7 @@ export async function POST(request: NextRequest) {
         if(dbVideo.summary) return NextResponse.json({ message: "Transcript already generated" }, { status: 200 });
 
         const { success, error, transcript } = await getYoutubeTranscript(videoId);
+        console.log({ success, error, transcript });
         if (!success) return NextResponse.json({ error: error || "Sorry, the transcript is not available" }, { status: 500 });
         if (!transcript) return NextResponse.json({ error: "Sorry, the transcript is not available" }, { status: 500 });
         dbVideo.transcript = transcript;

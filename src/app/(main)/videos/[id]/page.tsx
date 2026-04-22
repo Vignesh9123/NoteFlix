@@ -182,7 +182,12 @@ function VideoPage() {
             <p className='text-gray-500 text-xs text-center'>Add Note</p>
             </div>
               <div onClick={()=>{
-                toast.error("AI features are temporarily unavailable due to YouTube transcript issues.")
+                if((user?.creditsUsed ?? 5) >= 5){
+                  toast.error("You have already used your 5 credits for this month. Please try again next month.")
+                  return;
+                }
+                if(!loading)
+                  setAIDialogOpen(true)
               }} className={`flex flex-col md:flex-row lg:w-max items-center gap-2 opacity-50 cursor-not-allowed p-1`}>
             <Stars size={27}  className='text-gray-500  ' />
             <p className='text-gray-500 text-xs text-center'>Generate Summary using AI</p>
