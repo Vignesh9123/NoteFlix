@@ -4,9 +4,9 @@ import Video from "@/models/video.model";
 import youtube from "@/config/ytapiconfig";
 import { getYoutubeTranscript } from "@/utils/getYoutubeTranscript";
 import { getVoiceSystemPrompt } from "@/config/voiceSystemPrompt";
-import {GoogleGenerativeAI} from '@google/generative-ai'
 import Voice from "@/models/voice.model";
 import User from "@/models/user.model";
+import { getAIModelWithSystemPrompt, generationConfig } from "@/config/aiModel";
 
 export const GET = async (request: NextRequest) => {
     try {
@@ -107,18 +107,7 @@ export const POST = async (request: NextRequest)=>{
             content: question,
         })
         const systemPrompt = getVoiceSystemPrompt(JSON.stringify(video.transcript) || video.formattedTranscript || "", video.title);
-        const client = new GoogleGenerativeAI(process.env.NEXT_PUBLIC_GEMINI_API_KEY!);
-        const model = client.getGenerativeModel({
-            model: "gemini-2.5-flash",
-            systemInstruction: systemPrompt
-        })
-        const generationConfig = {
-            temperature: 1,
-            topP: 0.95,
-            topK: 40,
-            maxOutputTokens: 8192,
-            responseMimeType: "text/plain",
-        }
+        const model = getAIModelWithSystemPrompt(systemPrompt);
         const chatSession = model.startChat({generationConfig,
             history:voice.chats.map(chat=>({
                 role: chat.role == "user" ? "user" : "model",
