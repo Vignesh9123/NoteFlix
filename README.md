@@ -1,6 +1,6 @@
 # NoteFlix
 
-[Access it live here](https://noteflix-v1.vercel.app)
+[Access it live here](https://dub.sh/noteflix)
 
 NoteFlix is a YouTube library platform that allows users to organize and enhance their video-watching experience with advanced features such as note-taking, AI summarization, and playlist management.
 
