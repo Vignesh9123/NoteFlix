@@ -110,22 +110,11 @@ function Voice() {
             transition={{duration: 0.3, delay: index*0.1}}
             key={index}>{word + " "}</motion.p>)} 
         </motion.div>
-        {/* Notice Banner */}
-        <div className="bg-yellow-500/10 border border-yellow-500/20 rounded-lg py-3 px-4 mb-4 w-full md:w-[500px]">
-          <div className="flex items-center gap-3 text-yellow-400">
-            <AlertTriangle className="w-5 h-5 flex-shrink-0" />
-            <p className="text-sm">
-              <span className="font-semibold">Notice:</span> Fetching YouTube transcripts is currently not working, so AI features are temporarily unavailable. You can still organize videos, create playlists, and take notes as usual.
-            </p>
-          </div>
-        </div>
         <div className='flex justify-center items-center gap-[10px] w-full md:w-[500px]'>
         <Input value={urlInput} onChange={(e)=>{
             setUrlInput(e.target.value)
         }} type="text" placeholder="Enter youtube video url" />
-        <Button onClick={() => {
-          toast.error("AI features are temporarily unavailable due to YouTube transcript issues.")
-        }} disabled={true} className="opacity-50 cursor-not-allowed">Chat</Button>
+        <Button onClick={getAudioAvailability} disabled={availabilityChecking || urlInput === ""}>Chat</Button>
         </div>
         {conversations.length === 0 && <div className='text-muted-foreground my-4 border border-muted-foreground px-5 py-2 rounded-md' >
             <p className='text-lg font-semibold text-center'>Note</p>
