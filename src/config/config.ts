@@ -11,6 +11,7 @@ const config = {
     firebaseAppId: String(process.env.NEXT_PUBLIC_FIREBASE_APP_ID),
     firebaseMeasurementId: String(process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID),
     firebaseStorageBucket: String(process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET),
+    supadataApiKey: String(process.env.SUPADATA_API_KEY)
 }
 
 import axios from 'axios'
