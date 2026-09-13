@@ -1,5 +1,6 @@
 // import { Innertube } from "youtubei.js";
 // import { parseStringPromise } from 'xml2js';
+import config from '@/config/config';
 interface GetYoutubeTranscriptResponse {
     success: boolean;
     transcript?: {
@@ -129,7 +130,7 @@ myHeaders.append("sec-ch-ua-mobile", "?0");
 myHeaders.append("sec-ch-ua-platform", "\"Windows\"");
 
 
-const raw = `{\r\n    \"url\": \"https://www.youtube.com/watch?v=${videoId}\",\r\n    \"type\": \"transcript\",\r\n    \"apiKey\": \"\",\r\n    \"options\": {\r\n        \"lang\": \"auto\",\r\n        \"text\": false,\r\n        \"mode\": \"native\"\r\n    }\r\n}`;
+const raw = `{\r\n    \"url\": \"https://www.youtube.com/watch?v=${videoId}\",\r\n    \"type\": \"transcript\",\r\n    \"apiKey\": \"${config.supadataApiKey}\",\r\n    \"options\": {\r\n        \"lang\": \"auto\",\r\n        \"text\": false,\r\n        \"mode\": \"native\"\r\n    }\r\n}`;
 
 const requestOptions = {
   method: "POST",
