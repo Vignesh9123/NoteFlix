@@ -37,19 +37,7 @@ NoteFlix is a YouTube library platform that allows users to organize and enhance
    npm install
    ```
 
-4. Create a `.env.local` file and add the required environment variables:
-   ```env
-   NEXT_PUBLIC_MONGODB_URI=MONGODB_URI
-   NEXT_PUBLIC_JWT_SECRET=JWT_SECRET
-   NEXT_PUBLIC_YOUTUBE_API_KEY=youtube_api_key
-   NEXT_PUBLIC_YOUTUBE_API_URL=https://www.googleapis.com/youtube/v3/search
-   NEXT_PUBLIC_DEEPGRAM_API_KEY=deepgram_api_key - # Optional (Required if using its respective endpoint)
-   NEXT_PUBLIC_GEMINI_API_KEY=gemini_api_key
-   NEXT_PUBLIC_FIREBASE_API_KEY=firebase_api_key
-   NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=firebase_messaging_sender_id
-   NEXT_PUBLIC_FIREBASE_APP_ID=firebase_app_id
-   NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID=firebase_measurement_id
-   ```
+4. Create a `.env.local` file and copy the contents from `.env.sample` and replace all the existing env vars with real ones
 
 5. Start the development server:
    ```bash
